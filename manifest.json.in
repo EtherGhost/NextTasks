@@ -1,0 +1,16 @@
+{
+    "name": "nexttasks.cloudsite",
+    "description": "Native but simple Ubuntu Touch client for Nextcloud Tasks.",
+    "architecture": "$ENV{ARCH}",
+    "title": "NextTasks",
+    "hooks": {
+        "nexttasks": {
+            "accounts": "nexttasks.accounts",
+            "apparmor": "nexttasks.apparmor",
+            "desktop": "nexttasks.desktop"
+        }
+    },
+    "version": "@NEXTTASKS_VERSION@",
+    "maintainer": "Etherghost <noreply@cloudsite.se>",
+    "framework": "$ENV{CLICK_FRAMEWORK}"
+}

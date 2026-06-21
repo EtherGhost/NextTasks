@@ -1,0 +1,13 @@
+# Build output
+build/
+.clickable/
+*.click
+.env.test.local
+.idea/
+.vscode/
+.DS_Store
+*~
+
+# Python cache
+__pycache__/
+*.pyc

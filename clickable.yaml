@@ -1,0 +1,8 @@
+clickable_minimum_required: 8.8.0
+builder: cmake
+kill: nexttasks
+scripts:
+  desktop-large: ~/.local/bin/clickable desktop --arch amd64
+  desktop-dark: bash scripts/desktop-dark.sh
+  test: python3 -m unittest discover -s tests -v
+  test-live: python3 -m unittest discover -s tests_live -v

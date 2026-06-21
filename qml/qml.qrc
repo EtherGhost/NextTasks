@@ -1,0 +1,18 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Main.qml</file>
+        <file>pages/HomePage.qml</file>
+        <file>pages/TaskDetailPage.qml</file>
+        <file>pages/TaskConflictResolutionPage.qml</file>
+        <file>pages/AccountSelectionPage.qml</file>
+        <file>pages/SettingsPage.qml</file>
+        <file>pages/LanguageSelectionPage.qml</file>
+        <file>pages/AboutPage.qml</file>
+        <file>backend/AppController.qml</file>
+        <file>backend/AuthCore.js</file>
+        <file>backend/AccountSessionAdapter.qml</file>
+        <file>backend/TasksController.qml</file>
+        <file>backend/TasksCache.qml</file>
+        <file>backend/TasksApiClient.qml</file>
+    </qresource>
+</RCC>

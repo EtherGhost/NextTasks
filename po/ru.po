@@ -1,0 +1,1230 @@
+# Russian translations for nexttasks.cloudsite package.
+# This file is distributed under the same license as the nexttasks.cloudsite package.
+# AI-assisted starter translation; please review before relying on wording.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: nexttasks.cloudsite\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-21 00:18+0000\n"
+"PO-Revision-Date: 2026-06-21 00:00+0200\n"
+"Last-Translator: AI-assisted starter translation\n"
+"Language-Team: Russian\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#, fuzzy
+msgid "Authentication succeeded, but the required Online Accounts credentials were not available."
+msgstr "Authentication succeeded, but the required Online Accounts credentials were not available."
+
+#, fuzzy
+msgid "Authentication failed: %1"
+msgstr "Authentication failed: %1"
+
+#, fuzzy
+msgid "Desktop test credentials are incomplete."
+msgstr "Desktop test credentials are incomplete."
+
+#, fuzzy
+msgid "No account selected. Open Account first and authorize a Nextcloud account."
+msgstr "No account selected. Open Account first and authorize a Nextcloud account."
+
+#, fuzzy
+msgid "No server URL configured. Open Account and authorize the OS account."
+msgstr "No server URL configured. Open Account and authorize the OS account."
+
+#, fuzzy
+msgid "Waiting for Online Accounts..."
+msgstr "Waiting for Online Accounts..."
+
+#, fuzzy
+msgid "Selected Online Accounts service was not found. Open Account and verify the account again."
+msgstr "Selected Online Accounts service was not found. Open Account and verify the account again."
+
+#, fuzzy
+msgid "Account credentials are incomplete."
+msgstr "Account credentials are incomplete."
+
+#, fuzzy
+msgid "Tasks calendar request failed with HTTP %1."
+msgstr "Tasks calendar request failed with HTTP %1."
+
+#, fuzzy
+msgid "Tasks calendar request failed because the network request could not be completed."
+msgstr "Tasks calendar request failed because the network request could not be completed."
+
+#, fuzzy
+msgid "Tasks calendar request timed out."
+msgstr "Tasks calendar request timed out."
+
+msgid "Tasks"
+msgstr "Задачи"
+
+#, fuzzy
+msgid "Tasks request failed with HTTP %1."
+msgstr "Tasks request failed with HTTP %1."
+
+#, fuzzy
+msgid "Tasks request failed because the network request could not be completed."
+msgstr "Tasks request failed because the network request could not be completed."
+
+#, fuzzy
+msgid "Tasks request timed out."
+msgstr "Tasks request timed out."
+
+#, fuzzy
+msgid "Task list creation is not available."
+msgstr "Task list creation is not available."
+
+#, fuzzy
+msgid "Task list name is required."
+msgstr "Task list name is required."
+
+#, fuzzy
+msgid "Task list update is not available."
+msgstr "Task list update is not available."
+
+#, fuzzy
+msgid "Task list deletion is not available."
+msgstr "Task list deletion is not available."
+
+#, fuzzy
+msgid "Task list delete request is incomplete."
+msgstr "Task list delete request is incomplete."
+
+#, fuzzy
+msgid "Task update data is incomplete."
+msgstr "Task update data is incomplete."
+
+#, fuzzy
+msgid "Server version changed. Refresh tasks and try again."
+msgstr "Server version changed. Refresh tasks and try again."
+
+#, fuzzy
+msgid "Task update failed with HTTP %1."
+msgstr "Task update failed with HTTP %1."
+
+#, fuzzy
+msgid "Task update failed because the network request could not be completed."
+msgstr "Task update failed because the network request could not be completed."
+
+#, fuzzy
+msgid "Task update timed out."
+msgstr "Task update timed out."
+
+#, fuzzy
+msgid "Server version changed. Local task was not uploaded."
+msgstr "Server version changed. Local task was not uploaded."
+
+#, fuzzy
+msgid "Task create data is incomplete."
+msgstr "Task create data is incomplete."
+
+#, fuzzy
+msgid "Server rejected the new task because that resource already exists."
+msgstr "Server rejected the new task because that resource already exists."
+
+#, fuzzy
+msgid "Task create failed with HTTP %1."
+msgstr "Task create failed with HTTP %1."
+
+#, fuzzy
+msgid "Task create failed because the network request could not be completed."
+msgstr "Task create failed because the network request could not be completed."
+
+#, fuzzy
+msgid "Task create timed out."
+msgstr "Task create timed out."
+
+#, fuzzy
+msgid "Task delete data is incomplete."
+msgstr "Task delete data is incomplete."
+
+#, fuzzy
+msgid "Server version changed. Local delete was not uploaded."
+msgstr "Server version changed. Local delete was not uploaded."
+
+#, fuzzy
+msgid "Task delete failed with HTTP %1."
+msgstr "Task delete failed with HTTP %1."
+
+#, fuzzy
+msgid "Task delete failed because the network request could not be completed."
+msgstr "Task delete failed because the network request could not be completed."
+
+#, fuzzy
+msgid "Task delete timed out."
+msgstr "Task delete timed out."
+
+#, fuzzy
+msgid "Task move is not available."
+msgstr "Task move is not available."
+
+#, fuzzy
+msgid "Task move data is incomplete."
+msgstr "Task move data is incomplete."
+
+#, fuzzy
+msgid "Choose a different task list."
+msgstr "Choose a different task list."
+
+#, fuzzy
+msgid "Task calendar"
+msgstr "Task calendar"
+
+msgid "Untitled task"
+msgstr "Задача без названия"
+
+#, fuzzy
+msgid "Due %1"
+msgstr "Due %1"
+
+msgid "Completed"
+msgstr "Выполнено"
+
+msgid "In progress"
+msgstr "В процессе"
+
+msgid "Canceled"
+msgstr "Отменено"
+
+msgid "Open task"
+msgstr "Открытая задача"
+
+msgid "High"
+msgstr "Высокий"
+
+msgid "Medium"
+msgstr "Средний"
+
+msgid "Low"
+msgstr "Низкий"
+
+msgid "Untitled"
+msgstr "Без названия"
+
+#, fuzzy
+msgid "Select an account to load CalDAV task calendars."
+msgstr "Select an account to load CalDAV task calendars."
+
+msgid "No account"
+msgstr "Нет учётной записи"
+
+msgid "My Tasks"
+msgstr "Мои задачи"
+
+msgid "Authentication failed"
+msgstr "Ошибка аутентификации"
+
+#, fuzzy
+msgid "Loaded %1 list(s)."
+msgstr "Loaded %1 list(s)."
+
+#, fuzzy
+msgid "No lists found."
+msgstr "No lists found."
+
+#, fuzzy
+msgid "Loaded %1 task(s)."
+msgstr "Loaded %1 task(s)."
+
+#, fuzzy
+msgid "No tasks found."
+msgstr "No tasks found."
+
+msgid "Sync failed"
+msgstr "Ошибка синхронизации"
+
+#, fuzzy
+msgid "Updated %1 tasks."
+msgstr "Updated %1 tasks."
+
+#, fuzzy
+msgid "Task marked completed."
+msgstr "Task marked completed."
+
+#, fuzzy
+msgid "Task marked open."
+msgstr "Task marked open."
+
+#, fuzzy
+msgid "Task saved."
+msgstr "Task saved."
+
+#, fuzzy
+msgid "Task created."
+msgstr "Task created."
+
+#, fuzzy
+msgid "Task deleted."
+msgstr "Task deleted."
+
+msgid "Conflict"
+msgstr "Конфликт"
+
+#, fuzzy
+msgid "Task list created. Refreshing..."
+msgstr "Task list created. Refreshing..."
+
+msgid "Refreshing"
+msgstr "Обновление"
+
+#, fuzzy
+msgid "Task list updated. Refreshing..."
+msgstr "Task list updated. Refreshing..."
+
+#, fuzzy
+msgid "Task list deleted. Refreshing..."
+msgstr "Task list deleted. Refreshing..."
+
+#, fuzzy
+msgid "Account changed. Refreshing..."
+msgstr "Account changed. Refreshing..."
+
+msgid "Loading..."
+msgstr "Загрузка..."
+
+#, fuzzy
+msgid "Syncing local changes..."
+msgstr "Syncing local changes..."
+
+msgid "Syncing"
+msgstr "Синхронизация"
+
+msgid "Lists"
+msgstr "Списки"
+
+#, fuzzy
+msgid "No task list is available for new tasks."
+msgstr "No task list is available for new tasks."
+
+msgid "New task"
+msgstr "Новая задача"
+
+msgid "Waiting to sync"
+msgstr "Ожидает синхронизации"
+
+#, fuzzy
+msgid "Creating task list..."
+msgstr "Creating task list..."
+
+#, fuzzy
+msgid "Updating task list..."
+msgstr "Updating task list..."
+
+#, fuzzy
+msgid "Deleting task list..."
+msgstr "Deleting task list..."
+
+#, fuzzy
+msgid "Deleted local task draft."
+msgstr "Deleted local task draft."
+
+#, fuzzy
+msgid "Task deleted locally. Syncing deletion..."
+msgstr "Task deleted locally. Syncing deletion..."
+
+#, fuzzy
+msgid "%1 tasks deleted locally. Syncing deletions..."
+msgstr "%1 tasks deleted locally. Syncing deletions..."
+
+#, fuzzy
+msgid "%1 local task drafts deleted."
+msgstr "%1 local task drafts deleted."
+
+#, fuzzy
+msgid "Choose a target task list."
+msgstr "Choose a target task list."
+
+#, fuzzy
+msgid "Selected tasks must be synced before they can be moved."
+msgstr "Selected tasks must be synced before they can be moved."
+
+#, fuzzy
+msgid "No tasks can be moved."
+msgstr "No tasks can be moved."
+
+#, fuzzy
+msgid "Moving %1 tasks..."
+msgstr "Moving %1 tasks..."
+
+#, fuzzy
+msgid "Moving task..."
+msgstr "Moving task..."
+
+#, fuzzy
+msgid "Moving task %1 of %2..."
+msgstr "Moving task %1 of %2..."
+
+#, fuzzy
+msgid "Moved %1 task(s), %2 failed, %3 skipped."
+msgstr "Moved %1 task(s), %2 failed, %3 skipped."
+
+#, fuzzy
+msgid "Moved %1 task(s). %2 skipped because they need sync first."
+msgstr "Moved %1 task(s). %2 skipped because they need sync first."
+
+#, fuzzy
+msgid "Moved %1 task(s)."
+msgstr "Moved %1 task(s)."
+
+#, fuzzy
+msgid "%1 local task changes saved."
+msgstr "%1 local task changes saved."
+
+#, fuzzy
+msgid "Task marked completed locally."
+msgstr "Task marked completed locally."
+
+#, fuzzy
+msgid "Task marked open locally."
+msgstr "Task marked open locally."
+
+#, fuzzy
+msgid "Updating task %1 of %2..."
+msgstr "Updating task %1 of %2..."
+
+#, fuzzy
+msgid "Marking task completed..."
+msgstr "Marking task completed..."
+
+#, fuzzy
+msgid "Marking task open..."
+msgstr "Marking task open..."
+
+#, fuzzy
+msgid "Saving task..."
+msgstr "Saving task..."
+
+#, fuzzy
+msgid "Local changes saved on this device"
+msgstr "Local changes saved on this device"
+
+#, fuzzy
+msgid "Local changes waiting to sync."
+msgstr "Local changes waiting to sync."
+
+msgid "Views"
+msgstr "Виды"
+
+msgid "All lists"
+msgstr "Все списки"
+
+msgid "Create new list"
+msgstr "Создать список"
+
+msgid "Due date"
+msgstr "Срок"
+
+msgid "Start date"
+msgstr "Дата начала"
+
+msgid "Priority"
+msgstr "Приоритет"
+
+msgid "Alphabetical"
+msgstr "По алфавиту"
+
+msgid "Modified"
+msgstr "Изменено"
+
+msgid "Created"
+msgstr "Создано"
+
+msgid "List"
+msgstr "Список"
+
+msgid "Manual order"
+msgstr "Ручной порядок"
+
+#, fuzzy
+msgid "Loaded cached tasks. Refreshing..."
+msgstr "Loaded cached tasks. Refreshing..."
+
+#, fuzzy
+msgid "New task waiting for a title before sync."
+msgstr "New task waiting for a title before sync."
+
+#, fuzzy
+msgid "Uploading task %1 of %2..."
+msgstr "Uploading task %1 of %2..."
+
+#, fuzzy
+msgid "Local version kept. It will be uploaded on the next sync."
+msgstr "Local version kept. It will be uploaded on the next sync."
+
+#, fuzzy
+msgid "Server version is not available. Refresh and try again."
+msgstr "Server version is not available. Refresh and try again."
+
+#, fuzzy
+msgid "Using server version."
+msgstr "Using server version."
+
+#, fuzzy
+msgid "Server version changed"
+msgstr "Server version changed"
+
+#, fuzzy
+msgid "Local changes uploaded. Refreshing..."
+msgstr "Local changes uploaded. Refreshing..."
+
+#, fuzzy
+msgid "Sync finished with %1 failed and %2 conflicts. Local changes were kept."
+msgstr "Sync finished with %1 failed and %2 conflicts. Local changes were kept."
+
+#, fuzzy
+msgid "%1 local task changes uploaded."
+msgstr "%1 local task changes uploaded."
+
+msgid "Up to date"
+msgstr "Актуально"
+
+#, fuzzy
+msgid "Manual order updated."
+msgstr "Manual order updated."
+
+#, fuzzy
+msgid "Server version is not available."
+msgstr "Server version is not available."
+
+#, fuzzy
+msgid "Status: %1"
+msgstr "Status: %1"
+
+#, fuzzy
+msgid "Due: %1"
+msgstr "Due: %1"
+
+#, fuzzy
+msgid "Start: %1"
+msgstr "Start: %1"
+
+#, fuzzy
+msgid "Priority: %1"
+msgstr "Priority: %1"
+
+#, fuzzy
+msgid "Progress: %1%"
+msgstr "Progress: %1%"
+
+#, fuzzy
+msgid "Tags: %1"
+msgstr "Tags: %1"
+
+#, fuzzy
+msgid "Select an account to load tasks."
+msgstr "Select an account to load tasks."
+
+msgid "About"
+msgstr "О приложении"
+
+msgid "Version %1"
+msgstr "Версия %1"
+
+msgid "License"
+msgstr "Лицензия"
+
+#, fuzzy
+msgid "This project is licensed under the MIT License."
+msgstr "This project is licensed under the MIT License."
+
+#, fuzzy
+msgid "This project is not affiliated with, endorsed by, or sponsored by Nextcloud GmbH or the Nextcloud project. Nextcloud is a trademark of its respective owners."
+msgstr "This project is not affiliated with, endorsed by, or sponsored by Nextcloud GmbH or the Nextcloud project. Nextcloud is a trademark of its respective owners."
+
+#, fuzzy
+msgid "Select an account and authorize it for NextTasks."
+msgstr "Select an account and authorize it for NextTasks."
+
+msgid "Accounts"
+msgstr "Учётные записи"
+
+#, fuzzy
+msgid "Authorization succeeded, but the Ubuntu Touch account did not expose a server address for NextTasks."
+msgstr "Authorization succeeded, but the Ubuntu Touch account did not expose a server address for NextTasks."
+
+#, fuzzy
+msgid "Authorization succeeded for %1. Credentials are available to the app, but were not displayed or stored."
+msgstr "Authorization succeeded for %1. Credentials are available to the app, but were not displayed or stored."
+
+#, fuzzy
+msgid "NextTasks is not allowed to use this account yet. Open Ubuntu Touch System Settings > Accounts, allow NextTasks for this account, then return here."
+msgstr "NextTasks is not allowed to use this account yet. Open Ubuntu Touch System Settings > Accounts, allow NextTasks for this account, then return here."
+
+#, fuzzy
+msgid "Authorization failed: %1. If the system did not show an Online Accounts prompt, open System Settings > Accounts and allow NextTasks for this account, then try again."
+msgstr "Authorization failed: %1. If the system did not show an Online Accounts prompt, open System Settings > Accounts and allow NextTasks for this account, then try again."
+
+#, fuzzy
+msgid "System account authorization completed. Verifying access..."
+msgstr "System account authorization completed. Verifying access..."
+
+#, fuzzy
+msgid "System account authorization was cancelled or did not return an account."
+msgstr "System account authorization was cancelled or did not return an account."
+
+#, fuzzy
+msgid "Open system accounts?"
+msgstr "Open system accounts?"
+
+msgid "Open accounts"
+msgstr "Проверка учетной записи..."
+
+#, fuzzy
+msgid "Later"
+msgstr "Later"
+
+msgid "Account"
+msgstr "Учётная запись"
+
+msgid "Server address"
+msgstr "Адрес сервера"
+
+#, fuzzy
+msgid "https://cloud.example.com"
+msgstr "https://cloud.example.com"
+
+#, fuzzy
+msgid "This app uses Ubuntu Touch Online Accounts. Edit this only if the system account did not expose the correct server address."
+msgstr "This app uses Ubuntu Touch Online Accounts. Edit this only if the system account did not expose the correct server address."
+
+msgid "Available accounts"
+msgstr "Доступные учётные записи"
+
+#, fuzzy
+msgid "No Nextcloud account found"
+msgstr "No Nextcloud account found"
+
+#, fuzzy
+msgid "Add a Nextcloud or ownCloud account in Ubuntu Touch System Settings > Accounts. Then return here and select it."
+msgstr "Add a Nextcloud or ownCloud account in Ubuntu Touch System Settings > Accounts. Then return here and select it."
+
+msgid "Open system accounts"
+msgstr "Открыть системные учётные записи"
+
+#, fuzzy
+msgid "Allow NextTasks in Ubuntu Touch account settings first"
+msgstr "Allow NextTasks in Ubuntu Touch account settings first"
+
+#, fuzzy
+msgid "Allowed for NextTasks"
+msgstr "Allowed for NextTasks"
+
+#, fuzzy
+msgid "Nextcloud account discovered"
+msgstr "Nextcloud account discovered"
+
+#, fuzzy
+msgid "Verify selected account"
+msgstr "Verify selected account"
+
+msgid "Verifying account..."
+msgstr "Проверка учетной записи..."
+
+#, fuzzy
+msgid "Selected %1. Verifying authorization..."
+msgstr "Selected %1. Verifying authorization..."
+
+#, fuzzy
+msgid "This account is not allowed for NextTasks yet. Open Ubuntu Touch System Settings > Accounts, allow NextTasks for this account, then return here."
+msgstr "This account is not allowed for NextTasks yet. Open Ubuntu Touch System Settings > Accounts, allow NextTasks for this account, then return here."
+
+#, fuzzy
+msgid "Saved account selected. Verify again if needed."
+msgstr "Saved account selected. Verify again if needed."
+
+#, fuzzy
+msgid "Select an account first."
+msgstr "Select an account first."
+
+#, fuzzy
+msgid "Verifying Online Accounts authorization..."
+msgstr "Verifying Online Accounts authorization..."
+
+#, fuzzy
+msgid "Add a Nextcloud or ownCloud account in Ubuntu Touch System Settings, then return to NextTasks."
+msgstr "Add a Nextcloud or ownCloud account in Ubuntu Touch System Settings, then return to NextTasks."
+
+#, fuzzy
+msgid "Open Ubuntu Touch System Settings, select %1, allow NextTasks for that account, then return here. NextTasks will verify it automatically."
+msgstr "Open Ubuntu Touch System Settings, select %1, allow NextTasks for that account, then return here. NextTasks will verify it automatically."
+
+#, fuzzy
+msgid "Open Ubuntu Touch System Settings, select the Nextcloud account, allow NextTasks for that account, then return here. NextTasks will verify it automatically."
+msgstr "Open Ubuntu Touch System Settings, select the Nextcloud account, allow NextTasks for that account, then return here. NextTasks will verify it automatically."
+
+#, fuzzy
+msgid "Account permission detected. Verifying access..."
+msgstr "Account permission detected. Verifying access..."
+
+#, fuzzy
+msgid "Waiting for account permission. If you already allowed NextTasks, return here and wait a moment."
+msgstr "Waiting for account permission. If you already allowed NextTasks, return here and wait a moment."
+
+#, fuzzy
+msgid "No account is saved yet. Select a Nextcloud account below, authorize it, and verify access."
+msgstr "No account is saved yet. Select a Nextcloud account below, authorize it, and verify access."
+
+#, fuzzy
+msgid "%1 on %2\n"
+"providerId=%3 serviceId=%4"
+msgstr "%1 on %2\n"
+"providerId=%3 serviceId=%4"
+
+#, fuzzy
+msgid "Saved account"
+msgstr "Saved account"
+
+#, fuzzy
+msgid "server URL missing"
+msgstr "server URL missing"
+
+msgid "No account selected"
+msgstr "Учётная запись не выбрана"
+
+#, fuzzy
+msgid "The selected Ubuntu Touch account did not expose a server address."
+msgstr "The selected Ubuntu Touch account did not expose a server address."
+
+#, fuzzy
+msgid "This will delete %1 selected tasks."
+msgstr "This will delete %1 selected tasks."
+
+#, fuzzy
+msgid "%1 local-only drafts will be removed from this device."
+msgstr "%1 local-only drafts will be removed from this device."
+
+#, fuzzy
+msgid "%1 tasks have unsynced local changes that will be discarded."
+msgstr "%1 tasks have unsynced local changes that will be discarded."
+
+#, fuzzy
+msgid "%1 tasks have conflicts."
+msgstr "%1 tasks have conflicts."
+
+#, fuzzy
+msgid "%1 tasks have unsynced local changes."
+msgstr "%1 tasks have unsynced local changes."
+
+#, fuzzy
+msgid "Sync: %1"
+msgstr "Sync: %1"
+
+#, fuzzy
+msgid "No status message."
+msgstr "No status message."
+
+#, fuzzy
+msgid "Choose a list"
+msgstr "Choose a list"
+
+#, fuzzy
+msgid "Completed tasks are shown"
+msgstr "Completed tasks are shown"
+
+#, fuzzy
+msgid "Open tasks"
+msgstr "Open tasks"
+
+#, fuzzy
+msgid "Sort: %1"
+msgstr "Sort: %1"
+
+#, fuzzy
+msgid "Delete pending"
+msgstr "Delete pending"
+
+#, fuzzy
+msgid "New"
+msgstr "New"
+
+#, fuzzy
+msgid "Unsynced"
+msgstr "Unsynced"
+
+#, fuzzy
+msgid "%1 selected"
+msgstr "%1 selected"
+
+msgid "Search"
+msgstr "Поиск"
+
+msgid "Move"
+msgstr "Переместить"
+
+msgid "Delete"
+msgstr "Удалить"
+
+#, fuzzy
+msgid "Choose task list"
+msgstr "Choose task list"
+
+#, fuzzy
+msgid "Select where the new task should be created."
+msgstr "Select where the new task should be created."
+
+msgid "Cancel"
+msgstr "Отмена"
+
+#, fuzzy
+msgid "Enter a name for the new task list."
+msgstr "Enter a name for the new task list."
+
+#, fuzzy
+msgid "List name"
+msgstr "List name"
+
+msgid "Create"
+msgstr "Создать"
+
+#, fuzzy
+msgid "Task list"
+msgstr "Task list"
+
+#, fuzzy
+msgid "Rename the list, change its color, or delete it."
+msgstr "Rename the list, change its color, or delete it."
+
+#, fuzzy
+msgid "Color"
+msgstr "Color"
+
+msgid "Save"
+msgstr "Сохранить"
+
+#, fuzzy
+msgid "Delete list"
+msgstr "Delete list"
+
+#, fuzzy
+msgid "Delete task list?"
+msgstr "Delete task list?"
+
+#, fuzzy
+msgid "The list and its tasks will be removed from the server and this device."
+msgstr "The list and its tasks will be removed from the server and this device."
+
+#, fuzzy
+msgid "Delete task?"
+msgstr "Delete task?"
+
+#, fuzzy
+msgid "The task will be deleted from this device and synced to the server."
+msgstr "The task will be deleted from this device and synced to the server."
+
+#, fuzzy
+msgid "Delete selected tasks?"
+msgstr "Delete selected tasks?"
+
+#, fuzzy
+msgid "No selected tasks could be deleted."
+msgstr "No selected tasks could be deleted."
+
+#, fuzzy
+msgid "Move selected tasks"
+msgstr "Move selected tasks"
+
+#, fuzzy
+msgid "Choose the target list. Tasks with unsynced local changes are skipped."
+msgstr "Choose the target list. Tasks with unsynced local changes are skipped."
+
+#, fuzzy
+msgid "No selected tasks could be moved."
+msgstr "No selected tasks could be moved."
+
+#, fuzzy
+msgid "Sync status"
+msgstr "Sync status"
+
+#, fuzzy
+msgid "Resolve conflict"
+msgstr "Resolve conflict"
+
+msgid "Refresh"
+msgstr "Обновить"
+
+msgid "Close"
+msgstr "Закрыть"
+
+#, fuzzy
+msgid "Reopen completed tasks?"
+msgstr "Reopen completed tasks?"
+
+#, fuzzy
+msgid "This will mark all completed tasks in this list as open again."
+msgstr "This will mark all completed tasks in this list as open again."
+
+#, fuzzy
+msgid "Reopen all"
+msgstr "Reopen all"
+
+#, fuzzy
+msgid "Sort %1"
+msgstr "Sort %1"
+
+#, fuzzy
+msgid "Sort tasks"
+msgstr "Sort tasks"
+
+#, fuzzy
+msgid "Manual order is saved to the task list using Nextcloud-compatible task order values."
+msgstr "Manual order is saved to the task list using Nextcloud-compatible task order values."
+
+#, fuzzy
+msgid "Uses standard task sort concepts."
+msgstr "Uses standard task sort concepts."
+
+#, fuzzy
+msgid "Ascending"
+msgstr "Ascending"
+
+#, fuzzy
+msgid "Descending"
+msgstr "Descending"
+
+#, fuzzy
+msgid "Sort list"
+msgstr "Sort list"
+
+#, fuzzy
+msgid "Choose which task list to sort."
+msgstr "Choose which task list to sort."
+
+msgid "Refreshing..."
+msgstr "Обновление..."
+
+#, fuzzy
+msgid "Release to refresh"
+msgstr "Release to refresh"
+
+#, fuzzy
+msgid "Pull to refresh"
+msgstr "Pull to refresh"
+
+#, fuzzy
+msgid "Complete"
+msgstr "Complete"
+
+#, fuzzy
+msgid "Reopen"
+msgstr "Reopen"
+
+#, fuzzy
+msgid "Hide completed tasks (%1)"
+msgstr "Hide completed tasks (%1)"
+
+#, fuzzy
+msgid "Show completed tasks (%1)"
+msgstr "Show completed tasks (%1)"
+
+#, fuzzy
+msgid "No matching items"
+msgstr "No matching items"
+
+msgid "Task Lists"
+msgstr "Списки задач"
+
+msgid "Language"
+msgstr "Язык"
+
+msgid "Default"
+msgstr "По умолчанию"
+
+msgid "Follow system language"
+msgstr "Использовать язык системы"
+
+#, fuzzy
+msgid "Built-in source language"
+msgstr "Built-in source language"
+
+#, fuzzy
+msgid "Initial translation"
+msgstr "Initial translation"
+
+#, fuzzy
+msgid "Choose the language this app should use. Restart the app after changing language."
+msgstr "Choose the language this app should use. Restart the app after changing language."
+
+msgid "Settings"
+msgstr "Настройки"
+
+msgid "Sync"
+msgstr "Синхронизация"
+
+#, fuzzy
+msgid "Sync while app is active"
+msgstr "Sync while app is active"
+
+#, fuzzy
+msgid "Sync on startup"
+msgstr "Sync on startup"
+
+#, fuzzy
+msgid "These settings are placeholders until the app-specific API, cache, and sync controller are implemented."
+msgstr "These settings are placeholders until the app-specific API, cache, and sync controller are implemented."
+
+msgid "Swipe actions"
+msgstr "Жесты смахивания"
+
+#, fuzzy
+msgid "Choose where destructive swipe actions should appear. Ubuntu Touch style is the default."
+msgstr "Choose where destructive swipe actions should appear. Ubuntu Touch style is the default."
+
+#, fuzzy
+msgid "Ubuntu Touch style"
+msgstr "Ubuntu Touch style"
+
+#, fuzzy
+msgid "Use platform conventions for swipe actions."
+msgstr "Use platform conventions for swipe actions."
+
+#, fuzzy
+msgid "Upstream-compatible style"
+msgstr "Upstream-compatible style"
+
+#, fuzzy
+msgid "Match the upstream client where practical."
+msgstr "Match the upstream client where practical."
+
+#, fuzzy
+msgid "The server changed this task while you had local edits. Review one version, then choose which version to keep."
+msgstr "The server changed this task while you had local edits. Review one version, then choose which version to keep."
+
+msgid "Server version"
+msgstr "Версия сервера"
+
+msgid "Local version"
+msgstr "Локальная версия"
+
+msgid "Use server version"
+msgstr "Использовать версию сервера"
+
+msgid "Keep local version"
+msgstr "Оставить локальную версию"
+
+#, fuzzy
+msgid "Server version - ETag available"
+msgstr "Server version - ETag available"
+
+#, fuzzy
+msgid "Local version - unsynced"
+msgstr "Local version - unsynced"
+
+#, fuzzy
+msgid "Select a date."
+msgstr "Select a date."
+
+msgid "Today"
+msgstr "Сегодня"
+
+#, fuzzy
+msgid "Fri"
+msgstr "Fri"
+
+#, fuzzy
+msgid "Mon"
+msgstr "Mon"
+
+#, fuzzy
+msgid "Sat"
+msgstr "Sat"
+
+#, fuzzy
+msgid "Sun"
+msgstr "Sun"
+
+#, fuzzy
+msgid "Thu"
+msgstr "Thu"
+
+#, fuzzy
+msgid "Tue"
+msgstr "Tue"
+
+#, fuzzy
+msgid "Wed"
+msgstr "Wed"
+
+#, fuzzy
+msgid "Clear date"
+msgstr "Clear date"
+
+msgid "Status"
+msgstr "Статус"
+
+#, fuzzy
+msgid "Choose task status."
+msgstr "Choose task status."
+
+msgid "Needs action"
+msgstr "Требует действия"
+
+msgid "Select tags"
+msgstr "Выбрать метки"
+
+#, fuzzy
+msgid "No tags yet. Type above to create one."
+msgstr "No tags yet. Type above to create one."
+
+#, fuzzy
+msgid "Selected: %1"
+msgstr "Selected: %1"
+
+msgid "New tag"
+msgstr "Новая метка"
+
+msgid "Add tag"
+msgstr "Добавить метку"
+
+#, fuzzy
+msgid "Clear tags"
+msgstr "Clear tags"
+
+msgid "Done"
+msgstr "Готово"
+
+#, fuzzy
+msgid "This task has local changes. Deleting it will discard those local changes."
+msgstr "This task has local changes. Deleting it will discard those local changes."
+
+#, fuzzy
+msgid "Move task"
+msgstr "Move task"
+
+#, fuzzy
+msgid "Sync this task before moving it to another list."
+msgstr "Sync this task before moving it to another list."
+
+#, fuzzy
+msgid "Choose the target list."
+msgstr "Choose the target list."
+
+msgid "Task title"
+msgstr "Название задачи"
+
+msgid "Details"
+msgstr "Подробности"
+
+msgid "Notes"
+msgstr "Заметки"
+
+#, fuzzy
+msgid "No start date"
+msgstr "No start date"
+
+#, fuzzy
+msgid "No due date"
+msgstr "No due date"
+
+#, fuzzy
+msgid "%1% completed"
+msgstr "%1% completed"
+
+msgid "Progress"
+msgstr "Прогресс"
+
+msgid "Set location"
+msgstr "Задать место"
+
+msgid "Set a URL"
+msgstr "Задать URL"
+
+msgid "No tags"
+msgstr "Нет меток"
+
+#, fuzzy
+msgid "List: %1"
+msgstr "List: %1"
+
+#, fuzzy
+msgid "No list"
+msgstr "No list"
+
+#, fuzzy
+msgid "Move to another list"
+msgstr "Move to another list"
+
+#, fuzzy
+msgid "Modified: %1"
+msgstr "Modified: %1"
+
+#, fuzzy
+msgid "Created: %1"
+msgstr "Created: %1"
+
+#, fuzzy
+msgid "Delete task"
+msgstr "Delete task"
+
+msgid "No notes."
+msgstr "Нет заметок."
+
+#, fuzzy
+msgid "This task has a conflict."
+msgstr "This task has a conflict."
+
+#, fuzzy
+msgid "This task has local changes waiting to sync."
+msgstr "This task has local changes waiting to sync."
+
+#, fuzzy
+msgid "This task is up to date."
+msgstr "This task is up to date."
+
+msgid "April"
+msgstr "Апрель"
+
+msgid "August"
+msgstr "Август"
+
+msgid "December"
+msgstr "Декабрь"
+
+msgid "February"
+msgstr "Февраль"
+
+msgid "January"
+msgstr "Январь"
+
+msgid "July"
+msgstr "Июль"
+
+msgid "June"
+msgstr "Июнь"
+
+msgid "March"
+msgstr "Март"
+
+msgid "May"
+msgstr "Май"
+
+msgid "November"
+msgstr "Ноябрь"
+
+msgid "October"
+msgstr "Октябрь"
+
+msgid "September"
+msgstr "Сентябрь"
+
+#, fuzzy
+msgid "No priority assigned (0)"
+msgstr "No priority assigned (0)"
+
+#, fuzzy
+msgid "High (%1)"
+msgstr "High (%1)"
+
+#, fuzzy
+msgid "Medium (5)"
+msgstr "Medium (5)"
+
+#, fuzzy
+msgid "Low (%1)"
+msgstr "Low (%1)"
+
+msgid "AI-assisted starter translation"
+msgstr "Начальный перевод с помощью ИИ"

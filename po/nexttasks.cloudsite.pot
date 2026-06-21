@@ -1,0 +1,1452 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the nexttasks.cloudsite package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: nexttasks.cloudsite\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-21 00:48+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: qml/backend/AccountSessionAdapter.qml:74
+msgid ""
+"Authentication succeeded, but the required Online Accounts credentials were "
+"not available."
+msgstr ""
+
+#: qml/backend/AccountSessionAdapter.qml:116
+msgid "Authentication failed: %1"
+msgstr ""
+
+#: qml/backend/AccountSessionAdapter.qml:131
+msgid "Desktop test credentials are incomplete."
+msgstr ""
+
+#: qml/backend/AccountSessionAdapter.qml:151
+msgid ""
+"No account selected. Open Account first and authorize a Nextcloud account."
+msgstr ""
+
+#: qml/backend/AccountSessionAdapter.qml:157
+msgid "No server URL configured. Open Account and authorize the OS account."
+msgstr ""
+
+#: qml/backend/AccountSessionAdapter.qml:182
+msgid "Waiting for Online Accounts..."
+msgstr ""
+
+#: qml/backend/AccountSessionAdapter.qml:184
+msgid ""
+"Selected Online Accounts service was not found. Open Account and verify the "
+"account again."
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:62 qml/backend/TasksApiClient.qml:239
+msgid "Account credentials are incomplete."
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:151
+msgid "Tasks calendar request failed with HTTP %1."
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:165
+msgid ""
+"Tasks calendar request failed because the network request could not be "
+"completed."
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:169
+msgid "Tasks calendar request timed out."
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:244 qml/backend/TasksApiClient.qml:264
+#: qml/backend/TasksApiClient.qml:335 qml/backend/TasksController.qml:192
+#: qml/backend/TasksController.qml:598 qml/backend/TasksController.qml:662
+#: qml/backend/TasksController.qml:675 qml/backend/TasksController.qml:733
+#: qml/backend/TasksController.qml:832 qml/backend/TasksController.qml:864
+#: qml/backend/TasksController.qml:1305 qml/pages/HomePage.qml:382
+#: qml/pages/HomePage.qml:395 qml/pages/HomePage.qml:792
+#: qml/pages/HomePage.qml:1014 qml/pages/HomePage.qml:1147
+#: qml/pages/HomePage.qml:1150 qml/pages/HomePage.qml:1385
+#: qml/pages/HomePage.qml:1786 qml/pages/TaskDetailPage.qml:471
+msgid "Tasks"
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:259
+msgid "Tasks request failed with HTTP %1."
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:268
+msgid ""
+"Tasks request failed because the network request could not be completed."
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:272
+msgid "Tasks request timed out."
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:342
+msgid "Task list creation is not available."
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:346 qml/backend/TasksApiClient.qml:360
+#: qml/backend/TasksController.qml:687 qml/backend/TasksController.qml:709
+msgid "Task list name is required."
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:356
+msgid "Task list update is not available."
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:370
+msgid "Task list deletion is not available."
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:374
+msgid "Task list delete request is incomplete."
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:387 qml/backend/TasksApiClient.qml:442
+msgid "Task update data is incomplete."
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:414 qml/backend/TasksApiClient.qml:701
+#: qml/pages/HomePage.qml:521
+msgid "Server version changed. Refresh tasks and try again."
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:419 qml/backend/TasksApiClient.qml:482
+#: qml/backend/TasksApiClient.qml:706 qml/backend/TasksApiClient.qml:731
+msgid "Task update failed with HTTP %1."
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:427 qml/backend/TasksApiClient.qml:491
+msgid "Task update failed because the network request could not be completed."
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:431 qml/backend/TasksApiClient.qml:495
+msgid "Task update timed out."
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:477 qml/backend/TasksApiClient.qml:718
+#: qml/backend/TasksApiClient.qml:908
+msgid "Server version changed. Local task was not uploaded."
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:506
+msgid "Task create data is incomplete."
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:539 qml/backend/TasksApiClient.qml:723
+msgid "Server rejected the new task because that resource already exists."
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:544 qml/backend/TasksApiClient.qml:729
+msgid "Task create failed with HTTP %1."
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:553
+msgid "Task create failed because the network request could not be completed."
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:557
+msgid "Task create timed out."
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:567
+msgid "Task delete data is incomplete."
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:600 qml/backend/TasksApiClient.qml:776
+msgid "Server version changed. Local delete was not uploaded."
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:605 qml/backend/TasksApiClient.qml:781
+msgid "Task delete failed with HTTP %1."
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:613
+msgid "Task delete failed because the network request could not be completed."
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:617
+msgid "Task delete timed out."
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:625
+msgid "Task move is not available."
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:632
+msgid "Task move data is incomplete."
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:637
+msgid "Choose a different task list."
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:1000
+msgid "Task calendar"
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:1062 qml/backend/TasksController.qml:2028
+#: qml/pages/TaskConflictResolutionPage.qml:28
+#: qml/pages/TaskDetailPage.qml:1177
+msgid "Untitled task"
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:1064 qml/backend/TasksController.qml:1681
+#: qml/pages/HomePage.qml:463
+msgid "Due %1"
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:1319 qml/backend/TasksController.qml:2204
+#: qml/pages/TaskDetailPage.qml:1484
+msgid "Completed"
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:1321 qml/backend/TasksController.qml:2206
+#: qml/pages/TaskDetailPage.qml:354 qml/pages/TaskDetailPage.qml:1485
+msgid "In progress"
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:1322 qml/backend/TasksController.qml:2207
+#: qml/pages/TaskDetailPage.qml:355 qml/pages/TaskDetailPage.qml:1486
+msgid "Canceled"
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:1323 qml/backend/TasksCache.qml:353
+#: qml/backend/TasksController.qml:2208 qml/pages/HomePage.qml:459
+#: qml/pages/HomePage.qml:468
+msgid "Open task"
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:1336 qml/backend/TasksController.qml:2214
+msgid "High"
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:1337 qml/backend/TasksController.qml:2215
+msgid "Medium"
+msgstr ""
+
+#: qml/backend/TasksApiClient.qml:1338 qml/backend/TasksController.qml:2216
+msgid "Low"
+msgstr ""
+
+#: qml/backend/TasksCache.qml:131 qml/backend/TasksCache.qml:228
+#: qml/backend/TasksController.qml:1118 qml/backend/TasksController.qml:1121
+#: qml/pages/HomePage.qml:1548 qml/pages/HomePage.qml:1896
+msgid "Untitled"
+msgstr ""
+
+#: qml/backend/TasksController.qml:7
+msgid "Select an account to load CalDAV task calendars."
+msgstr ""
+
+#: qml/backend/TasksController.qml:8 qml/backend/TasksController.qml:2345
+msgid "No account"
+msgstr ""
+
+#: qml/backend/TasksController.qml:15 qml/backend/TasksController.qml:578
+#: qml/backend/TasksController.qml:615 qml/backend/TasksController.qml:1110
+#: qml/backend/TasksController.qml:1255 qml/backend/TasksController.qml:1308
+#: qml/backend/TasksController.qml:2335
+msgid "My Tasks"
+msgstr ""
+
+#: qml/backend/TasksController.qml:165
+msgid "Authentication failed"
+msgstr ""
+
+#: qml/backend/TasksController.qml:205 qml/backend/TasksController.qml:589
+msgid "Loaded %1 list(s)."
+msgstr ""
+
+#: qml/backend/TasksController.qml:205 qml/backend/TasksController.qml:589
+#: qml/backend/TasksController.qml:1235
+msgid "No lists found."
+msgstr ""
+
+#: qml/backend/TasksController.qml:234 qml/backend/TasksController.qml:617
+#: qml/backend/TasksController.qml:1259
+msgid "Loaded %1 task(s)."
+msgstr ""
+
+#: qml/backend/TasksController.qml:234 qml/backend/TasksController.qml:617
+#: qml/backend/TasksController.qml:1259 qml/pages/HomePage.qml:2024
+msgid "No tasks found."
+msgstr ""
+
+#: qml/backend/TasksController.qml:255 qml/backend/TasksController.qml:289
+#: qml/backend/TasksController.qml:448 qml/backend/TasksController.qml:478
+#: qml/backend/TasksController.qml:513 qml/backend/TasksController.qml:991
+#: qml/backend/TasksController.qml:1425 qml/backend/TasksController.qml:1505
+#: qml/pages/HomePage.qml:520 qml/pages/TaskDetailPage.qml:228
+msgid "Sync failed"
+msgstr ""
+
+#: qml/backend/TasksController.qml:272
+msgid "Updated %1 tasks."
+msgstr ""
+
+#: qml/backend/TasksController.qml:273
+msgid "Task marked completed."
+msgstr ""
+
+#: qml/backend/TasksController.qml:273
+msgid "Task marked open."
+msgstr ""
+
+#: qml/backend/TasksController.qml:311
+msgid "Task saved."
+msgstr ""
+
+#: qml/backend/TasksController.qml:334
+msgid "Task created."
+msgstr ""
+
+#: qml/backend/TasksController.qml:358
+msgid "Task deleted."
+msgstr ""
+
+#: qml/backend/TasksController.qml:415 qml/pages/HomePage.qml:498
+#: qml/pages/TaskConflictResolutionPage.qml:13
+msgid "Conflict"
+msgstr ""
+
+#: qml/backend/TasksController.qml:431
+msgid "Task list created. Refreshing..."
+msgstr ""
+
+#: qml/backend/TasksController.qml:432 qml/backend/TasksController.qml:462
+#: qml/backend/TasksController.qml:497 qml/backend/TasksController.qml:997
+#: qml/backend/TasksController.qml:2344
+msgid "Refreshing"
+msgstr ""
+
+#: qml/backend/TasksController.qml:461
+msgid "Task list updated. Refreshing..."
+msgstr ""
+
+#: qml/backend/TasksController.qml:496
+msgid "Task list deleted. Refreshing..."
+msgstr ""
+
+#: qml/backend/TasksController.qml:552 qml/backend/TasksController.qml:2341
+msgid "Account changed. Refreshing..."
+msgstr ""
+
+#: qml/backend/TasksController.qml:567 qml/backend/TasksController.qml:604
+msgid "Loading..."
+msgstr ""
+
+#: qml/backend/TasksController.qml:567 qml/backend/TasksController.qml:1347
+msgid "Syncing local changes..."
+msgstr ""
+
+#: qml/backend/TasksController.qml:568 qml/backend/TasksController.qml:605
+#: qml/backend/TasksController.qml:692 qml/backend/TasksController.qml:714
+#: qml/backend/TasksController.qml:731 qml/backend/TasksController.qml:955
+#: qml/backend/TasksController.qml:1348
+msgid "Syncing"
+msgstr ""
+
+#: qml/backend/TasksController.qml:586 qml/backend/TasksController.qml:1112
+#: qml/backend/TasksController.qml:1302
+msgid "Lists"
+msgstr ""
+
+#: qml/backend/TasksController.qml:648
+msgid "No task list is available for new tasks."
+msgstr ""
+
+#: qml/backend/TasksController.qml:653 qml/pages/TaskDetailPage.qml:82
+#: qml/pages/TaskDetailPage.qml:1177
+msgid "New task"
+msgstr ""
+
+#: qml/backend/TasksController.qml:654 qml/backend/TasksController.qml:765
+#: qml/backend/TasksController.qml:810 qml/backend/TasksController.qml:1061
+#: qml/backend/TasksController.qml:1071 qml/backend/TasksController.qml:1078
+#: qml/backend/TasksController.qml:1086 qml/backend/TasksController.qml:1335
+#: qml/backend/TasksController.qml:1439 qml/backend/TasksController.qml:1488
+#: qml/backend/TasksController.qml:1880 qml/backend/TasksController.qml:1995
+msgid "Waiting to sync"
+msgstr ""
+
+#: qml/backend/TasksController.qml:691
+msgid "Creating task list..."
+msgstr ""
+
+#: qml/backend/TasksController.qml:713
+msgid "Updating task list..."
+msgstr ""
+
+#: qml/backend/TasksController.qml:730
+msgid "Deleting task list..."
+msgstr ""
+
+#: qml/backend/TasksController.qml:751
+msgid "Deleted local task draft."
+msgstr ""
+
+#: qml/backend/TasksController.qml:764
+msgid "Task deleted locally. Syncing deletion..."
+msgstr ""
+
+#: qml/backend/TasksController.qml:809
+msgid "%1 tasks deleted locally. Syncing deletions..."
+msgstr ""
+
+#: qml/backend/TasksController.qml:814
+msgid "%1 local task drafts deleted."
+msgstr ""
+
+#: qml/backend/TasksController.qml:915
+msgid "Choose a target task list."
+msgstr ""
+
+#: qml/backend/TasksController.qml:940
+msgid "Selected tasks must be synced before they can be moved."
+msgstr ""
+
+#: qml/backend/TasksController.qml:941
+msgid "No tasks can be moved."
+msgstr ""
+
+#: qml/backend/TasksController.qml:953
+msgid "Moving %1 tasks..."
+msgstr ""
+
+#: qml/backend/TasksController.qml:954
+msgid "Moving task..."
+msgstr ""
+
+#: qml/backend/TasksController.qml:972
+msgid "Moving task %1 of %2..."
+msgstr ""
+
+#: qml/backend/TasksController.qml:990
+msgid "Moved %1 task(s), %2 failed, %3 skipped."
+msgstr ""
+
+#: qml/backend/TasksController.qml:995
+msgid "Moved %1 task(s). %2 skipped because they need sync first."
+msgstr ""
+
+#: qml/backend/TasksController.qml:996
+msgid "Moved %1 task(s)."
+msgstr ""
+
+#: qml/backend/TasksController.qml:1027
+msgid "%1 local task changes saved."
+msgstr ""
+
+#: qml/backend/TasksController.qml:1028
+msgid "Task marked completed locally."
+msgstr ""
+
+#: qml/backend/TasksController.qml:1028
+msgid "Task marked open locally."
+msgstr ""
+
+#: qml/backend/TasksController.qml:1038
+msgid "Updating task %1 of %2..."
+msgstr ""
+
+#: qml/backend/TasksController.qml:1039
+msgid "Marking task completed..."
+msgstr ""
+
+#: qml/backend/TasksController.qml:1039
+msgid "Marking task open..."
+msgstr ""
+
+#: qml/backend/TasksController.qml:1047
+msgid "Saving task..."
+msgstr ""
+
+#: qml/backend/TasksController.qml:1060 qml/backend/TasksController.qml:1085
+msgid "Local changes saved on this device"
+msgstr ""
+
+#: qml/backend/TasksController.qml:1070 qml/backend/TasksController.qml:1077
+#: qml/backend/TasksController.qml:1487
+msgid "Local changes waiting to sync."
+msgstr ""
+
+#: qml/backend/TasksController.qml:1109
+msgid "Views"
+msgstr ""
+
+#: qml/backend/TasksController.qml:1111
+msgid "All lists"
+msgstr ""
+
+#: qml/backend/TasksController.qml:1127 qml/pages/HomePage.qml:812
+msgid "Create new list"
+msgstr ""
+
+#: qml/backend/TasksController.qml:1134 qml/backend/TasksController.qml:1156
+#: qml/pages/TaskDetailPage.qml:249 qml/pages/TaskDetailPage.qml:767
+msgid "Due date"
+msgstr ""
+
+#: qml/backend/TasksController.qml:1135 qml/pages/TaskDetailPage.qml:249
+#: qml/pages/TaskDetailPage.qml:722
+msgid "Start date"
+msgstr ""
+
+#: qml/backend/TasksController.qml:1136 qml/pages/TaskDetailPage.qml:811
+msgid "Priority"
+msgstr ""
+
+#: qml/backend/TasksController.qml:1137
+msgid "Alphabetical"
+msgstr ""
+
+#: qml/backend/TasksController.qml:1138
+msgid "Modified"
+msgstr ""
+
+#: qml/backend/TasksController.qml:1139
+msgid "Created"
+msgstr ""
+
+#: qml/backend/TasksController.qml:1140
+msgid "List"
+msgstr ""
+
+#: qml/backend/TasksController.qml:1141
+msgid "Manual order"
+msgstr ""
+
+#: qml/backend/TasksController.qml:1311
+msgid "Loaded cached tasks. Refreshing..."
+msgstr ""
+
+#: qml/backend/TasksController.qml:1334
+msgid "New task waiting for a title before sync."
+msgstr ""
+
+#: qml/backend/TasksController.qml:1391
+msgid "Uploading task %1 of %2..."
+msgstr ""
+
+#: qml/backend/TasksController.qml:1438
+msgid "Local version kept. It will be uploaded on the next sync."
+msgstr ""
+
+#: qml/backend/TasksController.qml:1448
+msgid "Server version is not available. Refresh and try again."
+msgstr ""
+
+#: qml/backend/TasksController.qml:1457
+msgid "Using server version."
+msgstr ""
+
+#: qml/backend/TasksController.qml:1463
+msgid "Server version changed"
+msgstr ""
+
+#: qml/backend/TasksController.qml:1494
+msgid "Local changes uploaded. Refreshing..."
+msgstr ""
+
+#: qml/backend/TasksController.qml:1504
+msgid "Sync finished with %1 failed and %2 conflicts. Local changes were kept."
+msgstr ""
+
+#: qml/backend/TasksController.qml:1508
+msgid "%1 local task changes uploaded."
+msgstr ""
+
+#: qml/backend/TasksController.qml:1508 qml/backend/TasksController.qml:1998
+#: qml/pages/HomePage.qml:418
+msgid "Up to date"
+msgstr ""
+
+#: qml/backend/TasksController.qml:1879
+msgid "Manual order updated."
+msgstr ""
+
+#: qml/backend/TasksController.qml:2025
+#: qml/pages/TaskConflictResolutionPage.qml:118
+msgid "Server version is not available."
+msgstr ""
+
+#: qml/backend/TasksController.qml:2029
+msgid "Status: %1"
+msgstr ""
+
+#: qml/backend/TasksController.qml:2030
+msgid "Due: %1"
+msgstr ""
+
+#: qml/backend/TasksController.qml:2031
+msgid "Start: %1"
+msgstr ""
+
+#: qml/backend/TasksController.qml:2032
+msgid "Priority: %1"
+msgstr ""
+
+#: qml/backend/TasksController.qml:2033
+#, javascript-format
+msgid "Progress: %1%"
+msgstr ""
+
+#: qml/backend/TasksController.qml:2034
+msgid "Tags: %1"
+msgstr ""
+
+#: qml/backend/TasksController.qml:2342
+msgid "Select an account to load tasks."
+msgstr ""
+
+#: qml/pages/AboutPage.qml:12 qml/pages/HomePage.qml:2275
+msgid "About"
+msgstr ""
+
+#: qml/pages/AboutPage.qml:53
+msgid "Version %1"
+msgstr ""
+
+#: qml/pages/AboutPage.qml:74
+msgid "License"
+msgstr ""
+
+#: qml/pages/AboutPage.qml:80
+msgid "This project is licensed under the MIT License."
+msgstr ""
+
+#: qml/pages/AboutPage.qml:93
+msgid ""
+"This project is not affiliated with, endorsed by, or sponsored by Nextcloud "
+"GmbH or the Nextcloud project. Nextcloud is a trademark of its respective "
+"owners."
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:33
+msgid "Select an account and authorize it for NextTasks."
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:40
+msgid "Accounts"
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:89
+msgid ""
+"Authorization succeeded, but the Ubuntu Touch account did not expose a "
+"server address for NextTasks."
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:91
+msgid ""
+"Authorization succeeded for %1. Credentials are available to the app, but "
+"were not displayed or stored."
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:126
+msgid ""
+"NextTasks is not allowed to use this account yet. Open Ubuntu Touch System "
+"Settings > Accounts, allow NextTasks for this account, then return here."
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:128
+msgid ""
+"Authorization failed: %1. If the system did not show an Online Accounts "
+"prompt, open System Settings > Accounts and allow NextTasks for this "
+"account, then try again."
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:153
+msgid "System account authorization completed. Verifying access..."
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:156
+msgid ""
+"System account authorization was cancelled or did not return an account."
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:224
+msgid "Open system accounts?"
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:228
+msgid "Open accounts"
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:237
+msgid "Later"
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:266 qml/pages/HomePage.qml:2269
+msgid "Account"
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:333
+msgid "Server address"
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:341
+msgid "https://cloud.example.com"
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:350
+msgid ""
+"This app uses Ubuntu Touch Online Accounts. Edit this only if the system "
+"account did not expose the correct server address."
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:358
+msgid "Available accounts"
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:384
+msgid "No Nextcloud account found"
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:391
+msgid ""
+"Add a Nextcloud or ownCloud account in Ubuntu Touch System Settings > "
+"Accounts. Then return here and select it."
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:403
+msgid "Open system accounts"
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:525
+msgid "Allow NextTasks in Ubuntu Touch account settings first"
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:525
+msgid "Allowed for NextTasks"
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:526
+msgid "Nextcloud account discovered"
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:548
+msgid "Verify selected account"
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:548
+msgid "Verifying account..."
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:614
+msgid "Selected %1. Verifying authorization..."
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:617
+#: qml/pages/AccountSelectionPage.qml:838
+msgid ""
+"This account is not allowed for NextTasks yet. Open Ubuntu Touch System "
+"Settings > Accounts, allow NextTasks for this account, then return here."
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:679
+msgid "Saved account selected. Verify again if needed."
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:796
+#: qml/pages/AccountSelectionPage.qml:809
+msgid "Select an account first."
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:814
+msgid "Verifying Online Accounts authorization..."
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:871
+msgid ""
+"Add a Nextcloud or ownCloud account in Ubuntu Touch System Settings, then "
+"return to NextTasks."
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:878
+msgid ""
+"Open Ubuntu Touch System Settings, select %1, allow NextTasks for that "
+"account, then return here. NextTasks will verify it automatically."
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:882
+msgid ""
+"Open Ubuntu Touch System Settings, select the Nextcloud account, allow "
+"NextTasks for that account, then return here. NextTasks will verify it "
+"automatically."
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:899
+msgid "Account permission detected. Verifying access..."
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:903
+msgid ""
+"Waiting for account permission. If you already allowed NextTasks, return "
+"here and wait a moment."
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:939
+msgid ""
+"No account is saved yet. Select a Nextcloud account below, authorize it, and "
+"verify access."
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:942
+msgid ""
+"%1 on %2\n"
+"providerId=%3 serviceId=%4"
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:943
+msgid "Saved account"
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:944
+msgid "server URL missing"
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:956
+#: qml/pages/AccountSelectionPage.qml:984
+msgid "No account selected"
+msgstr ""
+
+#: qml/pages/AccountSelectionPage.qml:967
+msgid "The selected Ubuntu Touch account did not expose a server address."
+msgstr ""
+
+#: qml/pages/HomePage.qml:308
+msgid "This will delete %1 selected tasks."
+msgstr ""
+
+#: qml/pages/HomePage.qml:310
+msgid "%1 local-only drafts will be removed from this device."
+msgstr ""
+
+#: qml/pages/HomePage.qml:313
+msgid "%1 tasks have unsynced local changes that will be discarded."
+msgstr ""
+
+#: qml/pages/HomePage.qml:443
+msgid "%1 tasks have conflicts."
+msgstr ""
+
+#: qml/pages/HomePage.qml:446
+msgid "%1 tasks have unsynced local changes."
+msgstr ""
+
+#: qml/pages/HomePage.qml:449 qml/pages/TaskDetailPage.qml:1310
+msgid "Sync: %1"
+msgstr ""
+
+#: qml/pages/HomePage.qml:451
+msgid "No status message."
+msgstr ""
+
+#: qml/pages/HomePage.qml:473
+msgid "Choose a list"
+msgstr ""
+
+#: qml/pages/HomePage.qml:475
+msgid "Completed tasks are shown"
+msgstr ""
+
+#: qml/pages/HomePage.qml:476
+msgid "Open tasks"
+msgstr ""
+
+#: qml/pages/HomePage.qml:477
+msgid "Sort: %1"
+msgstr ""
+
+#: qml/pages/HomePage.qml:499
+msgid "Delete pending"
+msgstr ""
+
+#: qml/pages/HomePage.qml:500
+msgid "New"
+msgstr ""
+
+#: qml/pages/HomePage.qml:501
+msgid "Unsynced"
+msgstr ""
+
+#: qml/pages/HomePage.qml:563
+msgid "%1 selected"
+msgstr ""
+
+#: qml/pages/HomePage.qml:572
+msgid "Search"
+msgstr ""
+
+#: qml/pages/HomePage.qml:623
+msgid "Move"
+msgstr ""
+
+#: qml/pages/HomePage.qml:633 qml/pages/HomePage.qml:928
+#: qml/pages/HomePage.qml:953 qml/pages/HomePage.qml:982
+#: qml/pages/HomePage.qml:1415 qml/pages/HomePage.qml:1807
+#: qml/pages/TaskDetailPage.qml:442
+msgid "Delete"
+msgstr ""
+
+#: qml/pages/HomePage.qml:785
+msgid "Choose task list"
+msgstr ""
+
+#: qml/pages/HomePage.qml:786
+msgid "Select where the new task should be created."
+msgstr ""
+
+#: qml/pages/HomePage.qml:801 qml/pages/HomePage.qml:842
+#: qml/pages/HomePage.qml:913 qml/pages/HomePage.qml:938
+#: qml/pages/HomePage.qml:964 qml/pages/HomePage.qml:996
+#: qml/pages/HomePage.qml:1030 qml/pages/HomePage.qml:1091
+#: qml/pages/TaskDetailPage.qml:337 qml/pages/TaskDetailPage.qml:373
+#: qml/pages/TaskDetailPage.qml:451
+msgid "Cancel"
+msgstr ""
+
+#: qml/pages/HomePage.qml:813
+msgid "Enter a name for the new task list."
+msgstr ""
+
+#: qml/pages/HomePage.qml:818 qml/pages/HomePage.qml:859
+msgid "List name"
+msgstr ""
+
+#: qml/pages/HomePage.qml:831
+msgid "Create"
+msgstr ""
+
+#: qml/pages/HomePage.qml:853
+msgid "Task list"
+msgstr ""
+
+#: qml/pages/HomePage.qml:854
+msgid "Rename the list, change its color, or delete it."
+msgstr ""
+
+#: qml/pages/HomePage.qml:870
+msgid "Color"
+msgstr ""
+
+#: qml/pages/HomePage.qml:899
+msgid "Save"
+msgstr ""
+
+#: qml/pages/HomePage.qml:906
+msgid "Delete list"
+msgstr ""
+
+#: qml/pages/HomePage.qml:924
+msgid "Delete task list?"
+msgstr ""
+
+#: qml/pages/HomePage.qml:925
+msgid "The list and its tasks will be removed from the server and this device."
+msgstr ""
+
+#: qml/pages/HomePage.qml:949 qml/pages/TaskDetailPage.qml:436
+msgid "Delete task?"
+msgstr ""
+
+#: qml/pages/HomePage.qml:950 qml/pages/TaskDetailPage.qml:439
+msgid "The task will be deleted from this device and synced to the server."
+msgstr ""
+
+#: qml/pages/HomePage.qml:978
+msgid "Delete selected tasks?"
+msgstr ""
+
+#: qml/pages/HomePage.qml:990
+msgid "No selected tasks could be deleted."
+msgstr ""
+
+#: qml/pages/HomePage.qml:1007
+msgid "Move selected tasks"
+msgstr ""
+
+#: qml/pages/HomePage.qml:1008
+msgid "Choose the target list. Tasks with unsynced local changes are skipped."
+msgstr ""
+
+#: qml/pages/HomePage.qml:1023
+msgid "No selected tasks could be moved."
+msgstr ""
+
+#: qml/pages/HomePage.qml:1041 qml/pages/TaskDetailPage.qml:211
+msgid "Sync status"
+msgstr ""
+
+#: qml/pages/HomePage.qml:1045 qml/pages/TaskDetailPage.qml:215
+#: qml/pages/TaskDetailPage.qml:1077
+msgid "Resolve conflict"
+msgstr ""
+
+#: qml/pages/HomePage.qml:1056 qml/pages/TaskDetailPage.qml:226
+msgid "Refresh"
+msgstr ""
+
+#: qml/pages/HomePage.qml:1067 qml/pages/HomePage.qml:1129
+#: qml/pages/HomePage.qml:1158 qml/pages/TaskDetailPage.qml:237
+#: qml/pages/TaskDetailPage.qml:483
+msgid "Close"
+msgstr ""
+
+#: qml/pages/HomePage.qml:1078
+msgid "Reopen completed tasks?"
+msgstr ""
+
+#: qml/pages/HomePage.qml:1079
+msgid "This will mark all completed tasks in this list as open again."
+msgstr ""
+
+#: qml/pages/HomePage.qml:1082 qml/pages/HomePage.qml:2008
+msgid "Reopen all"
+msgstr ""
+
+#: qml/pages/HomePage.qml:1103
+msgid "Sort %1"
+msgstr ""
+
+#: qml/pages/HomePage.qml:1104
+msgid "Sort tasks"
+msgstr ""
+
+#: qml/pages/HomePage.qml:1106
+msgid ""
+"Manual order is saved to the task list using Nextcloud-compatible task order "
+"values."
+msgstr ""
+
+#: qml/pages/HomePage.qml:1107
+msgid "Uses standard task sort concepts."
+msgstr ""
+
+#: qml/pages/HomePage.qml:1123
+msgid "Ascending"
+msgstr ""
+
+#: qml/pages/HomePage.qml:1123
+msgid "Descending"
+msgstr ""
+
+#: qml/pages/HomePage.qml:1140
+msgid "Sort list"
+msgstr ""
+
+#: qml/pages/HomePage.qml:1141
+msgid "Choose which task list to sort."
+msgstr ""
+
+#: qml/pages/HomePage.qml:1229 qml/pages/TaskDetailPage.qml:533
+msgid "Refreshing..."
+msgstr ""
+
+#: qml/pages/HomePage.qml:1231 qml/pages/TaskDetailPage.qml:535
+msgid "Release to refresh"
+msgstr ""
+
+#: qml/pages/HomePage.qml:1232 qml/pages/TaskDetailPage.qml:536
+msgid "Pull to refresh"
+msgstr ""
+
+#: qml/pages/HomePage.qml:1427
+msgid "Complete"
+msgstr ""
+
+#: qml/pages/HomePage.qml:1427 qml/pages/HomePage.qml:1819
+msgid "Reopen"
+msgstr ""
+
+#: qml/pages/HomePage.qml:1732
+msgid "Hide completed tasks (%1)"
+msgstr ""
+
+#: qml/pages/HomePage.qml:1733
+msgid "Show completed tasks (%1)"
+msgstr ""
+
+#: qml/pages/HomePage.qml:2032
+msgid "No matching items"
+msgstr ""
+
+#: qml/pages/HomePage.qml:2106
+msgid "Task Lists"
+msgstr ""
+
+#: qml/pages/HomePage.qml:2263 qml/pages/LanguageSelectionPage.qml:29
+msgid "Language"
+msgstr ""
+
+#: qml/pages/LanguageSelectionPage.qml:12
+msgid "Default"
+msgstr ""
+
+#: qml/pages/LanguageSelectionPage.qml:12
+msgid "Follow system language"
+msgstr ""
+
+#: qml/pages/LanguageSelectionPage.qml:13
+msgid "Built-in source language"
+msgstr ""
+
+#: qml/pages/LanguageSelectionPage.qml:14
+msgid "Initial translation"
+msgstr ""
+
+#: qml/pages/LanguageSelectionPage.qml:15
+#: qml/pages/LanguageSelectionPage.qml:16
+#: qml/pages/LanguageSelectionPage.qml:17
+#: qml/pages/LanguageSelectionPage.qml:18
+#: qml/pages/LanguageSelectionPage.qml:19
+#: qml/pages/LanguageSelectionPage.qml:20
+#: qml/pages/LanguageSelectionPage.qml:21
+#: qml/pages/LanguageSelectionPage.qml:22
+#: qml/pages/LanguageSelectionPage.qml:23
+#: qml/pages/LanguageSelectionPage.qml:24
+#: qml/pages/LanguageSelectionPage.qml:25
+msgid "AI-assisted starter translation"
+msgstr ""
+
+#: qml/pages/LanguageSelectionPage.qml:49
+msgid ""
+"Choose the language this app should use. Restart the app after changing "
+"language."
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:12
+msgid "Settings"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:35
+msgid "Sync"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:40
+msgid "Sync while app is active"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:46
+msgid "Sync on startup"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:53
+msgid ""
+"These settings are placeholders until the app-specific API, cache, and sync "
+"controller are implemented."
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:66
+msgid "Swipe actions"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:72
+msgid ""
+"Choose where destructive swipe actions should appear. Ubuntu Touch style is "
+"the default."
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:79
+msgid "Ubuntu Touch style"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:79
+msgid "Use platform conventions for swipe actions."
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:80
+msgid "Upstream-compatible style"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:80
+msgid "Match the upstream client where practical."
+msgstr ""
+
+#: qml/pages/TaskConflictResolutionPage.qml:37
+msgid ""
+"The server changed this task while you had local edits. Review one version, "
+"then choose which version to keep."
+msgstr ""
+
+#: qml/pages/TaskConflictResolutionPage.qml:49
+#: qml/pages/TaskConflictResolutionPage.qml:122
+msgid "Server version"
+msgstr ""
+
+#: qml/pages/TaskConflictResolutionPage.qml:56
+#: qml/pages/TaskConflictResolutionPage.qml:128
+msgid "Local version"
+msgstr ""
+
+#: qml/pages/TaskConflictResolutionPage.qml:101
+msgid "Use server version"
+msgstr ""
+
+#: qml/pages/TaskConflictResolutionPage.qml:102
+msgid "Keep local version"
+msgstr ""
+
+#: qml/pages/TaskConflictResolutionPage.qml:121
+msgid "Server version - ETag available"
+msgstr ""
+
+#: qml/pages/TaskConflictResolutionPage.qml:127
+msgid "Local version - unsynced"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:250
+msgid "Select a date."
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:253
+msgid "Today"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:281
+msgid "Fri"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:281
+msgid "Mon"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:281
+msgid "Sat"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:281
+msgid "Sun"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:281
+msgid "Thu"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:281
+msgid "Tue"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:281
+msgid "Wed"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:329
+msgid "Clear date"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:348 qml/pages/TaskDetailPage.qml:672
+msgid "Status"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:349
+msgid "Choose task status."
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:353 qml/pages/TaskDetailPage.qml:1487
+msgid "Needs action"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:384 qml/pages/TaskDetailPage.qml:1010
+msgid "Select tags"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:385
+msgid "No tags yet. Type above to create one."
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:385
+msgid "Selected: %1"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:390
+msgid "New tag"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:406
+msgid "Add tag"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:415
+msgid "Clear tags"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:425
+msgid "Done"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:438
+msgid ""
+"This task has local changes. Deleting it will discard those local changes."
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:462
+msgid "Move task"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:464
+msgid "Sync this task before moving it to another list."
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:465
+msgid "Choose the target list."
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:558
+msgid "Task title"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:589
+msgid "Details"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:622
+msgid "Notes"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:729
+msgid "No start date"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:774
+msgid "No due date"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:886
+#, javascript-format
+msgid "%1% completed"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:893
+msgid "Progress"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:943 qml/pages/TaskDetailPage.qml:951
+msgid "Set location"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:968 qml/pages/TaskDetailPage.qml:976
+msgid "Set a URL"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:1017
+msgid "No tags"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:1035
+msgid "List: %1"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:1035
+msgid "No list"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:1046
+msgid "Move to another list"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:1064
+msgid "Modified: %1"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:1065
+msgid "Created: %1"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:1095
+msgid "Delete task"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:1135
+msgid "No notes."
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:1300
+msgid "This task has a conflict."
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:1302
+msgid "This task has local changes waiting to sync."
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:1304
+msgid "This task is up to date."
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:1447
+msgid "April"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:1447
+msgid "August"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:1447
+msgid "December"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:1447
+msgid "February"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:1447
+msgid "January"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:1447
+msgid "July"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:1447
+msgid "June"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:1447
+msgid "March"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:1447
+msgid "May"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:1447
+msgid "November"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:1447
+msgid "October"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:1447
+msgid "September"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:1608
+msgid "No priority assigned (0)"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:1609
+msgid "High (%1)"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:1610
+msgid "Medium (5)"
+msgstr ""
+
+#: qml/pages/TaskDetailPage.qml:1611
+msgid "Low (%1)"
+msgstr ""

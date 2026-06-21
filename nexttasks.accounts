@@ -1,0 +1,14 @@
+{
+    "services": [
+        {
+            "name": "NextTasks",
+            "description": "Use this Nextcloud account for NextTasks.",
+            "provider": "nextcloud"
+        },
+        {
+            "name": "NextTasks",
+            "description": "Use this ownCloud account for NextTasks.",
+            "provider": "owncloud"
+        }
+    ]
+}
