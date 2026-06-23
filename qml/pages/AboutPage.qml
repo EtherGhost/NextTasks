@@ -77,7 +77,7 @@ Page {
 
             Label {
                 Layout.fillWidth: true
-                text: i18n.tr("This project is licensed under the MIT License.")
+                text: "This project is licensed under the MIT License."
                 wrapMode: Text.WordWrap
             }
 
@@ -90,7 +90,7 @@ Page {
 
             Label {
                 Layout.fillWidth: true
-                text: i18n.tr("This project is not affiliated with, endorsed by, or sponsored by Nextcloud GmbH or the Nextcloud project. Nextcloud is a trademark of its respective owners.")
+                text: "This project is not affiliated with, endorsed by, or sponsored by Nextcloud GmbH or the Nextcloud project. Nextcloud is a trademark of its respective owners."
                 wrapMode: Text.WordWrap
                 opacity: 0.75
             }
