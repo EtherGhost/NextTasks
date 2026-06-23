@@ -28,6 +28,7 @@ Page {
     property var selectedTaskKeys: ({})
     property var bulkMoveTasks: []
     property var bulkMoveCalendars: []
+    property var createTaskCalendars: []
     property int selectionRevision: 0
     property int bulkDeleteDirtyCount: 0
     property int bulkDeleteNewCount: 0
@@ -111,6 +112,7 @@ Page {
         if (dataController.viewMode !== "calendarTasks") {
             var calendars = dataController.availableCreateCalendars()
             if (calendars.length > 1) {
+                page.createTaskCalendars = calendars
                 PopupUtils.open(createTaskListDialog)
                 return
             }
@@ -786,7 +788,7 @@ Page {
             text: i18n.tr("Select where the new task should be created.")
 
             Repeater {
-                model: page.bulkMoveCalendars
+                model: page.createTaskCalendars
 
                 Button {
                     text: modelData.title || i18n.tr("Tasks")
