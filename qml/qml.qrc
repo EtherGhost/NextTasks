@@ -14,5 +14,9 @@
         <file>backend/TasksController.qml</file>
         <file>backend/TasksCache.qml</file>
         <file>backend/TasksApiClient.qml</file>
+        <file>backend/TaskShareImportHandler.qml</file>
+        <file>backend/TaskShareImportHandlerUbuntu.qml</file>
+        <file>backend/TaskShareExportPage.qml</file>
+        <file>backend/TaskShareExportPageUbuntu.qml</file>
     </qresource>
 </RCC>

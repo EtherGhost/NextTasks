@@ -200,6 +200,27 @@ Page {
                     onClicked: page.openStatusFromIcon()
                 }
             }
+
+            Rectangle {
+                Layout.preferredWidth: units.gu(5)
+                Layout.preferredHeight: units.gu(5)
+                radius: units.gu(2.5)
+                color: "transparent"
+
+                Icon {
+                    anchors.centerIn: parent
+                    width: units.gu(2.9)
+                    height: units.gu(2.9)
+                    name: "share"
+                    color: theme.palette.normal.backgroundText
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    enabled: page.taskShareText().length > 0
+                    onClicked: page.shareCurrentTask()
+                }
+            }
         }
     }
 
@@ -1266,6 +1287,63 @@ Page {
             return
         }
         PopupUtils.open(syncStatusDialog)
+    }
+
+    function taskShareTitle() {
+        var title = String(titleText || "").trim()
+        return title.length > 0 ? title : tasksController.sharedDateTaskTitle()
+    }
+
+    function taskShareText() {
+        if (notesField && notesField.selectedText && notesField.selectedText.length > 0) {
+            return notesField.selectedText
+        }
+        var parts = []
+        var title = String(titleText || "").trim()
+        if (title.length > 0) {
+            parts.push(title)
+        }
+        var description = String(notesText || "").trim()
+        if (description.length > 0) {
+            if (parts.length > 0) {
+                parts.push("")
+            }
+            parts.push(description)
+        }
+        return parts.join("\n")
+    }
+
+    function shareCurrentTask() {
+        var text = page.taskShareText()
+        if (text.length === 0) {
+            return
+        }
+        if (dirty) {
+            performAutoSave()
+        }
+
+        var sharePage = pageStack.push(Qt.resolvedUrl("../backend/TaskShareExportPage.qml"), {
+            "shareTitle": page.taskShareTitle(),
+            "shareText": text
+        })
+        if (!sharePage) {
+            console.log("NextTasks ContentHub Lomiri.Content share page unavailable; trying Ubuntu.Content fallback")
+            sharePage = pageStack.push(Qt.resolvedUrl("../backend/TaskShareExportPageUbuntu.qml"), {
+                "shareTitle": page.taskShareTitle(),
+                "shareText": text
+            })
+        }
+        if (!sharePage) {
+            tasksController.statusText = i18n.tr("Sharing is not available.")
+            return
+        }
+        sharePage.shareFinished.connect(function() {
+            pageStack.pop()
+        })
+        sharePage.shareFailed.connect(function(message) {
+            tasksController.statusText = message
+            pageStack.pop()
+        })
     }
 
     function statusIconKind() {

@@ -1,4 +1,5 @@
 #include "CalDavNetwork.h"
+#include "ContentHubBridge.h"
 
 #include <QDir>
 #include <QFile>
@@ -154,8 +155,10 @@ int main(int argc, char *argv[])
 
     QQuickView view;
     CalDavNetwork calDavNetwork;
+    ContentHubBridge contentHubBridge;
     view.rootContext()->setContextProperty(QStringLiteral("nexttasksAppVersion"), QStringLiteral(NEXTTASKS_VERSION));
     view.rootContext()->setContextProperty(QStringLiteral("calDavNetwork"), &calDavNetwork);
+    view.rootContext()->setContextProperty(QStringLiteral("contentHubBridge"), &contentHubBridge);
     view.rootContext()->setContextProperty(QStringLiteral("desktopLarge"), desktopLarge);
     view.rootContext()->setContextProperty(QStringLiteral("desktopDarkMode"), desktopDarkMode);
     view.rootContext()->setContextProperty(QStringLiteral("desktopTestAuthEnabled"), desktopTestAuthEnabled);

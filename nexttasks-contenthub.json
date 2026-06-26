@@ -1,0 +1,17 @@
+{
+    "destination": [
+        "text",
+        "links",
+        "documents"
+    ],
+    "share": [
+        "text",
+        "links",
+        "documents"
+    ],
+    "source": [
+        "text",
+        "links",
+        "documents"
+    ]
+}

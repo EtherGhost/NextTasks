@@ -7,6 +7,7 @@
         "nexttasks": {
             "accounts": "nexttasks.accounts",
             "apparmor": "nexttasks.apparmor",
+            "content-hub": "nexttasks-contenthub.json",
             "desktop": "nexttasks.desktop"
         }
     },

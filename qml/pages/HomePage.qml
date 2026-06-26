@@ -29,6 +29,11 @@ Page {
     property var bulkMoveTasks: []
     property var bulkMoveCalendars: []
     property var createTaskCalendars: []
+    property var shareImportCalendars: []
+    property string pendingSharedTitle: ""
+    property string pendingSharedContent: ""
+    property var pendingSharedImportQueue: []
+    property bool shareImportDialogOpen: false
     property int selectionRevision: 0
     property int bulkDeleteDirtyCount: 0
     property int bulkDeleteNewCount: 0
@@ -50,6 +55,24 @@ Page {
         id: accountSettings
         category: "account"
         property string displayName: ""
+    }
+
+    Loader {
+        id: shareImportLoader
+        active: !desktopLarge
+        source: Qt.resolvedUrl("../backend/TaskShareImportHandler.qml")
+
+        onLoaded: {
+            item.sharedTextReceived.connect(page.handleSharedTextReceived)
+            item.importFailed.connect(page.handleSharedTextImportFailed)
+        }
+
+        onStatusChanged: {
+            if (status === Loader.Error && source.toString().indexOf("TaskShareImportHandler.qml") !== -1) {
+                console.log("NextTasks ContentHub Lomiri.Content handler unavailable; trying Ubuntu.Content fallback")
+                source = Qt.resolvedUrl("../backend/TaskShareImportHandlerUbuntu.qml")
+            }
+        }
     }
 
     function openPage(url) {
@@ -127,11 +150,77 @@ Page {
         }
     }
 
+    Timer {
+        id: shareImportRetryTimer
+        interval: 250
+        repeat: false
+        onTriggered: page.tryOpenSharedImportDialog()
+    }
+
     function createTaskInCalendar(calendar) {
         var task = dataController.createTaskInCalendar(calendar)
         if (task) {
             page.openTask(task)
         }
+    }
+
+    function handleSharedTextReceived(title, content) {
+        var cleanContent = String(content || "")
+        if (cleanContent.trim().length === 0) {
+            dataController.statusText = i18n.tr("The shared content did not contain readable text.")
+            return
+        }
+        if (page.shareImportDialogOpen || page.pendingSharedContent.length > 0) {
+            page.pendingSharedImportQueue.push({"title": title || "", "content": cleanContent})
+            console.log("NextTasks ContentHub queued shared import queueLength=" + page.pendingSharedImportQueue.length)
+            return
+        }
+        page.pendingSharedTitle = title || ""
+        page.pendingSharedContent = cleanContent
+        page.tryOpenSharedImportDialog()
+    }
+
+    function tryOpenSharedImportDialog() {
+        if (page.pendingSharedContent.length === 0 || page.shareImportDialogOpen) {
+            return
+        }
+        page.shareImportCalendars = dataController.availableCreateCalendars()
+        if (page.shareImportCalendars.length === 0) {
+            if (dataController.loading) {
+                shareImportRetryTimer.restart()
+                return
+            }
+            dataController.statusText = i18n.tr("No task list is available for imported text.")
+            return
+        }
+        drawerOpen = false
+        page.shareImportDialogOpen = true
+        PopupUtils.open(shareImportListDialog)
+    }
+
+    function processNextSharedImport() {
+        if (page.pendingSharedImportQueue.length === 0) {
+            return
+        }
+        var next = page.pendingSharedImportQueue.shift()
+        page.pendingSharedTitle = next.title || ""
+        page.pendingSharedContent = next.content || ""
+        Qt.callLater(page.tryOpenSharedImportDialog)
+    }
+
+    function handleSharedTextImportFailed(message) {
+        dataController.statusText = message
+    }
+
+    function createSharedTaskInCalendar(calendar) {
+        var task = dataController.createTaskFromSharedText(calendar, page.pendingSharedTitle, page.pendingSharedContent)
+        page.pendingSharedTitle = ""
+        page.pendingSharedContent = ""
+        page.shareImportDialogOpen = false
+        if (task) {
+            page.openTask(task)
+        }
+        processNextSharedImport()
     }
 
     function openListOptions(calendar) {
@@ -482,16 +571,12 @@ Page {
     function taskFrameColor(entry) {
         if (!entry || entry.type !== "task") return theme.palette.normal.base
         if (entry.conflict === true) return "#d85a7f"
-        if (entry.isNew === true) return "#2c7fb8"
-        if (entry.dirty === true || entry.deleted === true) return "#b37a2a"
         return theme.palette.normal.base
     }
 
     function taskCardColor(entry) {
         if (!entry || entry.type !== "task") return theme.palette.normal.background
         if (entry.conflict === true) return Qt.rgba(0.85, 0.20, 0.36, 0.14)
-        if (entry.isNew === true) return Qt.rgba(0.17, 0.50, 0.72, 0.14)
-        if (entry.dirty === true || entry.deleted === true) return Qt.rgba(0.70, 0.48, 0.16, 0.14)
         return theme.palette.normal.background
     }
 
@@ -513,7 +598,7 @@ Page {
     }
 
     function taskFrameWidth(entry) {
-        return entry && entry.type === "task" && (entry.conflict === true || entry.dirty === true || entry.isNew === true || entry.deleted === true)
+        return entry && entry.type === "task" && entry.conflict === true
             ? 2
             : 1
     }
@@ -802,6 +887,39 @@ Page {
             Button {
                 text: i18n.tr("Cancel")
                 onClicked: PopupUtils.close(dialog)
+            }
+        }
+    }
+
+    Component {
+        id: shareImportListDialog
+
+        Dialog {
+            id: dialog
+            title: i18n.tr("Choose task list")
+            text: i18n.tr("Select where the shared text task should be created.")
+
+            Repeater {
+                model: page.shareImportCalendars
+
+                Button {
+                    text: modelData.title || i18n.tr("Tasks")
+                    onClicked: {
+                        PopupUtils.close(dialog)
+                        page.createSharedTaskInCalendar(modelData)
+                    }
+                }
+            }
+
+            Button {
+                text: i18n.tr("Cancel")
+                onClicked: {
+                    page.pendingSharedTitle = ""
+                    page.pendingSharedContent = ""
+                    page.shareImportDialogOpen = false
+                    PopupUtils.close(dialog)
+                    page.processNextSharedImport()
+                }
             }
         }
     }
@@ -1178,6 +1296,10 @@ Page {
         }
         onViewModeChanged: page.updateFilteredEntries()
         onShowCompletedTasksChanged: page.updateFilteredEntries()
+        onCalendarsChanged: page.tryOpenSharedImportDialog()
+        onLoadingChanged: {
+            page.tryOpenSharedImportDialog()
+        }
     }
 
     Connections {

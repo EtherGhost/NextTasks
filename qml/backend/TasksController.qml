@@ -657,6 +657,72 @@ Item {
         return task
     }
 
+    function createTaskFromSharedText(targetCalendar, suggestedTitle, content) {
+        if (loading) {
+            return null
+        }
+        if (!targetCalendar || String(targetCalendar.href || "").length === 0) {
+            statusText = i18n.tr("Choose a task list before importing shared text.")
+            return null
+        }
+        var cleanContent = String(content || "").trim()
+        if (cleanContent.length === 0) {
+            statusText = i18n.tr("The shared content did not contain readable text.")
+            return null
+        }
+
+        var task = createTaskInCalendar(targetCalendar)
+        if (!task) {
+            return null
+        }
+
+        var cleanTitle = titleFromSharedText(suggestedTitle, cleanContent)
+        var description = descriptionFromSharedText(cleanContent)
+        var changes = taskToChanges(task)
+        changes.title = cleanTitle
+        changes.description = description
+        saveTask(task, changes)
+        statusText = i18n.tr("Shared text imported as a local task. Syncing soon.")
+        return taskByKey(task) || mergeTaskChanges(task, changes)
+    }
+
+    function titleFromSharedText(suggestedTitle, content) {
+        var text = String(content || "").trim()
+        var titleText = text.replace(/\s+/g, " ").trim()
+        if (titleText.length > 0) {
+            return titleText.length <= 80 ? titleText : titleText.slice(0, 80).trim()
+        }
+
+        var candidate = String(suggestedTitle || "").trim()
+        if (candidate.length > 0 && candidate.indexOf("/") < 0) {
+            return candidate.length <= 80 ? candidate : candidate.slice(0, 80).trim()
+        }
+
+        return sharedDateTaskTitle()
+    }
+
+    function descriptionFromSharedText(content) {
+        var text = String(content || "").trim()
+        if (text.length <= 80) {
+            return ""
+        }
+        return text.slice(80).trim()
+    }
+
+    function sharedDateTaskTitle() {
+        return i18n.tr("Shared %1").arg(sharedDateTitle())
+    }
+
+    function sharedDateTitle() {
+        var now = new Date()
+        var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+        var day = now.getDate()
+        var month = months[now.getMonth()]
+        var year = now.getFullYear()
+        return (day < 10 ? "0" + day : String(day)) + "-" + month + "-" + year
+    }
+
     function createTargetCalendar() {
         if (viewMode === "calendarTasks" && selectedCalendarHref.length > 0) {
             return {"href": selectedCalendarHref, "title": selectedCalendarTitle || i18n.tr("Tasks")}

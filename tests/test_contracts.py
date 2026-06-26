@@ -14,11 +14,20 @@ class ProjectContractTests(unittest.TestCase):
         self.assertEqual(manifest["architecture"], "$ENV{ARCH}")
         self.assertEqual(manifest["framework"], "$ENV{CLICK_FRAMEWORK}")
         self.assertIn("nexttasks", manifest["hooks"])
+        self.assertEqual(manifest["hooks"]["nexttasks"]["content-hub"], "nexttasks-contenthub.json")
         apparmor = read_text("nexttasks.apparmor")
         self.assertIn('"accounts"', apparmor)
         self.assertIn('"networking"', apparmor)
+        self.assertIn('"content_exchange"', apparmor)
+        self.assertIn('"content_exchange_source"', apparmor)
         self.assertNotIn("unconfined", apparmor)
         self.assertNotIn("template", apparmor)
+        content_hub = json.loads(read_text("nexttasks-contenthub.json"))
+        self.assertEqual(content_hub, {
+            "destination": ["text", "links", "documents"],
+            "share": ["text", "links", "documents"],
+            "source": ["text", "links", "documents"]
+        })
     def test_online_accounts_providers_are_declared(self):
         accounts = read_text("nexttasks.accounts")
         self.assertIn('"provider": "nextcloud"', accounts)
@@ -66,6 +75,55 @@ class ProjectContractTests(unittest.TestCase):
         self.assertIn('page.commitServerUrlInput("authenticate")', account_page)
         self.assertIn("<file>backend/AuthCore.js</file>", qrc)
         self.assertIn("<file>backend/AccountSessionAdapter.qml</file>", qrc)
+
+    def test_content_hub_text_import_export_contract(self):
+        cmake = read_text("CMakeLists.txt")
+        main = read_text("main.cpp")
+        qrc = read_text("qml/qml.qrc")
+        home = read_text("qml/pages/HomePage.qml")
+        detail = read_text("qml/pages/TaskDetailPage.qml")
+        controller = read_text("qml/backend/TasksController.qml")
+        import_handler = read_text("qml/backend/TaskShareImportHandler.qml")
+        export_page = read_text("qml/backend/TaskShareExportPage.qml")
+        bridge = read_text("ContentHubBridge.cpp")
+
+        self.assertIn("install(FILES ${PROJECT_NAME}-contenthub.json", cmake)
+        self.assertIn("ContentHubBridge.cpp", cmake)
+        self.assertIn("setContextProperty(QStringLiteral(\"contentHubBridge\")", main)
+        for qml_file in [
+            "TaskShareImportHandler.qml",
+            "TaskShareImportHandlerUbuntu.qml",
+            "TaskShareExportPage.qml",
+            "TaskShareExportPageUbuntu.qml",
+        ]:
+            self.assertIn(qml_file, qrc)
+
+        self.assertIn("TaskShareImportHandler.qml", home)
+        self.assertIn("handleSharedTextReceived", home)
+        self.assertIn("shareImportListDialog", home)
+        self.assertIn("createTaskFromSharedText", home)
+        self.assertIn("Select where the shared text task should be created.", home)
+        self.assertIn("function createTaskFromSharedText", controller)
+        self.assertIn("function titleFromSharedText", controller)
+        self.assertIn("function sharedDateTaskTitle()", controller)
+        self.assertIn("function descriptionFromSharedText", controller)
+        self.assertIn("titleText.slice(0, 80)", controller)
+        self.assertIn("text.slice(80).trim()", controller)
+        self.assertIn('var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"', controller)
+
+        self.assertIn("ContentHub.hasPending", import_handler)
+        self.assertIn("ContentHub.restoreImports()", import_handler)
+        self.assertIn("ContentHub.finishedImports", import_handler)
+        self.assertIn("ContentTransfer.Collected", import_handler)
+        self.assertIn("contentHubBridge.readTextFile", import_handler)
+        self.assertNotIn("console.log(content", import_handler)
+
+        self.assertIn("function shareCurrentTask()", detail)
+        self.assertIn("TaskShareExportPage.qml", detail)
+        self.assertIn("TaskShareExportPageUbuntu.qml", detail)
+        self.assertIn("ContentHandler.Share", export_page)
+        self.assertIn("item.text = shareText", export_page)
+        self.assertIn("writeSharedTextFile", bridge)
     def test_settings_contract(self):
         settings = read_text("qml/pages/SettingsPage.qml")
         language = read_text("qml/pages/LanguageSelectionPage.qml")
