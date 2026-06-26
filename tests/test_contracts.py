@@ -9,7 +9,7 @@ class ProjectContractTests(unittest.TestCase):
         cmake = read_text("CMakeLists.txt")
         self.assertEqual(manifest["name"], "nexttasks.cloudsite")
         self.assertEqual(manifest["title"], "NextTasks")
-        self.assertIn('set(NEXTTASKS_VERSION "0.1.0")', cmake)
+        self.assertIn('set(NEXTTASKS_VERSION "0.2.0")', cmake)
         self.assertEqual(manifest["version"], "@NEXTTASKS_VERSION@")
         self.assertEqual(manifest["architecture"], "$ENV{ARCH}")
         self.assertEqual(manifest["framework"], "$ENV{CLICK_FRAMEWORK}")

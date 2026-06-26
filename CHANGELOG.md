@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.0 - 2026-06-26
+
+- Added Ubuntu Touch Content Hub support.
+- Shared text from other apps can now be imported as a new task.
+- Tasks can now be shared to other apps, using task title and notes where available.
+
 ## 0.1.0 - 2026-06-21
 
 - Very early first public release.

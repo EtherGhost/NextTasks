@@ -8,6 +8,8 @@ NextTasks is not affiliated with, endorsed by, or sponsored by Nextcloud GmbH or
 
 ## Current Status
 
+Current release candidate: `0.2.0`.
+
 Shared Ubuntu Touch application shell is in place: hamburger/search/sync-status/avatar top bar, released-suite-style hamburger navigation, settings, language selection, about page, Online Accounts/AppArmor declarations, icons, translation scaffold, desktop dark debug support, and desktop test-account support.
 
 Translations are available for Swedish plus AI-assisted starter translations for Danish, German, Spanish, Finnish, French, Italian, Norwegian Bokmål, Dutch, Polish, Russian, and Ukrainian. Starter translations are intended to be improved by native speakers.
