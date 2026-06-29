@@ -1,0 +1,3 @@
+[submodule "vendor/NextCommon"]
+	path = vendor/NextCommon
+	url = https://github.com/EtherGhost/NextCommon.git

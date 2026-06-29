@@ -10,7 +10,6 @@
         <file>pages/AboutPage.qml</file>
         <file>backend/AppController.qml</file>
         <file>backend/AuthCore.js</file>
-        <file>backend/AccountSessionAdapter.qml</file>
         <file>backend/TasksController.qml</file>
         <file>backend/TasksCache.qml</file>
         <file>backend/TasksApiClient.qml</file>
@@ -18,5 +17,10 @@
         <file>backend/TaskShareImportHandlerUbuntu.qml</file>
         <file>backend/TaskShareExportPage.qml</file>
         <file>backend/TaskShareExportPageUbuntu.qml</file>
+        <file alias="NextCommon/AccountPage.qml">../vendor/NextCommon/qml/NextCommon/AccountPage.qml</file>
+        <file alias="NextCommon/AccountSessionAdapter.qml">../vendor/NextCommon/qml/NextCommon/AccountSessionAdapter.qml</file>
+        <file alias="NextCommon/AppButton.qml">../vendor/NextCommon/qml/NextCommon/AppButton.qml</file>
+        <file alias="NextCommon/UrlHelpers.js">../vendor/NextCommon/js/UrlHelpers.js</file>
+        <file alias="NextCommon/TextHelpers.js">../vendor/NextCommon/js/TextHelpers.js</file>
     </qresource>
 </RCC>

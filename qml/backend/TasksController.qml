@@ -1,5 +1,6 @@
 import QtQuick 2.7
 import Qt.labs.settings 1.0
+import "qrc:/NextCommon" as NextCommon
 
 Item {
     id: controller
@@ -104,8 +105,9 @@ Item {
         }
     }
 
-    AccountSessionAdapter {
+    NextCommon.AccountSessionAdapter {
         id: session
+        logPrefix: "NextTasks"
         onAuthenticated: function(userName, secret, serverUrl, accountId, serviceId) {
             if (!controller.isCurrentAccountResponse(accountId, serviceId, serverUrl)) {
                 console.log("NextTasks Controller ignored stale auth response accountId=" + accountId + " serviceId=" + serviceId)

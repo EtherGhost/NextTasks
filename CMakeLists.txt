@@ -8,7 +8,7 @@ find_package(Qt5Qml REQUIRED)
 find_package(Qt5Quick REQUIRED)
 set(PROJECT_NAME "nexttasks")
 set(FULL_PROJECT_NAME "nexttasks.cloudsite")
-set(NEXTTASKS_VERSION "0.2.0")
+set(NEXTTASKS_VERSION "0.2.0.1")
 set(DATA_DIR /)
 set(DESKTOP_FILE_NAME ${PROJECT_NAME}.desktop)
 configure_file(manifest.json.in ${CMAKE_CURRENT_BINARY_DIR}/manifest.json @ONLY)
@@ -25,7 +25,31 @@ target_link_libraries(${PROJECT_NAME} Qt5::Gui Qt5::Network Qt5::Qml Qt5::Quick)
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX})
 configure_file(${DESKTOP_FILE_NAME}.in ${CMAKE_CURRENT_BINARY_DIR}/${DESKTOP_FILE_NAME})
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${DESKTOP_FILE_NAME} DESTINATION ${DATA_DIR})
-file(GLOB_RECURSE I18N_SRC_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} qml/*.qml qml/*.js)
+file(GLOB_RECURSE I18N_SRC_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+    qml/*.qml
+    qml/*.js
+    vendor/NextCommon/qml/*.qml
+    vendor/NextCommon/js/*.js
+)
 add_subdirectory(po)
-file(GLOB_RECURSE PROJECT_SRC_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} qml/*.qml qml/*.js assets/* *.json *.json.in *.apparmor *.accounts *.desktop.in *.yaml po/*.po po/*.pot main.cpp CalDavNetwork.cpp CalDavNetwork.h ContentHubBridge.cpp ContentHubBridge.h)
+file(GLOB_RECURSE PROJECT_SRC_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+    qml/*.qml
+    qml/*.js
+    vendor/NextCommon/qml/*.qml
+    vendor/NextCommon/js/*.js
+    assets/*
+    *.json
+    *.json.in
+    *.apparmor
+    *.accounts
+    *.desktop.in
+    *.yaml
+    po/*.po
+    po/*.pot
+    main.cpp
+    CalDavNetwork.cpp
+    CalDavNetwork.h
+    ContentHubBridge.cpp
+    ContentHubBridge.h
+)
 add_custom_target(${PROJECT_NAME}_FILES ALL SOURCES ${PROJECT_SRC_FILES})
