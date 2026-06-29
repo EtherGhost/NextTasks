@@ -5,6 +5,7 @@ import Lomiri.Components.Popups 1.3
 import QtGraphicalEffects 1.0
 import Qt.labs.settings 1.0
 import "../backend"
+import "../NextCommon" as NextCommon
 
 Page {
     id: page
@@ -128,8 +129,7 @@ Page {
     }
 
     function createTask() {
-        if (searchField.text.length > 0) {
-            searchField.text = ""
+        if (page.searchQuery.length > 0) {
             page.searchQuery = ""
         }
         if (dataController.viewMode !== "calendarTasks") {
@@ -612,253 +612,78 @@ Page {
         id: header
         title: ""
 
-        contents: RowLayout {
-            anchors {
-                fill: parent
-                leftMargin: units.gu(0.5)
-                rightMargin: units.gu(0.5)
-            }
-            spacing: units.gu(0.75)
+        contents: Item {
+            anchors.fill: parent
 
-            Item {
-                Layout.preferredWidth: units.gu(3.4)
-                Layout.preferredHeight: units.gu(5)
-
-                Label {
-                    anchors.centerIn: parent
-                    text: page.selectionMode ? "\u2715" : "\u2630"
-                    color: theme.palette.normal.backgroundText
-                    font.pixelSize: units.gu(2.6)
-                    font.bold: true
-                }
-
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        if (page.selectionMode) {
-                            page.clearSelection()
-                        } else {
-                            page.drawerOpen = true
-                        }
-                    }
-                }
-            }
-
-            Label {
-                Layout.fillWidth: true
-                visible: page.selectionMode
-                text: i18n.tr("%1 selected").arg(page.selectedTaskCount())
-                font.bold: true
-                elide: Text.ElideRight
-            }
-
-            TextField {
-                id: searchField
-                Layout.fillWidth: true
+            NextCommon.MainTopBar {
                 visible: !page.selectionMode
-                placeholderText: i18n.tr("Search")
-                text: page.searchQuery
-                onTextChanged: page.searchQuery = text
+                searchText: page.searchQuery
+                searchPlaceholder: i18n.tr("Search")
+                filterIconKind: "sort"
+                filterActive: false
+                statusKind: page.statusIconKind()
+                statusColor: page.statusAccentColor()
+                avatarUrl: dataController.accountAvatarUrl
+                accountInitial: page.accountInitial
+                onMenuClicked: page.drawerOpen = true
+                onSearchChanged: page.searchQuery = text
+                onClearSearchClicked: page.searchQuery = ""
+                onFilterClicked: page.openSortPicker()
+                onStatusClicked: PopupUtils.open(statusDetailsDialog)
+                onAccountClicked: page.openPage("AccountSelectionPage.qml")
             }
 
-            Item {
-                Layout.preferredWidth: units.gu(5)
-                Layout.preferredHeight: units.gu(5)
-                visible: !page.selectionMode && searchField.text.length > 0
-
-                Label {
-                    anchors.centerIn: parent
-                    text: "\u2715"
-                    color: theme.palette.normal.backgroundText
-                    font.pixelSize: units.gu(2.2)
-                    font.bold: true
+            RowLayout {
+                anchors {
+                    fill: parent
+                    leftMargin: units.gu(0.5)
+                    rightMargin: units.gu(0.5)
                 }
-
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        searchField.text = ""
-                        page.searchQuery = ""
-                    }
-                }
-            }
-
-            Item {
-                Layout.preferredWidth: units.gu(5)
-                Layout.preferredHeight: units.gu(5)
-                visible: !page.selectionMode
-
-                Label {
-                    anchors.centerIn: parent
-                    text: "\u21c5"
-                    color: theme.palette.normal.backgroundText
-                    font.pixelSize: units.gu(2.6)
-                    font.bold: true
-                }
-
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: page.openSortPicker()
-                }
-            }
-
-            Button {
-                Layout.preferredWidth: units.gu(8)
-                Layout.preferredHeight: units.gu(5)
                 visible: page.selectionMode
-                enabled: page.selectedTaskCount() > 0
-                text: i18n.tr("Move")
-                color: page.actionBlue
-                onClicked: page.requestBulkMove()
-            }
-
-            Button {
-                Layout.preferredWidth: units.gu(8)
-                Layout.preferredHeight: units.gu(5)
-                visible: page.selectionMode
-                enabled: page.selectedTaskCount() > 0
-                text: i18n.tr("Delete")
-                color: page.deleteRed
-                onClicked: page.requestBulkDelete()
-            }
-
-            Rectangle {
-                Layout.preferredWidth: units.gu(5)
-                Layout.preferredHeight: units.gu(5)
-                visible: !page.selectionMode
-                radius: units.gu(2.5)
-                color: "transparent"
-                border.width: 2
-                border.color: page.statusAccentColor()
+                spacing: units.gu(0.75)
 
                 Item {
-                    id: statusIcon
-                    anchors.centerIn: parent
-                    width: units.gu(2.8)
-                    height: units.gu(2.8)
+                    Layout.preferredWidth: units.gu(3.4)
+                    Layout.preferredHeight: units.gu(5)
 
-                    RotationAnimation on rotation {
-                        from: 0
-                        to: 360
-                        duration: 900
-                        loops: Animation.Infinite
-                        running: dataController.loading || dataController.dirtySyncRunning
+                    Label {
+                        anchors.centerIn: parent
+                        text: "\u2715"
+                        color: theme.palette.normal.backgroundText
+                        font.pixelSize: units.gu(2.6)
+                        font.bold: true
                     }
 
-                    Connections {
-                        target: dataController
-                        onLoadingChanged: {
-                            if (!dataController.loading && !dataController.dirtySyncRunning) {
-                                statusIcon.rotation = 0
-                            }
-                        }
-                    }
-
-                    Canvas {
-                        id: statusCanvas
+                    MouseArea {
                         anchors.fill: parent
-                        property string paintColor: page.statusAccentColor()
-                        onPaintColorChanged: requestPaint()
-                        onPaint: {
-                            var ctx = getContext("2d")
-                            var w = width
-                            var h = height
-                            var s = Math.min(w, h)
-                            ctx.clearRect(0, 0, w, h)
-                            ctx.strokeStyle = paintColor
-                            ctx.fillStyle = paintColor
-                            ctx.lineWidth = Math.max(2.4, s * 0.13)
-                            ctx.lineCap = "round"
-                            ctx.lineJoin = "round"
-
-                            if (page.statusIconKind() === "syncing") {
-                                ctx.beginPath()
-                                ctx.arc(w / 2, h / 2, s * 0.35, Math.PI * 0.15, Math.PI * 1.55, false)
-                                ctx.stroke()
-                                ctx.beginPath()
-                                ctx.moveTo(w * 0.77, h * 0.30)
-                                ctx.lineTo(w * 0.82, h * 0.52)
-                                ctx.lineTo(w * 0.62, h * 0.45)
-                                ctx.stroke()
-                            } else if (page.statusIconKind() === "synced") {
-                                ctx.beginPath()
-                                ctx.moveTo(w * 0.22, h * 0.54)
-                                ctx.lineTo(w * 0.42, h * 0.72)
-                                ctx.lineTo(w * 0.78, h * 0.28)
-                                ctx.stroke()
-                            } else {
-                                ctx.beginPath()
-                                ctx.arc(w / 2, h / 2, s * 0.36, 0, Math.PI * 2, false)
-                                ctx.stroke()
-                                ctx.beginPath()
-                                ctx.moveTo(w / 2, h * 0.26)
-                                ctx.lineTo(w / 2, h * 0.58)
-                                ctx.stroke()
-                                ctx.beginPath()
-                                ctx.arc(w / 2, h * 0.75, s * 0.035, 0, Math.PI * 2, false)
-                                ctx.fill()
-                            }
-                        }
-
-                        Connections {
-                            target: dataController
-                            onLoadingChanged: statusCanvas.requestPaint()
-                            onDirtySyncRunningChanged: statusCanvas.requestPaint()
-                            onSyncStateTextChanged: statusCanvas.requestPaint()
-                            onSyncStateColorChanged: statusCanvas.requestPaint()
-                            onConflictTasksCountChanged: statusCanvas.requestPaint()
-                            onDirtyTasksCountChanged: statusCanvas.requestPaint()
-                        }
+                        onClicked: page.clearSelection()
                     }
-                }
-
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: PopupUtils.open(statusDetailsDialog)
-                }
-            }
-
-            Rectangle {
-                Layout.preferredWidth: units.gu(5)
-                Layout.preferredHeight: units.gu(5)
-                radius: units.gu(2.5)
-                color: "#2c7fb8"
-                border.width: 1
-                border.color: "#7a7a7a"
-
-                Image {
-                    id: accountAvatarSource
-                    anchors.fill: parent
-                    source: dataController.accountAvatarUrl
-                    fillMode: Image.PreserveAspectCrop
-                    visible: false
-                }
-
-                Rectangle {
-                    id: accountAvatarMask
-                    anchors.fill: parent
-                    radius: width / 2
-                    visible: false
-                }
-
-                OpacityMask {
-                    anchors.fill: parent
-                    source: accountAvatarSource
-                    maskSource: accountAvatarMask
-                    visible: accountAvatarSource.status === Image.Ready
                 }
 
                 Label {
-                    anchors.centerIn: parent
-                    text: page.accountInitial
-                    color: "white"
+                    Layout.fillWidth: true
+                    text: i18n.tr("%1 selected").arg(page.selectedTaskCount())
                     font.bold: true
-                    visible: accountAvatarSource.status !== Image.Ready
+                    elide: Text.ElideRight
                 }
 
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: page.openPage("AccountSelectionPage.qml")
+                NextCommon.AppButton {
+                    Layout.preferredWidth: units.gu(8)
+                    Layout.preferredHeight: units.gu(5)
+                    enabled: page.selectedTaskCount() > 0
+                    text: i18n.tr("Move")
+                    variant: "primary"
+                    onClicked: page.requestBulkMove()
+                }
+
+                NextCommon.AppButton {
+                    Layout.preferredWidth: units.gu(8)
+                    Layout.preferredHeight: units.gu(5)
+                    enabled: page.selectedTaskCount() > 0
+                    text: i18n.tr("Delete")
+                    variant: "destructive"
+                    destructiveColor: page.deleteRed
+                    onClicked: page.requestBulkDelete()
                 }
             }
         }
@@ -875,8 +700,9 @@ Page {
             Repeater {
                 model: page.createTaskCalendars
 
-                Button {
+                NextCommon.AppButton {
                     text: modelData.title || i18n.tr("Tasks")
+                    variant: "primary"
                     onClicked: {
                         PopupUtils.close(dialog)
                         page.createTaskInCalendar(modelData)
@@ -884,7 +710,7 @@ Page {
                 }
             }
 
-            Button {
+            NextCommon.AppButton {
                 text: i18n.tr("Cancel")
                 onClicked: PopupUtils.close(dialog)
             }
@@ -902,8 +728,9 @@ Page {
             Repeater {
                 model: page.shareImportCalendars
 
-                Button {
+                NextCommon.AppButton {
                     text: modelData.title || i18n.tr("Tasks")
+                    variant: "primary"
                     onClicked: {
                         PopupUtils.close(dialog)
                         page.createSharedTaskInCalendar(modelData)
@@ -911,7 +738,7 @@ Page {
                 }
             }
 
-            Button {
+            NextCommon.AppButton {
                 text: i18n.tr("Cancel")
                 onClicked: {
                     page.pendingSharedTitle = ""
@@ -947,9 +774,9 @@ Page {
                 }
             }
 
-            Button {
+            NextCommon.AppButton {
                 text: i18n.tr("Create")
-                color: "#2c7fb8"
+                variant: "primary"
                 enabled: listNameField.text.trim().length > 0 && !dataController.loading
                 onClicked: {
                     dataController.createCalendar(listNameField.text)
@@ -958,7 +785,7 @@ Page {
                 }
             }
 
-            Button {
+            NextCommon.AppButton {
                 text: i18n.tr("Cancel")
                 onClicked: PopupUtils.close(dialog)
             }
@@ -1015,21 +842,22 @@ Page {
                 }
             }
 
-            Button {
+            NextCommon.AppButton {
                 text: i18n.tr("Save")
-                color: page.actionBlue
+                variant: "primary"
                 enabled: page.editListName.trim().length > 0 && !dataController.loading
                 onClicked: page.saveSelectedListSettings(dialog)
             }
 
-            Button {
+            NextCommon.AppButton {
                 text: i18n.tr("Delete list")
-                color: page.deleteRed
+                variant: "destructive"
+                destructiveColor: page.deleteRed
                 enabled: !dataController.loading
                 onClicked: page.deleteSelectedList(dialog)
             }
 
-            Button {
+            NextCommon.AppButton {
                 text: i18n.tr("Cancel")
                 onClicked: PopupUtils.close(dialog)
             }
@@ -1044,9 +872,10 @@ Page {
             title: i18n.tr("Delete task list?")
             text: i18n.tr("The list and its tasks will be removed from the server and this device.")
 
-            Button {
+            NextCommon.AppButton {
                 text: i18n.tr("Delete")
-                color: page.deleteRed
+                variant: "destructive"
+                destructiveColor: page.deleteRed
                 enabled: !dataController.loading
                 onClicked: {
                     dataController.deleteCalendar(page.selectedMenuCalendar)
@@ -1054,7 +883,7 @@ Page {
                 }
             }
 
-            Button {
+            NextCommon.AppButton {
                 text: i18n.tr("Cancel")
                 onClicked: PopupUtils.close(dialog)
             }
@@ -1069,9 +898,10 @@ Page {
             title: i18n.tr("Delete task?")
             text: i18n.tr("The task will be deleted from this device and synced to the server.")
 
-            Button {
+            NextCommon.AppButton {
                 text: i18n.tr("Delete")
-                color: page.deleteRed
+                variant: "destructive"
+                destructiveColor: page.deleteRed
                 enabled: !dataController.loading
                 onClicked: {
                     dataController.deleteTask(page.pendingSwipeDeleteTask)
@@ -1080,7 +910,7 @@ Page {
                 }
             }
 
-            Button {
+            NextCommon.AppButton {
                 text: i18n.tr("Cancel")
                 onClicked: {
                     page.pendingSwipeDeleteTask = ({})
@@ -1098,9 +928,10 @@ Page {
             title: i18n.tr("Delete selected tasks?")
             text: page.bulkDeleteMessage()
 
-            Button {
+            NextCommon.AppButton {
                 text: i18n.tr("Delete")
-                color: page.deleteRed
+                variant: "destructive"
+                destructiveColor: page.deleteRed
                 enabled: !dataController.loading
                 onClicked: {
                     PopupUtils.close(dialog)
@@ -1112,7 +943,7 @@ Page {
                 }
             }
 
-            Button {
+            NextCommon.AppButton {
                 text: i18n.tr("Cancel")
                 onClicked: PopupUtils.close(dialog)
             }
@@ -1130,9 +961,9 @@ Page {
             Repeater {
                 model: dataController.availableCreateCalendars()
 
-                Button {
+                NextCommon.AppButton {
                     text: modelData.title || i18n.tr("Tasks")
-                    color: page.actionBlue
+                    variant: "primary"
                     visible: dataController.canMoveTasksToCalendar(page.bulkMoveTasks, modelData)
                     enabled: visible && !dataController.loading
                     onClicked: {
@@ -1146,7 +977,7 @@ Page {
                 }
             }
 
-            Button {
+            NextCommon.AppButton {
                 text: i18n.tr("Cancel")
                 onClicked: PopupUtils.close(dialog)
             }
@@ -1161,9 +992,9 @@ Page {
             title: i18n.tr("Sync status")
             text: page.statusDetailsText()
 
-            Button {
+            NextCommon.AppButton {
                 text: i18n.tr("Resolve conflict")
-                color: page.actionBlue
+                variant: "primary"
                 visible: dataController.conflictTasksCount > 0
                 enabled: !dataController.loading
                 onClicked: {
@@ -1172,9 +1003,9 @@ Page {
                 }
             }
 
-            Button {
+            NextCommon.AppButton {
                 text: i18n.tr("Refresh")
-                color: page.actionBlue
+                variant: "primary"
                 visible: page.statusAllowsRefresh()
                 enabled: !dataController.loading
                 onClicked: {
@@ -1183,7 +1014,7 @@ Page {
                 }
             }
 
-            Button {
+            NextCommon.AppButton {
                 text: i18n.tr("Close")
                 onClicked: PopupUtils.close(dialog)
             }
@@ -1198,16 +1029,16 @@ Page {
             title: i18n.tr("Reopen completed tasks?")
             text: i18n.tr("This will mark all completed tasks in this list as open again.")
 
-            Button {
+            NextCommon.AppButton {
                 text: i18n.tr("Reopen all")
-                color: page.actionBlue
+                variant: "primary"
                 onClicked: {
                     PopupUtils.close(dialog)
                     dataController.reopenCompletedTasksInCurrentScope()
                 }
             }
 
-            Button {
+            NextCommon.AppButton {
                 text: i18n.tr("Cancel")
                 onClicked: PopupUtils.close(dialog)
             }
@@ -1229,9 +1060,9 @@ Page {
             Repeater {
                 model: dataController.sortOptions()
 
-                Button {
+                NextCommon.AppButton {
                     text: modelData.label + (modelData.value === page.activeSortMode() ? "  \u2713" : "")
-                    color: modelData.value === page.activeSortMode() ? "#2c7fb8" : theme.palette.normal.background
+                    selected: modelData.value === page.activeSortMode()
                     onClicked: {
                         page.applySortMode(modelData.value)
                         PopupUtils.close(dialog)
@@ -1239,13 +1070,13 @@ Page {
                 }
             }
 
-            Button {
+            NextCommon.AppButton {
                 text: dataController.sortAscending ? i18n.tr("Ascending") : i18n.tr("Descending")
                 visible: page.activeSortMode() !== "manual"
                 onClicked: dataController.toggleSortAscending()
             }
 
-            Button {
+            NextCommon.AppButton {
                 text: i18n.tr("Close")
                 onClicked: PopupUtils.close(dialog)
             }
@@ -1263,8 +1094,9 @@ Page {
             Repeater {
                 model: dataController.visibleSortCalendars()
 
-                Button {
+                NextCommon.AppButton {
                     text: (modelData.title || i18n.tr("Tasks")) + " - " + dataController.sortModeLabelForCalendar(modelData.href || "")
+                    variant: "primary"
                     onClicked: {
                         page.sortDialogCalendarHref = modelData.href || ""
                         page.sortDialogCalendarTitle = modelData.title || i18n.tr("Tasks")
@@ -1274,7 +1106,7 @@ Page {
                 }
             }
 
-            Button {
+            NextCommon.AppButton {
                 text: i18n.tr("Close")
                 onClicked: PopupUtils.close(dialog)
             }
@@ -2122,40 +1954,27 @@ Page {
                     }
                 }
 
-                Item {
+                NextCommon.AppButton {
                     Layout.fillWidth: true
                     Layout.preferredHeight: units.gu(5)
                     visible: dataController.viewMode === "calendarTasks" && dataController.showCompletedTasks
-
-                    Label {
-                        anchors.centerIn: parent
-                        text: i18n.tr("Reopen all")
-                        color: theme.palette.normal.backgroundText
-                        font.bold: true
-                    }
-
-                    MouseArea {
-                        anchors.fill: parent
-                        enabled: !dataController.loading
-                        onClicked: PopupUtils.open(reopenCompletedDialog)
-                    }
+                    text: i18n.tr("Reopen all")
+                    enabled: !dataController.loading
+                    onClicked: PopupUtils.open(reopenCompletedDialog)
                 }
             }
 
-            Label {
+            NextCommon.EmptyState {
                 Layout.fillWidth: true
                 visible: page.filteredEntries.length === 0 && (dataController.viewMode === "myTasks" || dataController.viewMode === "calendarTasks") && !dataController.loading && page.searchQuery.length === 0
-                text: i18n.tr("No tasks found.")
-                wrapMode: Text.WordWrap
-                opacity: 0.72
+                title: i18n.tr("No tasks found.")
             }
 
-            Label {
+            NextCommon.EmptyState {
                 Layout.fillWidth: true
                 visible: page.filteredEntries.length === 0 && !dataController.loading && (page.searchQuery.length > 0 || dataController.viewMode === "calendarList")
-                text: page.searchQuery.length > 0 ? i18n.tr("No matching items") : appController.apiNote
-                wrapMode: Text.WordWrap
-                opacity: 0.72
+                title: page.searchQuery.length > 0 ? i18n.tr("No matching items") : ""
+                message: page.searchQuery.length > 0 ? "" : appController.apiNote
             }
         }
     }
@@ -2210,194 +2029,140 @@ Page {
             onClicked: page.drawerOpen = false
         }
 
-        Rectangle {
+        NextCommon.DrawerShell {
             id: drawer
             anchors { top: parent.top; bottom: parent.bottom; left: parent.left }
-            width: Math.min(parent.width * 0.82, units.gu(38))
-            color: theme.palette.normal.background
-            border.width: 1
-            border.color: "#7a7a7a"
+            appName: appController.appName
+            bottomItems: [
+                {"label": i18n.tr("Language"), "page": "LanguageSelectionPage.qml"},
+                {"label": i18n.tr("Account"), "page": "AccountSelectionPage.qml"},
+                {"label": i18n.tr("Settings"), "page": "SettingsPage.qml"},
+                {"label": i18n.tr("About"), "page": "AboutPage.qml"}
+            ]
+            onCloseClicked: page.drawerOpen = false
+            onBottomItemClicked: page.openPage(pageUrl)
 
-            ColumnLayout {
-                anchors { fill: parent; margins: units.gu(1.5) }
-                spacing: units.gu(1)
-
-                RowLayout {
-                    Layout.fillWidth: true
-
-                    Label {
-                        Layout.fillWidth: true
-                        text: i18n.tr("Task Lists")
-                        font.bold: true
-                        fontSize: "large"
-                        elide: Text.ElideRight
-                    }
-
-                    Item {
-                        Layout.preferredWidth: units.gu(5)
-                        Layout.preferredHeight: units.gu(5)
-
-                        Label {
-                            anchors.centerIn: parent
-                            text: "\u2715"
-                            color: theme.palette.normal.backgroundText
-                            font.pixelSize: units.gu(2.2)
-                            font.bold: true
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: page.drawerOpen = false
-                        }
-                    }
+            ListView {
+                id: tasksMenuList
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.preferredHeight: drawer.availableContentHeight
+                clip: true
+                spacing: units.gu(0.5)
+                model: {
+                    dataController.menuRevision
+                    return dataController.menuItems()
                 }
 
-                ListView {
-                    id: tasksMenuList
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    clip: true
-                    spacing: units.gu(0.5)
-                    model: {
-                        dataController.menuRevision
-                        return dataController.menuItems()
+                delegate: Rectangle {
+                    id: menuItem
+                    readonly property bool headerItem: modelData.type === "header"
+                    readonly property bool createListItem: modelData.type === "createList"
+                    readonly property bool selected: dataController.menuItemSelected(modelData)
+
+                    width: tasksMenuList.width
+                    height: headerItem ? units.gu(4.5) : (createListItem ? units.gu(5.8) : units.gu(5.2))
+                    radius: headerItem || createListItem ? 0 : units.gu(0.5)
+                    color: headerItem || createListItem ? theme.palette.normal.background : (selected ? "#2c7fb8" : "transparent")
+                    border.width: headerItem || selected || createListItem ? 0 : 1
+                    border.color: "#7a7a7a"
+
+                    NextCommon.AppButton {
+                        visible: createListItem
+                        anchors.centerIn: parent
+                        width: Math.min(parent.width - units.gu(4), units.gu(26))
+                        height: units.gu(4.2)
+                        text: modelData.label
+                        opacity: dataController.loading ? 0.45 : 1.0
+                        enabled: !dataController.loading
+                        onClicked: {
+                            page.drawerOpen = false
+                            page.newListName = ""
+                            PopupUtils.open(createListDialog)
+                        }
                     }
 
-                    delegate: Rectangle {
-                        id: menuItem
-                        readonly property bool headerItem: modelData.type === "header"
-                        readonly property bool createListItem: modelData.type === "createList"
-                        readonly property bool selected: dataController.menuItemSelected(modelData)
-
-                        width: tasksMenuList.width
-                        height: headerItem ? units.gu(4.5) : (createListItem ? units.gu(5.8) : units.gu(5.2))
-                        radius: headerItem || createListItem ? 0 : units.gu(0.5)
-                        color: headerItem || createListItem ? theme.palette.normal.background : (selected ? "#2c7fb8" : "transparent")
-                        border.width: headerItem || selected || createListItem ? 0 : 1
-                        border.color: "#7a7a7a"
+                    RowLayout {
+                        visible: !menuItem.createListItem
+                        anchors {
+                            fill: parent
+                            leftMargin: units.gu(1)
+                            rightMargin: units.gu(1)
+                        }
+                        spacing: units.gu(1)
 
                         Rectangle {
-                            visible: createListItem
-                            anchors.centerIn: parent
-                            width: Math.min(parent.width - units.gu(4), units.gu(26))
-                            height: units.gu(4.2)
-                            radius: units.gu(0.8)
-                            color: "transparent"
-                            border.width: 0
-                            border.color: theme.palette.normal.backgroundText
-                            opacity: dataController.loading ? 0.45 : 1.0
+                            Layout.preferredWidth: units.gu(1.2)
+                            Layout.preferredHeight: units.gu(1.2)
+                            radius: width / 2
+                            visible: modelData.type === "calendar"
+                            color: modelData.color || "#d85a7f"
+                        }
+
+                        Label {
+                            Layout.fillWidth: true
+                            text: modelData.label
+                            color: selected ? "white" : theme.palette.normal.backgroundText
+                            font.bold: headerItem || selected
+                            opacity: headerItem ? 0.58 : 1.0
+                            elide: Text.ElideRight
+                        }
+
+                        Label {
+                            visible: modelData.count !== undefined && modelData.count >= 0
+                            text: modelData.count !== undefined ? modelData.count : ""
+                            color: selected ? "white" : theme.palette.normal.backgroundText
+                            opacity: selected ? 1.0 : 0.62
+                            font.bold: selected
+                        }
+
+                        Item {
+                            Layout.preferredWidth: units.gu(4)
+                            Layout.fillHeight: true
+                            visible: modelData.type === "calendar"
 
                             Label {
                                 anchors.centerIn: parent
-                                text: modelData.label
-                                color: theme.palette.normal.backgroundText
+                                text: "\u22EE"
+                                color: selected ? "white" : theme.palette.normal.backgroundText
+                                font.pixelSize: units.gu(2.4)
                                 font.bold: true
-                                elide: Text.ElideRight
-                                maximumLineCount: 1
                             }
-                        }
-
-                        RowLayout {
-                            visible: !menuItem.createListItem
-                            anchors {
-                                fill: parent
-                                leftMargin: units.gu(1)
-                                rightMargin: units.gu(1)
-                            }
-                        spacing: units.gu(1)
-
-                            Rectangle {
-                                Layout.preferredWidth: units.gu(1.2)
-                                Layout.preferredHeight: units.gu(1.2)
-                                radius: width / 2
-                                visible: modelData.type === "calendar"
-                                color: modelData.color || "#d85a7f"
-                            }
-
-                            Label {
-                                Layout.fillWidth: true
-                                text: modelData.label
-                                color: selected ? "white" : theme.palette.normal.backgroundText
-                                font.bold: headerItem || selected
-                                opacity: headerItem ? 0.58 : 1.0
-                                elide: Text.ElideRight
-                            }
-
-                            Label {
-                                visible: modelData.count !== undefined && modelData.count >= 0
-                                text: modelData.count !== undefined ? modelData.count : ""
-                                color: selected ? "white" : theme.palette.normal.backgroundText
-                                opacity: selected ? 1.0 : 0.62
-                                font.bold: selected
-                            }
-
-                            Item {
-                                Layout.preferredWidth: units.gu(4)
-                                Layout.fillHeight: true
-                                visible: modelData.type === "calendar"
-
-                                Label {
-                                    anchors.centerIn: parent
-                                    text: "\u22EE"
-                                    color: selected ? "white" : theme.palette.normal.backgroundText
-                                    font.pixelSize: units.gu(2.4)
-                                    font.bold: true
-                                }
-                            }
-                        }
-
-                        MouseArea {
-                            anchors {
-                                left: parent.left
-                                top: parent.top
-                                bottom: parent.bottom
-                                right: parent.right
-                                rightMargin: modelData.type === "calendar" ? units.gu(4.8) : 0
-                            }
-                            enabled: !menuItem.headerItem
-                            onClicked: {
-                                page.drawerOpen = false
-                                if (menuItem.createListItem) {
-                                    page.newListName = ""
-                                    PopupUtils.open(createListDialog)
-                                } else {
-                                    dataController.activateMenuItem(modelData)
-                                }
-                            }
-                        }
-
-                        MouseArea {
-                            anchors {
-                                top: parent.top
-                                bottom: parent.bottom
-                                right: parent.right
-                            }
-                            width: units.gu(5)
-                            visible: modelData.type === "calendar"
-                            enabled: visible && !dataController.loading
-                            z: 10
-                            onClicked: page.openListOptions(modelData)
                         }
                     }
-                }
 
-                Item {
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: units.gu(5)
-                    Label { anchors.left: parent.left; anchors.verticalCenter: parent.verticalCenter; anchors.leftMargin: units.gu(1); text: i18n.tr("Language"); color: theme.palette.normal.backgroundText; font.bold: true }
-                    MouseArea { anchors.fill: parent; onClicked: page.openPage("LanguageSelectionPage.qml") }
-                }
-                Item {
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: units.gu(5)
-                    Label { anchors.left: parent.left; anchors.verticalCenter: parent.verticalCenter; anchors.leftMargin: units.gu(1); text: i18n.tr("Account"); color: theme.palette.normal.backgroundText; font.bold: true }
-                    MouseArea { anchors.fill: parent; onClicked: page.openPage("AccountSelectionPage.qml") }
-                }
-                Item {
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: units.gu(5)
-                    Label { anchors.left: parent.left; anchors.verticalCenter: parent.verticalCenter; anchors.leftMargin: units.gu(1); text: i18n.tr("About"); color: theme.palette.normal.backgroundText; font.bold: true }
-                    MouseArea { anchors.fill: parent; onClicked: page.openPage("AboutPage.qml") }
+                    MouseArea {
+                        anchors {
+                            left: parent.left
+                            top: parent.top
+                            bottom: parent.bottom
+                            right: parent.right
+                            rightMargin: modelData.type === "calendar" ? units.gu(4.8) : 0
+                        }
+                        enabled: !menuItem.headerItem
+                        onClicked: {
+                            page.drawerOpen = false
+                            if (menuItem.createListItem) {
+                                page.newListName = ""
+                                PopupUtils.open(createListDialog)
+                            } else {
+                                dataController.activateMenuItem(modelData)
+                            }
+                        }
+                    }
+
+                    MouseArea {
+                        anchors {
+                            top: parent.top
+                            bottom: parent.bottom
+                            right: parent.right
+                        }
+                        width: units.gu(5)
+                        visible: modelData.type === "calendar"
+                        enabled: visible && !dataController.loading
+                        z: 10
+                        onClicked: page.openListOptions(modelData)
+                    }
                 }
             }
         }

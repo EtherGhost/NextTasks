@@ -1,6 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import Lomiri.Components 1.3
+import "../NextCommon" as NextCommon
 
 Page {
     id: page
@@ -32,29 +33,27 @@ Page {
             elide: Text.ElideRight
         }
 
-        Label {
+        NextCommon.StatusRow {
             Layout.fillWidth: true
             text: i18n.tr("The server changed this task while you had local edits. Review one version, then choose which version to keep.")
-            wrapMode: Text.WordWrap
-            maximumLineCount: 3
-            opacity: 0.82
+            accentColor: page.selectedVersion === "server" ? "#c7162b" : "#c65d00"
         }
 
         RowLayout {
             Layout.fillWidth: true
             spacing: units.gu(1)
 
-            Button {
+            NextCommon.AppButton {
                 Layout.fillWidth: true
                 text: i18n.tr("Server version")
-                color: page.selectedVersion === "server" ? "#c7162b" : theme.palette.normal.background
+                selected: page.selectedVersion === "server"
                 onClicked: page.selectedVersion = "server"
             }
 
-            Button {
+            NextCommon.AppButton {
                 Layout.fillWidth: true
                 text: i18n.tr("Local version")
-                color: page.selectedVersion === "local" ? "#c65d00" : theme.palette.normal.background
+                selected: page.selectedVersion === "local"
                 onClicked: page.selectedVersion = "local"
             }
         }
@@ -95,11 +94,12 @@ Page {
             }
         }
 
-        Button {
+        NextCommon.AppButton {
             Layout.fillWidth: true
             text: page.selectedVersion === "server"
                 ? i18n.tr("Use server version")
                 : i18n.tr("Keep local version")
+            variant: "primary"
             enabled: task.conflict === true && tasksController && !tasksController.loading
             onClicked: {
                 if (page.selectedVersion === "server") {

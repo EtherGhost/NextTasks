@@ -2,15 +2,14 @@ import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import Qt.labs.settings 1.0
 import Lomiri.Components 1.3
+import "../NextCommon" as NextCommon
 
-Page {
+NextCommon.SettingsShell {
     id: page
 
     property var appController
 
-    header: PageHeader {
-        title: i18n.tr("Settings")
-    }
+    title: i18n.tr("Settings")
 
     Settings {
         id: appSettings
@@ -20,16 +19,7 @@ Page {
         property string swipeActionLayout: "ut"
     }
 
-    ColumnLayout {
-        anchors {
-            fill: parent
-            topMargin: page.header.height + units.gu(2)
-            leftMargin: units.gu(2)
-            rightMargin: units.gu(2)
-            bottomMargin: units.gu(2)
-        }
-        spacing: units.gu(1.2)
-
+    NextCommon.SettingsCard {
         Label {
             Layout.fillWidth: true
             text: i18n.tr("Sync")
@@ -54,13 +44,9 @@ Page {
             wrapMode: Text.WordWrap
             opacity: 0.72
         }
+    }
 
-        Rectangle {
-            Layout.fillWidth: true
-            height: 1
-            color: theme.palette.normal.base
-        }
-
+    NextCommon.SettingsCard {
         Label {
             Layout.fillWidth: true
             text: i18n.tr("Swipe actions")
@@ -77,7 +63,7 @@ Page {
         Repeater {
             model: [
                 {"value": "ut", "label": i18n.tr("Ubuntu Touch style"), "description": i18n.tr("Use platform conventions for swipe actions.")},
-                {"value": "android", "label": i18n.tr("Upstream-compatible style"), "description": i18n.tr("Match the upstream client where practical.")}
+                {"value": "android", "label": i18n.tr("Android style"), "description": i18n.tr("Match the Android client where practical.")}
             ]
 
             Rectangle {
@@ -128,7 +114,5 @@ Page {
                 }
             }
         }
-
-        Item { Layout.fillHeight: true }
     }
 }

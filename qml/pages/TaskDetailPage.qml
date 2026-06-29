@@ -2,6 +2,7 @@ import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import Lomiri.Components 1.3
 import Lomiri.Components.Popups 1.3
+import "../NextCommon" as NextCommon
 
 Page {
     id: page
@@ -232,9 +233,9 @@ Page {
             title: i18n.tr("Sync status")
             text: page.syncStatusDetailsText()
 
-            Button {
+            NextCommon.AppButton {
                 text: i18n.tr("Resolve conflict")
-                color: page.actionBlue
+                variant: "primary"
                 visible: page.task.conflict === true
                 enabled: tasksController && !tasksController.loading
                 onClicked: {
@@ -243,9 +244,9 @@ Page {
                 }
             }
 
-            Button {
+            NextCommon.AppButton {
                 text: i18n.tr("Refresh")
-                color: page.actionBlue
+                variant: "primary"
                 visible: tasksController && tasksController.syncStateText === i18n.tr("Sync failed")
                 enabled: tasksController && !tasksController.loading
                 onClicked: {
@@ -254,7 +255,7 @@ Page {
                 }
             }
 
-            Button {
+            NextCommon.AppButton {
                 text: i18n.tr("Close")
                 onClicked: PopupUtils.close(dialog)
             }
@@ -270,8 +271,9 @@ Page {
             title: page.dateDialogTarget === "start" ? i18n.tr("Start date") : i18n.tr("Due date")
             text: i18n.tr("Select a date.")
 
-            Button {
+            NextCommon.AppButton {
                 text: i18n.tr("Today")
+                variant: "primary"
                 onClicked: {
                     page.applyDateDialogValue(page.todayText())
                     PopupUtils.close(dateDialog)
@@ -280,7 +282,7 @@ Page {
 
             RowLayout {
                 width: Math.min(dateDialog.width - units.gu(2), units.gu(34))
-                Button {
+                NextCommon.AppButton {
                     text: "\u2039"
                     onClicked: page.shiftCalendarMonth(-1)
                 }
@@ -290,7 +292,7 @@ Page {
                     horizontalAlignment: Text.AlignHCenter
                     font.bold: true
                 }
-                Button {
+                NextCommon.AppButton {
                     text: "\u203a"
                     onClicked: page.shiftCalendarMonth(1)
                 }
@@ -346,7 +348,7 @@ Page {
                 }
             }
 
-            Button {
+            NextCommon.AppButton {
                 text: i18n.tr("Clear date")
                 onClicked: {
                     page.applyDateDialogValue("")
@@ -354,7 +356,7 @@ Page {
                 }
             }
 
-            Button {
+            NextCommon.AppButton {
                 text: i18n.tr("Cancel")
                 onClicked: PopupUtils.close(dateDialog)
             }
@@ -376,9 +378,9 @@ Page {
                     {"label": i18n.tr("Canceled"), "value": "CANCELLED"}
                 ]
 
-                Button {
+                NextCommon.AppButton {
                     text: modelData.label + (page.statusValue === modelData.value ? "  \u2713" : "")
-                    color: page.statusValue === modelData.value ? "#2c7fb8" : theme.palette.normal.background
+                    selected: page.statusValue === modelData.value
                     onClicked: {
                         page.statusValue = modelData.value
                         if (modelData.value === "NEEDS-ACTION") page.percentText = "0"
@@ -390,7 +392,7 @@ Page {
                 }
             }
 
-            Button {
+            NextCommon.AppButton {
                 text: i18n.tr("Cancel")
                 onClicked: PopupUtils.close(statusPopup)
             }
@@ -416,23 +418,23 @@ Page {
             Repeater {
                 model: page.availableTags()
 
-                Button {
+                NextCommon.AppButton {
                     text: (page.tagSelected(modelData) ? "\u2713  " : "") + modelData
-                    color: page.tagSelected(modelData) ? "#2c7fb8" : theme.palette.normal.background
+                    selected: page.tagSelected(modelData)
                     onClicked: page.toggleTag(modelData)
                 }
             }
 
-            Button {
+            NextCommon.AppButton {
                 text: i18n.tr("Add tag")
-                color: "#2c7fb8"
+                variant: "primary"
                 onClicked: {
                     page.addTag(newTagField.text)
                     PopupUtils.close(tagsPopup)
                 }
             }
 
-            Button {
+            NextCommon.AppButton {
                 text: i18n.tr("Clear tags")
                 visible: page.tagsText.length > 0
                 onClicked: {
@@ -442,7 +444,7 @@ Page {
                 }
             }
 
-            Button {
+            NextCommon.AppButton {
                 text: i18n.tr("Done")
                 onClicked: PopupUtils.close(tagsPopup)
             }
@@ -459,16 +461,17 @@ Page {
                 ? i18n.tr("This task has local changes. Deleting it will discard those local changes.")
                 : i18n.tr("The task will be deleted from this device and synced to the server.")
 
-            Button {
+            NextCommon.AppButton {
                 text: i18n.tr("Delete")
-                color: page.deleteRed
+                variant: "destructive"
+                destructiveColor: page.deleteRed
                 onClicked: {
                     PopupUtils.close(dialog)
                     page.deleteCurrentTask()
                 }
             }
 
-            Button {
+            NextCommon.AppButton {
                 text: i18n.tr("Cancel")
                 onClicked: PopupUtils.close(dialog)
             }
@@ -488,9 +491,9 @@ Page {
             Repeater {
                 model: tasksController ? tasksController.availableMoveCalendars(task) : []
 
-                Button {
+                NextCommon.AppButton {
                     text: modelData.title || i18n.tr("Tasks")
-                    color: page.actionBlue
+                    variant: "primary"
                     visible: !(task.dirty || task.isNew || task.conflict)
                     enabled: tasksController && !tasksController.loading
                     onClicked: {
@@ -500,7 +503,7 @@ Page {
                 }
             }
 
-            Button {
+            NextCommon.AppButton {
                 text: i18n.tr("Close")
                 onClicked: PopupUtils.close(dialog)
             }
@@ -1058,22 +1061,12 @@ Page {
                         opacity: 0.75
                     }
 
-                    Item {
+                    NextCommon.AppButton {
                         Layout.fillWidth: true
                         Layout.preferredHeight: units.gu(5.4)
-
-                        Label {
-                            anchors.centerIn: parent
-                            text: i18n.tr("Move to another list")
-                            color: page.actionBlue
-                            font.bold: true
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            enabled: tasksController && !tasksController.loading
-                            onClicked: PopupUtils.open(moveTaskDialog)
-                        }
+                        text: i18n.tr("Move to another list")
+                        enabled: tasksController && !tasksController.loading
+                        onClicked: PopupUtils.open(moveTaskDialog)
                     }
 
                     Rectangle { Layout.fillWidth: true; Layout.preferredHeight: 1; color: theme.palette.normal.base }
@@ -1088,48 +1081,34 @@ Page {
                         opacity: 0.75
                     }
 
-                    Item {
+                    NextCommon.AppButton {
                         Layout.fillWidth: true
                         Layout.preferredHeight: units.gu(5.4)
                         visible: task.conflict === true
-
-                        Label {
-                            anchors.centerIn: parent
-                            text: i18n.tr("Resolve conflict")
-                            color: page.actionBlue
-                            font.bold: true
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            enabled: tasksController && !tasksController.loading
-                            onClicked: page.openConflictResolution()
-                        }
+                        text: i18n.tr("Resolve conflict")
+                        variant: "primary"
+                        enabled: tasksController && !tasksController.loading
+                        onClicked: page.openConflictResolution()
                     }
 
-                    Item {
+                    NextCommon.AppButton {
                         Layout.fillWidth: true
                         Layout.preferredHeight: units.gu(5.4)
-
-                        Label {
-                            anchors.centerIn: parent
-                            text: i18n.tr("Delete task")
-                            color: page.deleteRed
-                            font.bold: true
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            enabled: tasksController && !tasksController.loading
-                            onClicked: PopupUtils.open(deleteTaskDialog)
-                        }
+                        text: i18n.tr("Delete task")
+                        variant: "destructive"
+                        destructiveColor: page.deleteRed
+                        enabled: tasksController && !tasksController.loading
+                        onClicked: PopupUtils.open(deleteTaskDialog)
                     }
                 }
             }
 
             Rectangle {
                 Layout.fillWidth: true
-                Layout.preferredHeight: notesColumn.height + units.gu(2)
+                Layout.preferredHeight: Math.max(
+                    units.gu(28),
+                    detailFlickable.height - titleField.height - units.gu(11)
+                )
                 visible: page.activeTab === "notes"
                 radius: units.gu(0.6)
                 color: theme.palette.normal.background
@@ -1142,6 +1121,7 @@ Page {
                         left: parent.left
                         right: parent.right
                         top: parent.top
+                        bottom: parent.bottom
                         margins: units.gu(1)
                     }
                     spacing: units.gu(0.8)
@@ -1149,7 +1129,7 @@ Page {
                     TextArea {
                         id: notesField
                         Layout.fillWidth: true
-                        height: Math.max(units.gu(18), implicitHeight)
+                        Layout.fillHeight: true
                         text: page.notesText
                         readOnly: false
                         wrapMode: TextEdit.WordWrap

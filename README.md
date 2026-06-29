@@ -10,7 +10,7 @@ NextTasks is not affiliated with, endorsed by, or sponsored by Nextcloud GmbH or
 
 Current release candidate: `0.2.0`.
 
-Shared Ubuntu Touch application shell is in place: hamburger/search/sync-status/avatar top bar, released-suite-style hamburger navigation, settings, language selection, about page, Online Accounts/AppArmor declarations, icons, translation scaffold, desktop dark debug support, and desktop test-account support. NextTasks now vendors `NextCommon` as a source-level git submodule for shared account UI/session code and packages that source inside its own click package.
+Shared Ubuntu Touch application shell is in place: hamburger/search/sync-status/avatar top bar, released-suite-style hamburger navigation, settings, language selection, about page, Online Accounts/AppArmor declarations, icons, translation scaffold, desktop dark debug support, and desktop test-account support. NextTasks now vendors `NextCommon` as a source-level git submodule for shared account UI/session code and a first set of shared shell components, and packages that source inside its own click package.
 
 Translations are available for Swedish plus AI-assisted starter translations for Danish, German, Spanish, Finnish, French, Italian, Norwegian Bokmål, Dutch, Polish, Russian, and Ukrainian. Starter translations are intended to be improved by native speakers.
 

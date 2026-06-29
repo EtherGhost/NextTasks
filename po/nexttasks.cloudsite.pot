@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nexttasks.cloudsite\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-29 14:20+0000\n"
+"POT-Creation-Date: 2026-06-29 18:04+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -67,11 +67,11 @@ msgstr ""
 #: qml/backend/TasksController.qml:743 qml/backend/TasksController.qml:801
 #: qml/backend/TasksController.qml:900 qml/backend/TasksController.qml:932
 #: qml/backend/TasksController.qml:1373 qml/pages/HomePage.qml:473
-#: qml/pages/HomePage.qml:486 qml/pages/HomePage.qml:879
-#: qml/pages/HomePage.qml:906 qml/pages/HomePage.qml:1134
-#: qml/pages/HomePage.qml:1267 qml/pages/HomePage.qml:1270
-#: qml/pages/HomePage.qml:1509 qml/pages/HomePage.qml:1910
-#: qml/pages/TaskDetailPage.qml:492
+#: qml/pages/HomePage.qml:486 qml/pages/HomePage.qml:704
+#: qml/pages/HomePage.qml:732 qml/pages/HomePage.qml:965
+#: qml/pages/HomePage.qml:1098 qml/pages/HomePage.qml:1102
+#: qml/pages/HomePage.qml:1341 qml/pages/HomePage.qml:1742
+#: qml/pages/TaskDetailPage.qml:495
 msgid "Tasks"
 msgstr ""
 
@@ -193,8 +193,8 @@ msgid "Task calendar"
 msgstr ""
 
 #: qml/backend/TasksApiClient.qml:1062 qml/backend/TasksController.qml:2096
-#: qml/pages/TaskConflictResolutionPage.qml:28
-#: qml/pages/TaskDetailPage.qml:1198
+#: qml/pages/TaskConflictResolutionPage.qml:29
+#: qml/pages/TaskDetailPage.qml:1178
 msgid "Untitled task"
 msgstr ""
 
@@ -204,17 +204,17 @@ msgid "Due %1"
 msgstr ""
 
 #: qml/backend/TasksApiClient.qml:1319 qml/backend/TasksController.qml:2272
-#: qml/pages/TaskDetailPage.qml:1562
+#: qml/pages/TaskDetailPage.qml:1542
 msgid "Completed"
 msgstr ""
 
 #: qml/backend/TasksApiClient.qml:1321 qml/backend/TasksController.qml:2274
-#: qml/pages/TaskDetailPage.qml:375 qml/pages/TaskDetailPage.qml:1563
+#: qml/pages/TaskDetailPage.qml:377 qml/pages/TaskDetailPage.qml:1543
 msgid "In progress"
 msgstr ""
 
 #: qml/backend/TasksApiClient.qml:1322 qml/backend/TasksController.qml:2275
-#: qml/pages/TaskDetailPage.qml:376 qml/pages/TaskDetailPage.qml:1564
+#: qml/pages/TaskDetailPage.qml:378 qml/pages/TaskDetailPage.qml:1544
 msgid "Canceled"
 msgstr ""
 
@@ -238,7 +238,7 @@ msgstr ""
 
 #: qml/backend/TasksCache.qml:131 qml/backend/TasksCache.qml:228
 #: qml/backend/TasksController.qml:1186 qml/backend/TasksController.qml:1189
-#: qml/pages/HomePage.qml:1672 qml/pages/HomePage.qml:2020
+#: qml/pages/HomePage.qml:1504 qml/pages/HomePage.qml:1852
 msgid "Untitled"
 msgstr ""
 
@@ -276,7 +276,7 @@ msgid "Loaded %1 task(s)."
 msgstr ""
 
 #: qml/backend/TasksController.qml:236 qml/backend/TasksController.qml:619
-#: qml/backend/TasksController.qml:1327 qml/pages/HomePage.qml:2148
+#: qml/backend/TasksController.qml:1327 qml/pages/HomePage.qml:1970
 msgid "No tasks found."
 msgstr ""
 
@@ -284,7 +284,7 @@ msgstr ""
 #: qml/backend/TasksController.qml:450 qml/backend/TasksController.qml:480
 #: qml/backend/TasksController.qml:515 qml/backend/TasksController.qml:1059
 #: qml/backend/TasksController.qml:1493 qml/backend/TasksController.qml:1573
-#: qml/pages/HomePage.qml:607 qml/pages/TaskDetailPage.qml:249
+#: qml/pages/HomePage.qml:607 qml/pages/TaskDetailPage.qml:250
 msgid "Sync failed"
 msgstr ""
 
@@ -313,7 +313,7 @@ msgid "Task deleted."
 msgstr ""
 
 #: qml/backend/TasksController.qml:417 qml/pages/HomePage.qml:585
-#: qml/pages/TaskConflictResolutionPage.qml:13
+#: qml/pages/TaskConflictResolutionPage.qml:14
 msgid "Conflict"
 msgstr ""
 
@@ -363,8 +363,8 @@ msgstr ""
 msgid "No task list is available for new tasks."
 msgstr ""
 
-#: qml/backend/TasksController.qml:655 qml/pages/TaskDetailPage.qml:82
-#: qml/pages/TaskDetailPage.qml:1198
+#: qml/backend/TasksController.qml:655 qml/pages/TaskDetailPage.qml:83
+#: qml/pages/TaskDetailPage.qml:1178
 msgid "New task"
 msgstr ""
 
@@ -498,21 +498,21 @@ msgstr ""
 msgid "All lists"
 msgstr ""
 
-#: qml/backend/TasksController.qml:1195 qml/pages/HomePage.qml:932
+#: qml/backend/TasksController.qml:1195 qml/pages/HomePage.qml:759
 msgid "Create new list"
 msgstr ""
 
 #: qml/backend/TasksController.qml:1202 qml/backend/TasksController.qml:1224
-#: qml/pages/TaskDetailPage.qml:270 qml/pages/TaskDetailPage.qml:788
+#: qml/pages/TaskDetailPage.qml:271 qml/pages/TaskDetailPage.qml:791
 msgid "Due date"
 msgstr ""
 
-#: qml/backend/TasksController.qml:1203 qml/pages/TaskDetailPage.qml:270
-#: qml/pages/TaskDetailPage.qml:743
+#: qml/backend/TasksController.qml:1203 qml/pages/TaskDetailPage.qml:271
+#: qml/pages/TaskDetailPage.qml:746
 msgid "Start date"
 msgstr ""
 
-#: qml/backend/TasksController.qml:1204 qml/pages/TaskDetailPage.qml:832
+#: qml/backend/TasksController.qml:1204 qml/pages/TaskDetailPage.qml:835
 msgid "Priority"
 msgstr ""
 
@@ -619,19 +619,6 @@ msgstr ""
 msgid "Select an account to load tasks."
 msgstr ""
 
-#: qml/pages/AboutPage.qml:12 qml/pages/HomePage.qml:2399
-#: vendor/NextCommon/qml/NextCommon/AboutPage.qml:17
-msgid "About"
-msgstr ""
-
-#: qml/pages/AboutPage.qml:53 vendor/NextCommon/qml/NextCommon/AboutPage.qml:58
-msgid "Version %1"
-msgstr ""
-
-#: qml/pages/AboutPage.qml:74 vendor/NextCommon/qml/NextCommon/AboutPage.qml:79
-msgid "License"
-msgstr ""
-
 #: qml/pages/HomePage.qml:193
 msgid "No task list is available for imported text."
 msgstr ""
@@ -656,7 +643,7 @@ msgstr ""
 msgid "%1 tasks have unsynced local changes."
 msgstr ""
 
-#: qml/pages/HomePage.qml:540 qml/pages/TaskDetailPage.qml:1388
+#: qml/pages/HomePage.qml:540 qml/pages/TaskDetailPage.qml:1368
 msgid "Sync: %1"
 msgstr ""
 
@@ -692,244 +679,259 @@ msgstr ""
 msgid "Unsynced"
 msgstr ""
 
-#: qml/pages/HomePage.qml:650
-msgid "%1 selected"
-msgstr ""
-
-#: qml/pages/HomePage.qml:659
+#: qml/pages/HomePage.qml:621
 msgid "Search"
 msgstr ""
 
-#: qml/pages/HomePage.qml:710
+#: qml/pages/HomePage.qml:665
+msgid "%1 selected"
+msgstr ""
+
+#: qml/pages/HomePage.qml:674
 msgid "Move"
 msgstr ""
 
-#: qml/pages/HomePage.qml:720 qml/pages/HomePage.qml:1048
-#: qml/pages/HomePage.qml:1073 qml/pages/HomePage.qml:1102
-#: qml/pages/HomePage.qml:1539 qml/pages/HomePage.qml:1931
-#: qml/pages/TaskDetailPage.qml:463
+#: qml/pages/HomePage.qml:683 qml/pages/HomePage.qml:876
+#: qml/pages/HomePage.qml:902 qml/pages/HomePage.qml:932
+#: qml/pages/HomePage.qml:1371 qml/pages/HomePage.qml:1763
+#: qml/pages/TaskDetailPage.qml:465
 msgid "Delete"
 msgstr ""
 
-#: qml/pages/HomePage.qml:872 qml/pages/HomePage.qml:899
+#: qml/pages/HomePage.qml:697 qml/pages/HomePage.qml:725
 msgid "Choose task list"
 msgstr ""
 
-#: qml/pages/HomePage.qml:873
+#: qml/pages/HomePage.qml:698
 msgid "Select where the new task should be created."
 msgstr ""
 
-#: qml/pages/HomePage.qml:888 qml/pages/HomePage.qml:915
-#: qml/pages/HomePage.qml:962 qml/pages/HomePage.qml:1033
-#: qml/pages/HomePage.qml:1058 qml/pages/HomePage.qml:1084
-#: qml/pages/HomePage.qml:1116 qml/pages/HomePage.qml:1150
-#: qml/pages/HomePage.qml:1211 qml/pages/TaskDetailPage.qml:358
-#: qml/pages/TaskDetailPage.qml:394 qml/pages/TaskDetailPage.qml:472
+#: qml/pages/HomePage.qml:714 qml/pages/HomePage.qml:742
+#: qml/pages/HomePage.qml:789 qml/pages/HomePage.qml:861
+#: qml/pages/HomePage.qml:887 qml/pages/HomePage.qml:914
+#: qml/pages/HomePage.qml:947 qml/pages/HomePage.qml:981
+#: qml/pages/HomePage.qml:1042 qml/pages/TaskDetailPage.qml:360
+#: qml/pages/TaskDetailPage.qml:396 qml/pages/TaskDetailPage.qml:475
 #: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:15
 #: vendor/NextCommon/qml/NextCommon/ConfirmDialog.qml:9
 #: vendor/NextCommon/qml/NextCommon/TimePicker.qml:16
 msgid "Cancel"
 msgstr ""
 
-#: qml/pages/HomePage.qml:900
+#: qml/pages/HomePage.qml:726
 msgid "Select where the shared text task should be created."
 msgstr ""
 
-#: qml/pages/HomePage.qml:933
+#: qml/pages/HomePage.qml:760
 msgid "Enter a name for the new task list."
 msgstr ""
 
-#: qml/pages/HomePage.qml:938 qml/pages/HomePage.qml:979
+#: qml/pages/HomePage.qml:765 qml/pages/HomePage.qml:806
 msgid "List name"
 msgstr ""
 
-#: qml/pages/HomePage.qml:951
+#: qml/pages/HomePage.qml:778
 msgid "Create"
 msgstr ""
 
-#: qml/pages/HomePage.qml:973
+#: qml/pages/HomePage.qml:800
 msgid "Task list"
 msgstr ""
 
-#: qml/pages/HomePage.qml:974
+#: qml/pages/HomePage.qml:801
 msgid "Rename the list, change its color, or delete it."
 msgstr ""
 
-#: qml/pages/HomePage.qml:990
+#: qml/pages/HomePage.qml:817
 msgid "Color"
 msgstr ""
 
-#: qml/pages/HomePage.qml:1019
+#: qml/pages/HomePage.qml:846
 msgid "Save"
 msgstr ""
 
-#: qml/pages/HomePage.qml:1026
+#: qml/pages/HomePage.qml:853
 msgid "Delete list"
 msgstr ""
 
-#: qml/pages/HomePage.qml:1044
+#: qml/pages/HomePage.qml:872
 msgid "Delete task list?"
 msgstr ""
 
-#: qml/pages/HomePage.qml:1045
+#: qml/pages/HomePage.qml:873
 msgid "The list and its tasks will be removed from the server and this device."
 msgstr ""
 
-#: qml/pages/HomePage.qml:1069 qml/pages/TaskDetailPage.qml:457
+#: qml/pages/HomePage.qml:898 qml/pages/TaskDetailPage.qml:459
 msgid "Delete task?"
 msgstr ""
 
-#: qml/pages/HomePage.qml:1070 qml/pages/TaskDetailPage.qml:460
+#: qml/pages/HomePage.qml:899 qml/pages/TaskDetailPage.qml:462
 msgid "The task will be deleted from this device and synced to the server."
 msgstr ""
 
-#: qml/pages/HomePage.qml:1098
+#: qml/pages/HomePage.qml:928
 msgid "Delete selected tasks?"
 msgstr ""
 
-#: qml/pages/HomePage.qml:1110
+#: qml/pages/HomePage.qml:941
 msgid "No selected tasks could be deleted."
 msgstr ""
 
-#: qml/pages/HomePage.qml:1127
+#: qml/pages/HomePage.qml:958
 msgid "Move selected tasks"
 msgstr ""
 
-#: qml/pages/HomePage.qml:1128
+#: qml/pages/HomePage.qml:959
 msgid "Choose the target list. Tasks with unsynced local changes are skipped."
 msgstr ""
 
-#: qml/pages/HomePage.qml:1143
+#: qml/pages/HomePage.qml:974
 msgid "No selected tasks could be moved."
 msgstr ""
 
-#: qml/pages/HomePage.qml:1161 qml/pages/TaskDetailPage.qml:232
+#: qml/pages/HomePage.qml:992 qml/pages/TaskDetailPage.qml:233
 msgid "Sync status"
 msgstr ""
 
-#: qml/pages/HomePage.qml:1165 qml/pages/TaskDetailPage.qml:236
-#: qml/pages/TaskDetailPage.qml:1098
+#: qml/pages/HomePage.qml:996 qml/pages/TaskDetailPage.qml:237
+#: qml/pages/TaskDetailPage.qml:1088
 msgid "Resolve conflict"
 msgstr ""
 
-#: qml/pages/HomePage.qml:1176 qml/pages/TaskDetailPage.qml:247
+#: qml/pages/HomePage.qml:1007 qml/pages/TaskDetailPage.qml:248
 msgid "Refresh"
 msgstr ""
 
-#: qml/pages/HomePage.qml:1187 qml/pages/HomePage.qml:1249
-#: qml/pages/HomePage.qml:1278 qml/pages/TaskDetailPage.qml:258
-#: qml/pages/TaskDetailPage.qml:504
+#: qml/pages/HomePage.qml:1018 qml/pages/HomePage.qml:1080
+#: qml/pages/HomePage.qml:1110 qml/pages/TaskDetailPage.qml:259
+#: qml/pages/TaskDetailPage.qml:507
 msgid "Close"
 msgstr ""
 
-#: qml/pages/HomePage.qml:1198
+#: qml/pages/HomePage.qml:1029
 msgid "Reopen completed tasks?"
 msgstr ""
 
-#: qml/pages/HomePage.qml:1199
+#: qml/pages/HomePage.qml:1030
 msgid "This will mark all completed tasks in this list as open again."
 msgstr ""
 
-#: qml/pages/HomePage.qml:1202 qml/pages/HomePage.qml:2132
+#: qml/pages/HomePage.qml:1033 qml/pages/HomePage.qml:1961
 msgid "Reopen all"
 msgstr ""
 
-#: qml/pages/HomePage.qml:1223
+#: qml/pages/HomePage.qml:1054
 msgid "Sort %1"
 msgstr ""
 
-#: qml/pages/HomePage.qml:1224
+#: qml/pages/HomePage.qml:1055
 msgid "Sort tasks"
 msgstr ""
 
-#: qml/pages/HomePage.qml:1226
+#: qml/pages/HomePage.qml:1057
 msgid ""
 "Manual order is saved to the task list using Nextcloud-compatible task order "
 "values."
 msgstr ""
 
-#: qml/pages/HomePage.qml:1227
+#: qml/pages/HomePage.qml:1058
 msgid "Uses standard task sort concepts."
 msgstr ""
 
-#: qml/pages/HomePage.qml:1243
+#: qml/pages/HomePage.qml:1074
 msgid "Ascending"
 msgstr ""
 
-#: qml/pages/HomePage.qml:1243
+#: qml/pages/HomePage.qml:1074
 msgid "Descending"
 msgstr ""
 
-#: qml/pages/HomePage.qml:1260
+#: qml/pages/HomePage.qml:1091
 msgid "Sort list"
 msgstr ""
 
-#: qml/pages/HomePage.qml:1261
+#: qml/pages/HomePage.qml:1092
 msgid "Choose which task list to sort."
 msgstr ""
 
-#: qml/pages/HomePage.qml:1353 qml/pages/TaskDetailPage.qml:554
+#: qml/pages/HomePage.qml:1185 qml/pages/TaskDetailPage.qml:557
 msgid "Refreshing..."
 msgstr ""
 
-#: qml/pages/HomePage.qml:1355 qml/pages/TaskDetailPage.qml:556
+#: qml/pages/HomePage.qml:1187 qml/pages/TaskDetailPage.qml:559
 msgid "Release to refresh"
 msgstr ""
 
-#: qml/pages/HomePage.qml:1356 qml/pages/TaskDetailPage.qml:557
+#: qml/pages/HomePage.qml:1188 qml/pages/TaskDetailPage.qml:560
 msgid "Pull to refresh"
 msgstr ""
 
-#: qml/pages/HomePage.qml:1551
+#: qml/pages/HomePage.qml:1383
 msgid "Complete"
 msgstr ""
 
-#: qml/pages/HomePage.qml:1551 qml/pages/HomePage.qml:1943
+#: qml/pages/HomePage.qml:1383 qml/pages/HomePage.qml:1775
 msgid "Reopen"
 msgstr ""
 
-#: qml/pages/HomePage.qml:1856
+#: qml/pages/HomePage.qml:1688
 msgid "Hide completed tasks (%1)"
 msgstr ""
 
-#: qml/pages/HomePage.qml:1857
+#: qml/pages/HomePage.qml:1689
 msgid "Show completed tasks (%1)"
 msgstr ""
 
-#: qml/pages/HomePage.qml:2156
+#: qml/pages/HomePage.qml:1976
 msgid "No matching items"
 msgstr ""
 
-#: qml/pages/HomePage.qml:2230
-msgid "Task Lists"
-msgstr ""
-
-#: qml/pages/HomePage.qml:2387 qml/pages/LanguageSelectionPage.qml:29
+#: qml/pages/HomePage.qml:2037
 #: vendor/NextCommon/qml/NextCommon/LanguagePage.qml:14
 msgid "Language"
 msgstr ""
 
-#: qml/pages/HomePage.qml:2393
+#: qml/pages/HomePage.qml:2038
 #: vendor/NextCommon/qml/NextCommon/AccountPage.qml:221
 msgid "Account"
 msgstr ""
 
-#: qml/pages/LanguageSelectionPage.qml:12
+#: qml/pages/HomePage.qml:2039 qml/pages/SettingsPage.qml:12
+#: vendor/NextCommon/qml/NextCommon/SettingsShell.qml:8
+msgid "Settings"
+msgstr ""
+
+#: qml/pages/HomePage.qml:2040
+#: vendor/NextCommon/qml/NextCommon/AboutPage.qml:17
+msgid "About"
+msgstr ""
+
+#: qml/pages/LanguageSelectionPage.qml:8
+#: vendor/NextCommon/qml/NextCommon/LanguagePage.qml:11
+msgid ""
+"Some translations are AI-assisted and not fully reviewed. You can help "
+"improve translations in the project repository."
+msgstr ""
+
+#: qml/pages/LanguageSelectionPage.qml:10
 msgid "Default"
 msgstr ""
 
-#: qml/pages/LanguageSelectionPage.qml:12
+#: qml/pages/LanguageSelectionPage.qml:10
 msgid "Follow system language"
 msgstr ""
 
-#: qml/pages/LanguageSelectionPage.qml:13
+#: qml/pages/LanguageSelectionPage.qml:11
 msgid "Built-in source language"
 msgstr ""
 
-#: qml/pages/LanguageSelectionPage.qml:14
+#: qml/pages/LanguageSelectionPage.qml:12
 msgid "Initial translation"
 msgstr ""
 
+#: qml/pages/LanguageSelectionPage.qml:13
+#: qml/pages/LanguageSelectionPage.qml:14
 #: qml/pages/LanguageSelectionPage.qml:15
 #: qml/pages/LanguageSelectionPage.qml:16
 #: qml/pages/LanguageSelectionPage.qml:17
@@ -939,87 +941,74 @@ msgstr ""
 #: qml/pages/LanguageSelectionPage.qml:21
 #: qml/pages/LanguageSelectionPage.qml:22
 #: qml/pages/LanguageSelectionPage.qml:23
-#: qml/pages/LanguageSelectionPage.qml:24
-#: qml/pages/LanguageSelectionPage.qml:25
 msgid "AI-assisted starter translation"
 msgstr ""
 
-#: qml/pages/LanguageSelectionPage.qml:49
-msgid ""
-"Choose the language this app should use. Restart the app after changing "
-"language."
-msgstr ""
-
-#: qml/pages/SettingsPage.qml:12
-#: vendor/NextCommon/qml/NextCommon/SettingsShell.qml:8
-msgid "Settings"
-msgstr ""
-
-#: qml/pages/SettingsPage.qml:35
+#: qml/pages/SettingsPage.qml:25
 msgid "Sync"
 msgstr ""
 
-#: qml/pages/SettingsPage.qml:40
+#: qml/pages/SettingsPage.qml:30
 msgid "Sync while app is active"
 msgstr ""
 
-#: qml/pages/SettingsPage.qml:46
+#: qml/pages/SettingsPage.qml:36
 msgid "Sync on startup"
 msgstr ""
 
-#: qml/pages/SettingsPage.qml:53
+#: qml/pages/SettingsPage.qml:43
 msgid ""
 "These settings are placeholders until the app-specific API, cache, and sync "
 "controller are implemented."
 msgstr ""
 
-#: qml/pages/SettingsPage.qml:66
+#: qml/pages/SettingsPage.qml:52
 msgid "Swipe actions"
 msgstr ""
 
-#: qml/pages/SettingsPage.qml:72
+#: qml/pages/SettingsPage.qml:58
 msgid ""
 "Choose where destructive swipe actions should appear. Ubuntu Touch style is "
 "the default."
 msgstr ""
 
-#: qml/pages/SettingsPage.qml:79
+#: qml/pages/SettingsPage.qml:65
 msgid "Ubuntu Touch style"
 msgstr ""
 
-#: qml/pages/SettingsPage.qml:79
+#: qml/pages/SettingsPage.qml:65
 msgid "Use platform conventions for swipe actions."
 msgstr ""
 
-#: qml/pages/SettingsPage.qml:80
-msgid "Match the upstream client where practical."
+#: qml/pages/SettingsPage.qml:66
+msgid "Android style"
 msgstr ""
 
-#: qml/pages/SettingsPage.qml:80
-msgid "Upstream-compatible style"
+#: qml/pages/SettingsPage.qml:66
+msgid "Match the Android client where practical."
 msgstr ""
 
-#: qml/pages/TaskConflictResolutionPage.qml:37
+#: qml/pages/TaskConflictResolutionPage.qml:38
 msgid ""
 "The server changed this task while you had local edits. Review one version, "
 "then choose which version to keep."
 msgstr ""
 
-#: qml/pages/TaskConflictResolutionPage.qml:49
+#: qml/pages/TaskConflictResolutionPage.qml:48
 #: qml/pages/TaskConflictResolutionPage.qml:122
 msgid "Server version"
 msgstr ""
 
-#: qml/pages/TaskConflictResolutionPage.qml:56
+#: qml/pages/TaskConflictResolutionPage.qml:55
 #: qml/pages/TaskConflictResolutionPage.qml:128
 msgid "Local version"
 msgstr ""
 
-#: qml/pages/TaskConflictResolutionPage.qml:101
+#: qml/pages/TaskConflictResolutionPage.qml:100
 msgid "Use server version"
 msgstr ""
 
-#: qml/pages/TaskConflictResolutionPage.qml:102
+#: qml/pages/TaskConflictResolutionPage.qml:101
 msgid "Keep local version"
 msgstr ""
 
@@ -1031,157 +1020,157 @@ msgstr ""
 msgid "Local version - unsynced"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:271
+#: qml/pages/TaskDetailPage.qml:272
 msgid "Select a date."
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:274
+#: qml/pages/TaskDetailPage.qml:275
 #: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:13
 msgid "Today"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:302
+#: qml/pages/TaskDetailPage.qml:304
 #: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:209
 msgid "Fri"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:302
+#: qml/pages/TaskDetailPage.qml:304
 #: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:209
 msgid "Mon"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:302
+#: qml/pages/TaskDetailPage.qml:304
 #: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:209
 msgid "Sat"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:302
+#: qml/pages/TaskDetailPage.qml:304
 #: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:209
 msgid "Sun"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:302
+#: qml/pages/TaskDetailPage.qml:304
 #: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:209
 msgid "Thu"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:302
+#: qml/pages/TaskDetailPage.qml:304
 #: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:209
 msgid "Tue"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:302
+#: qml/pages/TaskDetailPage.qml:304
 #: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:209
 msgid "Wed"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:350
+#: qml/pages/TaskDetailPage.qml:352
 msgid "Clear date"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:369 qml/pages/TaskDetailPage.qml:693
+#: qml/pages/TaskDetailPage.qml:371 qml/pages/TaskDetailPage.qml:696
 msgid "Status"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:370
+#: qml/pages/TaskDetailPage.qml:372
 msgid "Choose task status."
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:374 qml/pages/TaskDetailPage.qml:1565
+#: qml/pages/TaskDetailPage.qml:376 qml/pages/TaskDetailPage.qml:1545
 msgid "Needs action"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:405 qml/pages/TaskDetailPage.qml:1031
+#: qml/pages/TaskDetailPage.qml:407 qml/pages/TaskDetailPage.qml:1034
 msgid "Select tags"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:406
+#: qml/pages/TaskDetailPage.qml:408
 msgid "No tags yet. Type above to create one."
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:406
+#: qml/pages/TaskDetailPage.qml:408
 msgid "Selected: %1"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:411
+#: qml/pages/TaskDetailPage.qml:413
 msgid "New tag"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:427
+#: qml/pages/TaskDetailPage.qml:429
 msgid "Add tag"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:436
+#: qml/pages/TaskDetailPage.qml:438
 msgid "Clear tags"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:446
+#: qml/pages/TaskDetailPage.qml:448
 msgid "Done"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:459
+#: qml/pages/TaskDetailPage.qml:461
 msgid ""
 "This task has local changes. Deleting it will discard those local changes."
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:483
+#: qml/pages/TaskDetailPage.qml:486
 msgid "Move task"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:485
+#: qml/pages/TaskDetailPage.qml:488
 msgid "Sync this task before moving it to another list."
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:486
+#: qml/pages/TaskDetailPage.qml:489
 msgid "Choose the target list."
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:579
+#: qml/pages/TaskDetailPage.qml:582
 msgid "Task title"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:610
+#: qml/pages/TaskDetailPage.qml:613
 msgid "Details"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:643
+#: qml/pages/TaskDetailPage.qml:646
 msgid "Notes"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:750
+#: qml/pages/TaskDetailPage.qml:753
 msgid "No start date"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:795
+#: qml/pages/TaskDetailPage.qml:798
 msgid "No due date"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:907
+#: qml/pages/TaskDetailPage.qml:910
 #, javascript-format
 msgid "%1% completed"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:914
+#: qml/pages/TaskDetailPage.qml:917
 msgid "Progress"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:964 qml/pages/TaskDetailPage.qml:972
+#: qml/pages/TaskDetailPage.qml:967 qml/pages/TaskDetailPage.qml:975
 msgid "Set location"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:989 qml/pages/TaskDetailPage.qml:997
+#: qml/pages/TaskDetailPage.qml:992 qml/pages/TaskDetailPage.qml:1000
 msgid "Set a URL"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:1038
+#: qml/pages/TaskDetailPage.qml:1041
 msgid "No tags"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:1056
+#: qml/pages/TaskDetailPage.qml:1059
 msgid "List: %1"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:1056
+#: qml/pages/TaskDetailPage.qml:1059
 msgid "No list"
 msgstr ""
 
@@ -1189,112 +1178,120 @@ msgstr ""
 msgid "Move to another list"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:1085
+#: qml/pages/TaskDetailPage.qml:1078
 msgid "Modified: %1"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:1086
+#: qml/pages/TaskDetailPage.qml:1079
 msgid "Created: %1"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:1116
+#: qml/pages/TaskDetailPage.qml:1097
 msgid "Delete task"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:1156
+#: qml/pages/TaskDetailPage.qml:1136
 msgid "No notes."
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:1337
+#: qml/pages/TaskDetailPage.qml:1317
 msgid "Sharing is not available."
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:1378
+#: qml/pages/TaskDetailPage.qml:1358
 msgid "This task has a conflict."
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:1380
+#: qml/pages/TaskDetailPage.qml:1360
 msgid "This task has local changes waiting to sync."
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:1382
+#: qml/pages/TaskDetailPage.qml:1362
 msgid "This task is up to date."
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:1525
+#: qml/pages/TaskDetailPage.qml:1505
 #: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:68
 msgid "April"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:1525
+#: qml/pages/TaskDetailPage.qml:1505
 #: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:72
 msgid "August"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:1525
+#: qml/pages/TaskDetailPage.qml:1505
 #: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:76
 msgid "December"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:1525
+#: qml/pages/TaskDetailPage.qml:1505
 #: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:66
 msgid "February"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:1525
+#: qml/pages/TaskDetailPage.qml:1505
 #: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:65
 msgid "January"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:1525
+#: qml/pages/TaskDetailPage.qml:1505
 #: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:71
 msgid "July"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:1525
+#: qml/pages/TaskDetailPage.qml:1505
 #: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:70
 msgid "June"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:1525
+#: qml/pages/TaskDetailPage.qml:1505
 #: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:67
 msgid "March"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:1525
+#: qml/pages/TaskDetailPage.qml:1505
 #: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:69
 msgid "May"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:1525
+#: qml/pages/TaskDetailPage.qml:1505
 #: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:75
 msgid "November"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:1525
+#: qml/pages/TaskDetailPage.qml:1505
 #: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:74
 msgid "October"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:1525
+#: qml/pages/TaskDetailPage.qml:1505
 #: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:73
 msgid "September"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:1686
+#: qml/pages/TaskDetailPage.qml:1666
 msgid "No priority assigned (0)"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:1687
+#: qml/pages/TaskDetailPage.qml:1667
 msgid "High (%1)"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:1688
+#: qml/pages/TaskDetailPage.qml:1668
 msgid "Medium (5)"
 msgstr ""
 
-#: qml/pages/TaskDetailPage.qml:1689
+#: qml/pages/TaskDetailPage.qml:1669
 msgid "Low (%1)"
+msgstr ""
+
+#: vendor/NextCommon/qml/NextCommon/AboutPage.qml:58
+msgid "Version %1"
+msgstr ""
+
+#: vendor/NextCommon/qml/NextCommon/AboutPage.qml:79
+msgid "License"
 msgstr ""
 
 #: vendor/NextCommon/qml/NextCommon/AccountPage.qml:37
@@ -1527,12 +1524,6 @@ msgstr ""
 
 #: vendor/NextCommon/qml/NextCommon/ConfirmDialog.qml:8
 msgid "Confirm"
-msgstr ""
-
-#: vendor/NextCommon/qml/NextCommon/LanguagePage.qml:11
-msgid ""
-"Some translations are AI-assisted and not fully reviewed. You can help "
-"improve translations in the project repository."
 msgstr ""
 
 #: vendor/NextCommon/qml/NextCommon/LanguagePage.qml:34

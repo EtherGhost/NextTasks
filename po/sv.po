@@ -945,12 +945,12 @@ msgid "Use platform conventions for swipe actions."
 msgstr "Använd plattformens konventioner för svepåtgärder."
 
 #: qml/pages/SettingsPage.qml:80
-msgid "Upstream-compatible style"
-msgstr "Kompatibel stil"
+msgid "Android style"
+msgstr "Android-stil"
 
 #: qml/pages/SettingsPage.qml:80
-msgid "Match the upstream client where practical."
-msgstr "Matcha den etablerade klientstilen där det är praktiskt."
+msgid "Match the Android client where practical."
+msgstr "Matcha Android-klienten där det är praktiskt."
 
 #: qml/pages/TaskConflictResolutionPage.qml:37
 msgid ""

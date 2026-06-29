@@ -949,12 +949,12 @@ msgid "Use platform conventions for swipe actions."
 msgstr "Use platform conventions for swipe actions."
 
 #, fuzzy
-msgid "Upstream-compatible style"
-msgstr "Upstream-compatible style"
+msgid "Android style"
+msgstr "Android style"
 
 #, fuzzy
-msgid "Match the upstream client where practical."
-msgstr "Match the upstream client where practical."
+msgid "Match the Android client where practical."
+msgstr "Match the Android client where practical."
 
 #, fuzzy
 msgid "The server changed this task while you had local edits. Review one version, then choose which version to keep."
