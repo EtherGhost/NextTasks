@@ -60,6 +60,7 @@ Item {
     property bool dirtySyncQueuedAfterInteraction: false
     property bool skipNextCachedLoad: false
     property bool userSyncPaused: false
+    property bool suppressDirtySyncViewReload: false
     property bool showCompletedTasks: false
     property int completedTasksCount: completedTasksForCurrentScope().length
     property string sortMode: sortSettings.sortMode
@@ -302,8 +303,11 @@ Item {
             controller.pendingUpdateChanges = ({})
             tasksCache.saveUploadedTask(updatedTask)
             var cachedUpdatedTask = tasksCache.loadTask(updatedTask)
-            controller.upsertTask(cachedUpdatedTask || updatedTask)
-            controller.applyCurrentViewFilter()
+            var suppressViewReload = controller.dirtySyncRunning && controller.suppressDirtySyncViewReload
+            controller.upsertTask(cachedUpdatedTask || updatedTask, !suppressViewReload)
+            if (!suppressViewReload) {
+                controller.applyCurrentViewFilter()
+            }
             if (controller.dirtySyncRunning) {
                 controller.dirtySyncUploadedCount += 1
                 controller.dirtySyncQueue.shift()
@@ -1397,6 +1401,7 @@ Item {
         dirtySyncQueue = syncableLocalChanges(tasksCache.loadLocalChanges())
         console.log("NextTasks Controller startDirtySync queue=" + dirtySyncQueue.length)
         if (dirtySyncQueue.length === 0) {
+            suppressDirtySyncViewReload = false
             var pendingLocalChanges = tasksCache.loadLocalChanges()
             if (pendingLocalChanges.length > 0) {
                 statusText = i18n.tr("New task waiting for a title before sync.")
@@ -1488,6 +1493,7 @@ Item {
             dirtySyncQueue.shift()
             startNextDirtySync()
         } else {
+            suppressDirtySyncViewReload = false
             loading = false
             statusText = message
             syncStateText = i18n.tr("Sync failed")
@@ -1538,8 +1544,10 @@ Item {
     function finishDirtySync() {
         var hadFailures = dirtySyncFailedCount > 0 || dirtySyncConflictCount > 0
         var shouldRefresh = dirtySyncAfterRefresh && !hadFailures
+        var suppressViewReload = suppressDirtySyncViewReload
         dirtySyncRunning = false
         dirtySyncAfterRefresh = false
+        suppressDirtySyncViewReload = false
         taskUpdateRunning = false
         pendingUpdateTask = ({})
         pendingUpdateChanges = ({})
@@ -1548,7 +1556,12 @@ Item {
         pendingCalendar = ({})
         pendingCalendarColor = ""
         dirtySyncQueue = []
-        loadCachedState()
+        if (suppressViewReload) {
+            updateDirtySummary()
+            updateConflictSummary()
+        } else {
+            loadCachedState()
+        }
         var remainingLocalChanges = syncableLocalChanges(tasksCache.loadLocalChanges())
         if (!hadFailures && remainingLocalChanges.length > 0) {
             loading = false
@@ -1655,7 +1668,7 @@ Item {
         menuRevision += 1
     }
 
-    function upsertTask(task) {
+    function upsertTask(task, updateEntries) {
         if (!task || task.type !== "task") {
             return
         }
@@ -1675,6 +1688,10 @@ Item {
         }
         allTasks = updatedAll
         menuRevision += 1
+
+        if (updateEntries === false) {
+            return
+        }
 
         var updatedEntries = []
         var entryReplaced = false
@@ -1880,7 +1897,7 @@ Item {
         reorderManualTask(task, target)
     }
 
-    function reorderManualTask(task, targetIndex) {
+    function reorderManualTask(task, targetIndex, refreshView) {
         if (!task || task.type !== "task") return
         if (sortMode !== "manual") {
             setSortMode("manual")
@@ -1899,7 +1916,7 @@ Item {
         if (index === target) return
         var moved = current.splice(index, 1)[0]
         current.splice(target, 0, moved)
-        applyManualOrderForList(current, moved)
+        applyManualOrderForList(current, moved, refreshView)
     }
 
     function manualReorderSource(task) {
@@ -1915,7 +1932,7 @@ Item {
         return visibleTasks(result, true)
     }
 
-    function applyManualOrderForList(orderedTasks, movedTask) {
+    function applyManualOrderForList(orderedTasks, movedTask, refreshView) {
         var targetIndex = -1
         for (var i = 0; i < orderedTasks.length; ++i) {
             if (taskKey(orderedTasks[i]) === taskKey(movedTask)) {
@@ -1924,6 +1941,9 @@ Item {
             }
         }
         if (targetIndex < 0) return
+        if (refreshView === false) {
+            suppressDirtySyncViewReload = true
+        }
         var previous = targetIndex > 0 ? orderedTasks[targetIndex - 1] : null
         var next = targetIndex < orderedTasks.length - 1 ? orderedTasks[targetIndex + 1] : null
         var previousOrder = previous ? Number(previous.sortOrder || 0) : 0
@@ -1937,20 +1957,22 @@ Item {
             newOrder = previousOrder + 1000
         }
         if (newOrder > 0) {
-            saveSortOrderDraft(movedTask, newOrder)
+            saveSortOrderDraft(movedTask, newOrder, refreshView)
         } else {
             for (var j = 0; j < orderedTasks.length; ++j) {
-                saveSortOrderDraft(orderedTasks[j], (j + 1) * 1000)
+                saveSortOrderDraft(orderedTasks[j], (j + 1) * 1000, refreshView)
             }
         }
-        applyCurrentViewFilter()
+        if (refreshView !== false) {
+            applyCurrentViewFilter()
+        }
         statusText = i18n.tr("Manual order updated.")
         syncStateText = i18n.tr("Waiting to sync")
         syncStateColor = "#b37a2a"
         scheduleDirtyAutoSync()
     }
 
-    function saveSortOrderDraft(task, sortOrder) {
+    function saveSortOrderDraft(task, sortOrder, refreshView) {
         if (Number(task.sortOrder || 0) === Number(sortOrder || 0)) return
         var updated = {}
         for (var key in task) {
@@ -1960,7 +1982,7 @@ Item {
         updated.localStatus = updated.isNew === true ? tasksCache.statusCreated : tasksCache.statusEdited
         updated.dirty = true
         updated.localModified = Date.now()
-        upsertTask(updated)
+        upsertTask(updated, refreshView !== false)
         tasksCache.saveLocalDraft(updated)
     }
 

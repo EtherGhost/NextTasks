@@ -231,11 +231,27 @@ Page {
         Dialog {
             id: dialog
             title: i18n.tr("Sync status")
-            text: page.syncStatusDetailsText()
+            text: ""
+
+            Flickable {
+                width: parent ? parent.width : units.gu(34)
+                height: Math.min(syncStatusText.implicitHeight, units.gu(22))
+                contentWidth: width
+                contentHeight: syncStatusText.implicitHeight
+                clip: true
+
+                Label {
+                    id: syncStatusText
+                    width: parent.width
+                    text: page.syncStatusDetailsText()
+                    wrapMode: Text.WordWrap
+                }
+            }
 
             NextCommon.AppButton {
+                width: parent ? parent.width : units.gu(34)
+                height: units.gu(4.8)
                 text: i18n.tr("Resolve conflict")
-                variant: "primary"
                 visible: page.task.conflict === true
                 enabled: tasksController && !tasksController.loading
                 onClicked: {
@@ -245,8 +261,9 @@ Page {
             }
 
             NextCommon.AppButton {
+                width: parent ? parent.width : units.gu(34)
+                height: units.gu(4.8)
                 text: i18n.tr("Refresh")
-                variant: "primary"
                 visible: tasksController && tasksController.syncStateText === i18n.tr("Sync failed")
                 enabled: tasksController && !tasksController.loading
                 onClicked: {
@@ -256,6 +273,8 @@ Page {
             }
 
             NextCommon.AppButton {
+                width: parent ? parent.width : units.gu(34)
+                height: units.gu(4.8)
                 text: i18n.tr("Close")
                 onClicked: PopupUtils.close(dialog)
             }
@@ -369,7 +388,13 @@ Page {
         Dialog {
             id: statusPopup
             title: i18n.tr("Status")
-            text: i18n.tr("Choose task status.")
+            text: ""
+
+            Label {
+                width: parent ? parent.width : units.gu(34)
+                text: i18n.tr("Choose task status.")
+                wrapMode: Text.WordWrap
+            }
 
             Repeater {
                 model: [
@@ -379,6 +404,8 @@ Page {
                 ]
 
                 NextCommon.AppButton {
+                    width: parent ? parent.width : units.gu(34)
+                    height: units.gu(4.8)
                     text: modelData.label + (page.statusValue === modelData.value ? "  \u2713" : "")
                     selected: page.statusValue === modelData.value
                     onClicked: {
@@ -393,6 +420,8 @@ Page {
             }
 
             NextCommon.AppButton {
+                width: parent ? parent.width : units.gu(34)
+                height: units.gu(4.8)
                 text: i18n.tr("Cancel")
                 onClicked: PopupUtils.close(statusPopup)
             }
@@ -405,10 +434,26 @@ Page {
         Dialog {
             id: tagsPopup
             title: i18n.tr("Select tags")
-            text: page.tagsText.length > 0 ? i18n.tr("Selected: %1").arg(page.tagsText) : i18n.tr("No tags yet. Type above to create one.")
+            text: ""
+
+            Flickable {
+                width: parent ? parent.width : units.gu(34)
+                height: Math.min(tagsStatusText.implicitHeight, units.gu(12))
+                contentWidth: width
+                contentHeight: tagsStatusText.implicitHeight
+                clip: true
+
+                Label {
+                    id: tagsStatusText
+                    width: parent.width
+                    text: page.tagsText.length > 0 ? i18n.tr("Selected: %1").arg(page.tagsText) : i18n.tr("No tags yet. Type above to create one.")
+                    wrapMode: Text.WordWrap
+                }
+            }
 
             TextField {
                 id: newTagField
+                width: parent ? parent.width : units.gu(34)
                 text: page.newTagText
                 placeholderText: i18n.tr("New tag")
                 inputMethodHints: Qt.ImhNoPredictiveText
@@ -419,6 +464,8 @@ Page {
                 model: page.availableTags()
 
                 NextCommon.AppButton {
+                    width: parent ? parent.width : units.gu(34)
+                    height: units.gu(4.8)
                     text: (page.tagSelected(modelData) ? "\u2713  " : "") + modelData
                     selected: page.tagSelected(modelData)
                     onClicked: page.toggleTag(modelData)
@@ -426,8 +473,9 @@ Page {
             }
 
             NextCommon.AppButton {
+                width: parent ? parent.width : units.gu(34)
+                height: units.gu(4.8)
                 text: i18n.tr("Add tag")
-                variant: "primary"
                 onClicked: {
                     page.addTag(newTagField.text)
                     PopupUtils.close(tagsPopup)
@@ -435,6 +483,8 @@ Page {
             }
 
             NextCommon.AppButton {
+                width: parent ? parent.width : units.gu(34)
+                height: units.gu(4.8)
                 text: i18n.tr("Clear tags")
                 visible: page.tagsText.length > 0
                 onClicked: {
@@ -445,6 +495,8 @@ Page {
             }
 
             NextCommon.AppButton {
+                width: parent ? parent.width : units.gu(34)
+                height: units.gu(4.8)
                 text: i18n.tr("Done")
                 onClicked: PopupUtils.close(tagsPopup)
             }
@@ -457,11 +509,19 @@ Page {
         Dialog {
             id: dialog
             title: i18n.tr("Delete task?")
-            text: task.dirty || task.isNew
-                ? i18n.tr("This task has local changes. Deleting it will discard those local changes.")
-                : i18n.tr("The task will be deleted from this device and synced to the server.")
+            text: ""
+
+            Label {
+                width: parent ? parent.width : units.gu(34)
+                text: task.dirty || task.isNew
+                    ? i18n.tr("This task has local changes. Deleting it will discard those local changes.")
+                    : i18n.tr("The task will be deleted from this device and synced to the server.")
+                wrapMode: Text.WordWrap
+            }
 
             NextCommon.AppButton {
+                width: parent ? parent.width : units.gu(34)
+                height: units.gu(4.8)
                 text: i18n.tr("Delete")
                 variant: "destructive"
                 destructiveColor: page.deleteRed
@@ -472,6 +532,8 @@ Page {
             }
 
             NextCommon.AppButton {
+                width: parent ? parent.width : units.gu(34)
+                height: units.gu(4.8)
                 text: i18n.tr("Cancel")
                 onClicked: PopupUtils.close(dialog)
             }
@@ -484,16 +546,23 @@ Page {
         Dialog {
             id: dialog
             title: i18n.tr("Move task")
-            text: task.dirty || task.isNew || task.conflict
-                ? i18n.tr("Sync this task before moving it to another list.")
-                : i18n.tr("Choose the target list.")
+            text: ""
+
+            Label {
+                width: parent ? parent.width : units.gu(34)
+                text: task.dirty || task.isNew || task.conflict
+                    ? i18n.tr("Sync this task before moving it to another list.")
+                    : i18n.tr("Choose the target list.")
+                wrapMode: Text.WordWrap
+            }
 
             Repeater {
                 model: tasksController ? tasksController.availableMoveCalendars(task) : []
 
                 NextCommon.AppButton {
+                    width: parent ? parent.width : units.gu(34)
+                    height: units.gu(4.8)
                     text: modelData.title || i18n.tr("Tasks")
-                    variant: "primary"
                     visible: !(task.dirty || task.isNew || task.conflict)
                     enabled: tasksController && !tasksController.loading
                     onClicked: {
@@ -504,6 +573,8 @@ Page {
             }
 
             NextCommon.AppButton {
+                width: parent ? parent.width : units.gu(34)
+                height: units.gu(4.8)
                 text: i18n.tr("Close")
                 onClicked: PopupUtils.close(dialog)
             }

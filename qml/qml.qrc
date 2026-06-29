@@ -27,6 +27,7 @@
         <file alias="NextCommon/EmptyState.qml">../vendor/NextCommon/qml/NextCommon/EmptyState.qml</file>
         <file alias="NextCommon/LanguagePage.qml">../vendor/NextCommon/qml/NextCommon/LanguagePage.qml</file>
         <file alias="NextCommon/MainTopBar.qml">../vendor/NextCommon/qml/NextCommon/MainTopBar.qml</file>
+        <file alias="NextCommon/ReorderableListView.qml">../vendor/NextCommon/qml/NextCommon/ReorderableListView.qml</file>
         <file alias="NextCommon/SettingsCard.qml">../vendor/NextCommon/qml/NextCommon/SettingsCard.qml</file>
         <file alias="NextCommon/SettingsShell.qml">../vendor/NextCommon/qml/NextCommon/SettingsShell.qml</file>
         <file alias="NextCommon/StatusRow.qml">../vendor/NextCommon/qml/NextCommon/StatusRow.qml</file>

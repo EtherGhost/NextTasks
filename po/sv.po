@@ -802,7 +802,7 @@ msgstr "Synkstatus"
 #: qml/pages/HomePage.qml:503 qml/pages/TaskDetailPage.qml:207
 #: qml/pages/TaskDetailPage.qml:970
 msgid "Resolve conflict"
-msgstr ""
+msgstr "Lös konflikt"
 
 #: qml/pages/HomePage.qml:514 qml/pages/TaskDetailPage.qml:218
 msgid "Refresh"
@@ -1260,6 +1260,18 @@ msgstr "Flyttade %1 uppgift(er). %2 hoppades över eftersom de behöver synkas f
 #: qml/backend/TasksController.qml:940
 msgid "Moved %1 task(s)."
 msgstr "Flyttade %1 uppgift(er)."
+
+msgid "%1 selected"
+msgstr "%1 markerade"
+
+msgid "Move"
+msgstr "Flytta"
+
+msgid "This will delete %1 selected tasks."
+msgstr "Detta raderar %1 markerade uppgifter."
+
+msgid "Delete selected tasks?"
+msgstr "Radera markerade uppgifter?"
 
 #: qml/pages/HomePage.qml:966
 msgid "Move selected tasks"

@@ -15,6 +15,7 @@ Page {
     property var filteredEntries: []
     property var displayEntries: []
     property var completedDisplayEntries: []
+    property var reorderableTaskEntries: []
     property int completedTaskCount: 0
     property string newListName: ""
     property var selectedMenuCalendar: ({})
@@ -102,6 +103,27 @@ Page {
         sortDialogCalendarHref = dataController.selectedCalendarHref
         sortDialogCalendarTitle = dataController.selectedCalendarTitle
         PopupUtils.open(sortDialog)
+    }
+
+    function useReorderableTaskList() {
+        return dataController.viewMode === "calendarTasks"
+            && dataController.sortMode === "manual"
+            && page.searchQuery.length === 0
+            && page.completedTaskCount === 0
+    }
+
+    function reorderTaskByVisibleIndexes(fromIndex, toIndex) {
+        if (fromIndex < 0 || fromIndex >= reorderableTaskEntries.length) {
+            return
+        }
+        if (toIndex < 0 || toIndex >= reorderableTaskEntries.length || fromIndex === toIndex) {
+            return
+        }
+        var nextEntries = reorderableTaskEntries.slice(0)
+        var task = nextEntries.splice(fromIndex, 1)[0]
+        nextEntries.splice(toIndex, 0, task)
+        reorderableTaskEntries = nextEntries
+        dataController.reorderManualTask(task, toIndex, false)
     }
 
     function activeSortMode() {
@@ -437,6 +459,7 @@ Page {
         if (dataController.viewMode === "calendarList") {
             displayEntries = source || []
             completedDisplayEntries = []
+            reorderableTaskEntries = []
             return
         }
 
@@ -453,6 +476,7 @@ Page {
         }
         displayEntries = sectionedEntries(openEntries)
         completedDisplayEntries = sectionedEntries(completedEntries)
+        reorderableTaskEntries = dataController.viewMode === "calendarTasks" ? openEntries : []
     }
 
     function sectionedEntries(source) {
@@ -668,16 +692,15 @@ Page {
                 }
 
                 NextCommon.AppButton {
-                    Layout.preferredWidth: units.gu(8)
+                    Layout.preferredWidth: units.gu(9.5)
                     Layout.preferredHeight: units.gu(5)
                     enabled: page.selectedTaskCount() > 0
                     text: i18n.tr("Move")
-                    variant: "primary"
                     onClicked: page.requestBulkMove()
                 }
 
                 NextCommon.AppButton {
-                    Layout.preferredWidth: units.gu(8)
+                    Layout.preferredWidth: units.gu(9.5)
                     Layout.preferredHeight: units.gu(5)
                     enabled: page.selectedTaskCount() > 0
                     text: i18n.tr("Delete")
@@ -695,14 +718,21 @@ Page {
         Dialog {
             id: dialog
             title: i18n.tr("Choose task list")
-            text: i18n.tr("Select where the new task should be created.")
+            text: ""
+
+            Label {
+                width: parent ? parent.width : units.gu(34)
+                text: i18n.tr("Select where the new task should be created.")
+                wrapMode: Text.WordWrap
+            }
 
             Repeater {
                 model: page.createTaskCalendars
 
                 NextCommon.AppButton {
+                    width: parent ? parent.width : units.gu(34)
+                    height: units.gu(4.8)
                     text: modelData.title || i18n.tr("Tasks")
-                    variant: "primary"
                     onClicked: {
                         PopupUtils.close(dialog)
                         page.createTaskInCalendar(modelData)
@@ -711,6 +741,8 @@ Page {
             }
 
             NextCommon.AppButton {
+                width: parent ? parent.width : units.gu(34)
+                height: units.gu(4.8)
                 text: i18n.tr("Cancel")
                 onClicked: PopupUtils.close(dialog)
             }
@@ -723,14 +755,21 @@ Page {
         Dialog {
             id: dialog
             title: i18n.tr("Choose task list")
-            text: i18n.tr("Select where the shared text task should be created.")
+            text: ""
+
+            Label {
+                width: parent ? parent.width : units.gu(34)
+                text: i18n.tr("Select where the shared text task should be created.")
+                wrapMode: Text.WordWrap
+            }
 
             Repeater {
                 model: page.shareImportCalendars
 
                 NextCommon.AppButton {
+                    width: parent ? parent.width : units.gu(34)
+                    height: units.gu(4.8)
                     text: modelData.title || i18n.tr("Tasks")
-                    variant: "primary"
                     onClicked: {
                         PopupUtils.close(dialog)
                         page.createSharedTaskInCalendar(modelData)
@@ -739,6 +778,8 @@ Page {
             }
 
             NextCommon.AppButton {
+                width: parent ? parent.width : units.gu(34)
+                height: units.gu(4.8)
                 text: i18n.tr("Cancel")
                 onClicked: {
                     page.pendingSharedTitle = ""
@@ -757,10 +798,17 @@ Page {
         Dialog {
             id: dialog
             title: i18n.tr("Create new list")
-            text: i18n.tr("Enter a name for the new task list.")
+            text: ""
+
+            Label {
+                width: parent ? parent.width : units.gu(34)
+                text: i18n.tr("Enter a name for the new task list.")
+                wrapMode: Text.WordWrap
+            }
 
             TextField {
                 id: listNameField
+                width: parent ? parent.width : units.gu(34)
                 text: page.newListName
                 placeholderText: i18n.tr("List name")
                 inputMethodHints: Qt.ImhNoPredictiveText
@@ -775,8 +823,9 @@ Page {
             }
 
             NextCommon.AppButton {
+                width: parent ? parent.width : units.gu(34)
+                height: units.gu(4.8)
                 text: i18n.tr("Create")
-                variant: "primary"
                 enabled: listNameField.text.trim().length > 0 && !dataController.loading
                 onClicked: {
                     dataController.createCalendar(listNameField.text)
@@ -786,6 +835,8 @@ Page {
             }
 
             NextCommon.AppButton {
+                width: parent ? parent.width : units.gu(34)
+                height: units.gu(4.8)
                 text: i18n.tr("Cancel")
                 onClicked: PopupUtils.close(dialog)
             }
@@ -798,10 +849,17 @@ Page {
         Dialog {
             id: dialog
             title: page.selectedMenuCalendar.title || i18n.tr("Task list")
-            text: i18n.tr("Rename the list, change its color, or delete it.")
+            text: ""
+
+            Label {
+                width: parent ? parent.width : units.gu(34)
+                text: i18n.tr("Rename the list, change its color, or delete it.")
+                wrapMode: Text.WordWrap
+            }
 
             TextField {
                 id: editListNameField
+                width: parent ? parent.width : units.gu(34)
                 text: page.editListName
                 placeholderText: i18n.tr("List name")
                 inputMethodHints: Qt.ImhNoPredictiveText
@@ -843,13 +901,16 @@ Page {
             }
 
             NextCommon.AppButton {
+                width: parent ? parent.width : units.gu(34)
+                height: units.gu(4.8)
                 text: i18n.tr("Save")
-                variant: "primary"
                 enabled: page.editListName.trim().length > 0 && !dataController.loading
                 onClicked: page.saveSelectedListSettings(dialog)
             }
 
             NextCommon.AppButton {
+                width: parent ? parent.width : units.gu(34)
+                height: units.gu(4.8)
                 text: i18n.tr("Delete list")
                 variant: "destructive"
                 destructiveColor: page.deleteRed
@@ -858,6 +919,8 @@ Page {
             }
 
             NextCommon.AppButton {
+                width: parent ? parent.width : units.gu(34)
+                height: units.gu(4.8)
                 text: i18n.tr("Cancel")
                 onClicked: PopupUtils.close(dialog)
             }
@@ -870,9 +933,17 @@ Page {
         Dialog {
             id: dialog
             title: i18n.tr("Delete task list?")
-            text: i18n.tr("The list and its tasks will be removed from the server and this device.")
+            text: ""
+
+            Label {
+                width: parent ? parent.width : units.gu(34)
+                text: i18n.tr("The list and its tasks will be removed from the server and this device.")
+                wrapMode: Text.WordWrap
+            }
 
             NextCommon.AppButton {
+                width: parent ? parent.width : units.gu(34)
+                height: units.gu(4.8)
                 text: i18n.tr("Delete")
                 variant: "destructive"
                 destructiveColor: page.deleteRed
@@ -884,6 +955,8 @@ Page {
             }
 
             NextCommon.AppButton {
+                width: parent ? parent.width : units.gu(34)
+                height: units.gu(4.8)
                 text: i18n.tr("Cancel")
                 onClicked: PopupUtils.close(dialog)
             }
@@ -896,9 +969,17 @@ Page {
         Dialog {
             id: dialog
             title: i18n.tr("Delete task?")
-            text: i18n.tr("The task will be deleted from this device and synced to the server.")
+            text: ""
+
+            Label {
+                width: parent ? parent.width : units.gu(34)
+                text: i18n.tr("The task will be deleted from this device and synced to the server.")
+                wrapMode: Text.WordWrap
+            }
 
             NextCommon.AppButton {
+                width: parent ? parent.width : units.gu(34)
+                height: units.gu(4.8)
                 text: i18n.tr("Delete")
                 variant: "destructive"
                 destructiveColor: page.deleteRed
@@ -911,6 +992,8 @@ Page {
             }
 
             NextCommon.AppButton {
+                width: parent ? parent.width : units.gu(34)
+                height: units.gu(4.8)
                 text: i18n.tr("Cancel")
                 onClicked: {
                     page.pendingSwipeDeleteTask = ({})
@@ -926,9 +1009,26 @@ Page {
         Dialog {
             id: dialog
             title: i18n.tr("Delete selected tasks?")
-            text: page.bulkDeleteMessage()
+            text: ""
+
+            Flickable {
+                width: parent ? parent.width : units.gu(34)
+                height: Math.min(bulkDeleteText.implicitHeight, units.gu(16))
+                contentWidth: width
+                contentHeight: bulkDeleteText.implicitHeight
+                clip: true
+
+                Label {
+                    id: bulkDeleteText
+                    width: parent.width
+                    text: page.bulkDeleteMessage()
+                    wrapMode: Text.WordWrap
+                }
+            }
 
             NextCommon.AppButton {
+                width: parent ? parent.width : units.gu(34)
+                height: units.gu(4.8)
                 text: i18n.tr("Delete")
                 variant: "destructive"
                 destructiveColor: page.deleteRed
@@ -944,6 +1044,8 @@ Page {
             }
 
             NextCommon.AppButton {
+                width: parent ? parent.width : units.gu(34)
+                height: units.gu(4.8)
                 text: i18n.tr("Cancel")
                 onClicked: PopupUtils.close(dialog)
             }
@@ -956,14 +1058,30 @@ Page {
         Dialog {
             id: dialog
             title: i18n.tr("Move selected tasks")
-            text: i18n.tr("Choose the target list. Tasks with unsynced local changes are skipped.")
+            text: ""
+
+            Flickable {
+                width: parent ? parent.width : units.gu(34)
+                height: Math.min(bulkMoveText.implicitHeight, units.gu(12))
+                contentWidth: width
+                contentHeight: bulkMoveText.implicitHeight
+                clip: true
+
+                Label {
+                    id: bulkMoveText
+                    width: parent.width
+                    text: i18n.tr("Choose the target list. Tasks with unsynced local changes are skipped.")
+                    wrapMode: Text.WordWrap
+                }
+            }
 
             Repeater {
                 model: dataController.availableCreateCalendars()
 
                 NextCommon.AppButton {
+                    width: parent ? parent.width : units.gu(34)
+                    height: units.gu(4.8)
                     text: modelData.title || i18n.tr("Tasks")
-                    variant: "primary"
                     visible: dataController.canMoveTasksToCalendar(page.bulkMoveTasks, modelData)
                     enabled: visible && !dataController.loading
                     onClicked: {
@@ -978,6 +1096,8 @@ Page {
             }
 
             NextCommon.AppButton {
+                width: parent ? parent.width : units.gu(34)
+                height: units.gu(4.8)
                 text: i18n.tr("Cancel")
                 onClicked: PopupUtils.close(dialog)
             }
@@ -990,9 +1110,25 @@ Page {
         Dialog {
             id: dialog
             title: i18n.tr("Sync status")
-            text: page.statusDetailsText()
+
+            Flickable {
+                width: parent ? parent.width : units.gu(34)
+                height: Math.min(statusDetailsLabel.implicitHeight, units.gu(22))
+                contentWidth: width
+                contentHeight: statusDetailsLabel.implicitHeight
+                clip: true
+
+                Label {
+                    id: statusDetailsLabel
+                    width: parent.width
+                    text: page.statusDetailsText()
+                    wrapMode: Text.WordWrap
+                }
+            }
 
             NextCommon.AppButton {
+                width: parent ? parent.width : units.gu(34)
+                height: units.gu(4.8)
                 text: i18n.tr("Resolve conflict")
                 variant: "primary"
                 visible: dataController.conflictTasksCount > 0
@@ -1004,6 +1140,8 @@ Page {
             }
 
             NextCommon.AppButton {
+                width: parent ? parent.width : units.gu(34)
+                height: units.gu(4.8)
                 text: i18n.tr("Refresh")
                 variant: "primary"
                 visible: page.statusAllowsRefresh()
@@ -1015,6 +1153,8 @@ Page {
             }
 
             NextCommon.AppButton {
+                width: parent ? parent.width : units.gu(34)
+                height: units.gu(4.8)
                 text: i18n.tr("Close")
                 onClicked: PopupUtils.close(dialog)
             }
@@ -1027,11 +1167,18 @@ Page {
         Dialog {
             id: dialog
             title: i18n.tr("Reopen completed tasks?")
-            text: i18n.tr("This will mark all completed tasks in this list as open again.")
+            text: ""
+
+            Label {
+                width: parent ? parent.width : units.gu(34)
+                text: i18n.tr("This will mark all completed tasks in this list as open again.")
+                wrapMode: Text.WordWrap
+            }
 
             NextCommon.AppButton {
+                width: parent ? parent.width : units.gu(34)
+                height: units.gu(4.8)
                 text: i18n.tr("Reopen all")
-                variant: "primary"
                 onClicked: {
                     PopupUtils.close(dialog)
                     dataController.reopenCompletedTasksInCurrentScope()
@@ -1039,6 +1186,8 @@ Page {
             }
 
             NextCommon.AppButton {
+                width: parent ? parent.width : units.gu(34)
+                height: units.gu(4.8)
                 text: i18n.tr("Cancel")
                 onClicked: PopupUtils.close(dialog)
             }
@@ -1053,14 +1202,22 @@ Page {
             title: page.sortDialogCalendarTitle.length > 0
                 ? i18n.tr("Sort %1").arg(page.sortDialogCalendarTitle)
                 : i18n.tr("Sort tasks")
-            text: page.activeSortMode() === "manual"
-                ? i18n.tr("Manual order is saved to the task list using Nextcloud-compatible task order values.")
-                : i18n.tr("Uses standard task sort concepts.")
+            text: ""
+
+            Label {
+                width: parent ? parent.width : units.gu(34)
+                text: page.activeSortMode() === "manual"
+                    ? i18n.tr("Manual order is saved to the task list using Nextcloud-compatible task order values.")
+                    : i18n.tr("Uses standard task sort concepts.")
+                wrapMode: Text.WordWrap
+            }
 
             Repeater {
                 model: dataController.sortOptions()
 
                 NextCommon.AppButton {
+                    width: parent ? parent.width : units.gu(34)
+                    height: units.gu(4.8)
                     text: modelData.label + (modelData.value === page.activeSortMode() ? "  \u2713" : "")
                     selected: modelData.value === page.activeSortMode()
                     onClicked: {
@@ -1071,12 +1228,16 @@ Page {
             }
 
             NextCommon.AppButton {
+                width: parent ? parent.width : units.gu(34)
+                height: units.gu(4.8)
                 text: dataController.sortAscending ? i18n.tr("Ascending") : i18n.tr("Descending")
                 visible: page.activeSortMode() !== "manual"
                 onClicked: dataController.toggleSortAscending()
             }
 
             NextCommon.AppButton {
+                width: parent ? parent.width : units.gu(34)
+                height: units.gu(4.8)
                 text: i18n.tr("Close")
                 onClicked: PopupUtils.close(dialog)
             }
@@ -1089,14 +1250,21 @@ Page {
         Dialog {
             id: dialog
             title: i18n.tr("Sort list")
-            text: i18n.tr("Choose which task list to sort.")
+            text: ""
+
+            Label {
+                width: parent ? parent.width : units.gu(34)
+                text: i18n.tr("Choose which task list to sort.")
+                wrapMode: Text.WordWrap
+            }
 
             Repeater {
                 model: dataController.visibleSortCalendars()
 
                 NextCommon.AppButton {
+                    width: parent ? parent.width : units.gu(34)
+                    height: units.gu(4.8)
                     text: (modelData.title || i18n.tr("Tasks")) + " - " + dataController.sortModeLabelForCalendar(modelData.href || "")
-                    variant: "primary"
                     onClicked: {
                         page.sortDialogCalendarHref = modelData.href || ""
                         page.sortDialogCalendarTitle = modelData.title || i18n.tr("Tasks")
@@ -1107,8 +1275,118 @@ Page {
             }
 
             NextCommon.AppButton {
+                width: parent ? parent.width : units.gu(34)
+                height: units.gu(4.8)
                 text: i18n.tr("Close")
                 onClicked: PopupUtils.close(dialog)
+            }
+        }
+    }
+
+    Component {
+        id: reorderTaskDelegate
+
+        Rectangle {
+            property var itemData: ({})
+            property int itemIndex: -1
+            property bool placeholder: false
+            property bool dragging: false
+
+            implicitHeight: units.gu(8.8)
+            radius: units.gu(0.6)
+            color: placeholder ? "transparent" : page.taskCardColor(itemData)
+            border.width: placeholder ? 2 : page.taskFrameWidth(itemData)
+            border.color: placeholder ? page.actionBlue : page.taskFrameColor(itemData)
+            opacity: placeholder ? 0.55 : (itemData.completed ? 0.56 : 1.0)
+
+            RowLayout {
+                anchors {
+                    fill: parent
+                    margins: units.gu(1)
+                }
+                spacing: units.gu(1)
+
+                Rectangle {
+                    Layout.preferredWidth: units.gu(2.8)
+                    Layout.preferredHeight: units.gu(2.8)
+                    Layout.alignment: Qt.AlignVCenter
+                    radius: units.gu(0.35)
+                    color: itemData.completed ? "#5a8f3c" : "transparent"
+                    border.width: 2
+                    border.color: itemData.completed ? "#5a8f3c" : theme.palette.normal.backgroundText
+
+                    Label {
+                        anchors.centerIn: parent
+                        text: "\u2713"
+                        visible: itemData.completed === true
+                        color: "white"
+                        font.bold: true
+                    }
+                }
+
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignVCenter
+                    spacing: units.gu(0.2)
+
+                    Label {
+                        Layout.fillWidth: true
+                        text: itemData.title || i18n.tr("Untitled")
+                        font.bold: !itemData.completed
+                        wrapMode: Text.WordWrap
+                        maximumLineCount: 2
+                        elide: Text.ElideRight
+                        opacity: itemData.completed ? 0.58 : 1.0
+                    }
+
+                    RowLayout {
+                        Layout.fillWidth: true
+                        spacing: units.gu(0.75)
+
+                        Label {
+                            Layout.fillWidth: true
+                            text: page.entrySubtitle(itemData)
+                            textSize: Label.Small
+                            opacity: itemData.completed ? 0.48 : 0.68
+                            elide: Text.ElideRight
+                            maximumLineCount: 1
+                        }
+
+                        Rectangle {
+                            visible: page.taskStatusBadgeText(itemData).length > 0
+                            color: page.taskStatusBadgeColor(itemData)
+                            height: reorderTaskStatusBadgeLabel.implicitHeight + units.gu(0.35)
+                            width: Math.min(reorderTaskStatusBadgeLabel.implicitWidth + units.gu(0.9), units.gu(12))
+                            radius: units.gu(0.3)
+
+                            Label {
+                                id: reorderTaskStatusBadgeLabel
+                                anchors {
+                                    left: parent.left
+                                    right: parent.right
+                                    verticalCenter: parent.verticalCenter
+                                    leftMargin: units.gu(0.45)
+                                    rightMargin: units.gu(0.45)
+                                }
+                                text: page.taskStatusBadgeText(itemData)
+                                color: "white"
+                                elide: Text.ElideRight
+                                maximumLineCount: 1
+                            }
+                        }
+                    }
+                }
+
+                Label {
+                    Layout.preferredWidth: units.gu(3.2)
+                    Layout.alignment: Qt.AlignVCenter
+                    text: "\u2630"
+                    color: theme.palette.normal.backgroundText
+                    opacity: dragging ? 0.35 : 0.62
+                    font.pixelSize: units.gu(2.2)
+                    font.bold: true
+                    horizontalAlignment: Text.AlignHCenter
+                }
             }
         }
     }
@@ -1144,6 +1422,7 @@ Page {
     Flickable {
         id: taskFlickable
         anchors { fill: parent; topMargin: page.header.height }
+        visible: !page.useReorderableTaskList()
         contentWidth: width
         contentHeight: contentColumn.height + units.gu(3)
         clip: true
@@ -1220,7 +1499,7 @@ Page {
                 }
                 Label {
                     Layout.fillWidth: true
-                    text: dataController.titleText + "  \u2022  " + page.listStatusText()
+                    text: dataController.titleText + " - " + page.listStatusText()
                     textSize: Label.Small
                     opacity: 0.68
                     elide: Text.ElideRight
@@ -1976,6 +2255,114 @@ Page {
                 title: page.searchQuery.length > 0 ? i18n.tr("No matching items") : ""
                 message: page.searchQuery.length > 0 ? "" : appController.apiNote
             }
+        }
+    }
+
+    ColumnLayout {
+        id: reorderableContent
+        anchors {
+            fill: parent
+            topMargin: page.header.height
+            leftMargin: units.gu(2)
+            rightMargin: units.gu(2)
+            bottomMargin: units.gu(2)
+        }
+        visible: page.useReorderableTaskList()
+        spacing: units.gu(1.2)
+
+        RowLayout {
+            Layout.fillWidth: true
+            Layout.preferredHeight: units.gu(4)
+            spacing: units.gu(1)
+
+            Item {
+                Layout.preferredWidth: units.gu(5)
+                Layout.preferredHeight: units.gu(4)
+
+                Label {
+                    anchors.centerIn: parent
+                    text: "\u2039"
+                    color: theme.palette.normal.backgroundText
+                    font.pixelSize: units.gu(3)
+                    font.bold: true
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: dataController.goBackToMyTasks()
+                }
+            }
+
+            Label {
+                Layout.fillWidth: true
+                text: dataController.titleText + " - " + page.listStatusText()
+                textSize: Label.Small
+                opacity: 0.68
+                elide: Text.ElideRight
+                maximumLineCount: 1
+            }
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+            Layout.preferredHeight: units.gu(4)
+            spacing: units.gu(0.8)
+
+            Rectangle {
+                Layout.preferredWidth: units.gu(1.2)
+                Layout.preferredHeight: units.gu(1.2)
+                radius: width / 2
+                color: "#d85a7f"
+            }
+
+            Label {
+                Layout.fillWidth: true
+                text: dataController.titleText || i18n.tr("Tasks")
+                font.bold: true
+                opacity: 0.78
+                elide: Text.ElideRight
+            }
+        }
+
+        NextCommon.ReorderableListView {
+            id: reorderableTasks
+            Layout.fillWidth: true
+            Layout.preferredHeight: Math.max(units.gu(28), page.height - page.header.height - units.gu(16.6))
+            visible: page.reorderableTaskEntries.length > 0
+            model: page.reorderableTaskEntries
+            delegate: reorderTaskDelegate
+            reorderEnabled: !dataController.loading && !page.selectionMode
+            refreshing: dataController.loading
+            dragAreaRightMargin: units.gu(5)
+            pullRefreshThreshold: page.pullRefreshThreshold
+            pullToRefreshEnabled: false
+            refreshIndicatorColor: page.actionBlue
+            pullToRefreshText: i18n.tr("Pull to refresh")
+            releaseToRefreshText: i18n.tr("Release to refresh")
+            refreshingText: i18n.tr("Refreshing...")
+
+            onItemClicked: function(index, item) {
+                if (!item || item.type !== "task") {
+                    return
+                }
+                if (item.conflict === true) {
+                    page.openConflictResolution(item)
+                } else {
+                    page.openTask(item)
+                }
+            }
+
+            onMoveRequested: function(fromIndex, toIndex) {
+                page.reorderTaskByVisibleIndexes(fromIndex, toIndex)
+            }
+
+            onDragStarted: {
+                dataController.pauseUserSync()
+            }
+            onDragEnded: {
+                dataController.resumeUserSync()
+            }
+            onRefreshRequested: dataController.refresh()
         }
     }
 
