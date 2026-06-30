@@ -19,6 +19,7 @@ Item {
     property string trashBinHref: ""
     property int trashRetentionSeconds: 0
     property var pendingTrashRestoreItem: ({})
+    property bool backgroundTrashRefresh: false
     property string viewMode: "myTasks"
     property string titleText: i18n.tr("My Tasks")
     property string selectedCalendarHref: ""
@@ -179,6 +180,10 @@ Item {
                 api.restoreTrashItem(serverUrl, userName, secret, controller.pendingTrashRestoreItem, controller.trashBinHref)
                 return
             }
+            if (controller.backgroundTrashRefresh) {
+                api.loadTrash(serverUrl, userName, secret, "")
+                return
+            }
             if (controller.viewMode === "trash") {
                 api.loadTrash(serverUrl, userName, secret, "")
                 return
@@ -242,6 +247,7 @@ Item {
                 if (controller.dirtySyncRunning) return
                 controller.statusText = controller.calendars.length > 0 ? i18n.tr("Loaded %1 list(s).").arg(controller.calendars.length) : i18n.tr("No lists found.")
                 controller.markUpToDateIfClean()
+                controller.refreshTrashCount()
             } else {
                 controller.loadMyTasksFromCalendars(controller.calendars)
             }
@@ -559,6 +565,15 @@ Item {
                 debugLog("NextTasks Controller ignored stale trash response generation=" + generation)
                 return
             }
+            if (controller.backgroundTrashRefresh) {
+                controller.backgroundTrashRefresh = false
+                controller.trashItems = items || []
+                controller.trashLoadedOnce = true
+                controller.trashBinHref = trashBinHref || ""
+                controller.trashRetentionSeconds = retentionSeconds || 0
+                controller.menuRevision += 1
+                return
+            }
             controller.trashItems = items || []
             controller.trashLoadedOnce = true
             controller.trashBinHref = trashBinHref || ""
@@ -573,6 +588,10 @@ Item {
         onTrashLoadFailed: function(message, generation) {
             if (!controller.isCurrentApiGeneration(generation)) {
                 debugLog("NextTasks Controller ignored stale trash load failure generation=" + generation)
+                return
+            }
+            if (controller.backgroundTrashRefresh) {
+                controller.backgroundTrashRefresh = false
                 return
             }
             controller.loading = false
@@ -593,6 +612,8 @@ Item {
             controller.statusText = i18n.tr("Item restored. Refreshing...")
             controller.syncStateText = i18n.tr("Refreshing")
             controller.syncStateColor = "#2c7fb8"
+            controller.removeRestoredTrashItem(item)
+            controller.forceFullRefresh = true
             controller.loadTrashBin()
         }
         onTrashItemRestoreFailed: function(message, generation) {
@@ -691,6 +712,7 @@ Item {
     }
 
     function loadTrashBin() {
+        backgroundTrashRefresh = false
         selectedCalendarHref = ""
         selectedCalendarTitle = ""
         viewMode = "trash"
@@ -703,6 +725,36 @@ Item {
         api.requestGeneration = accountRequestGeneration
         session.setAccount(accountSettings.accountId, accountSettings.providerId, accountSettings.serviceId, accountSettings.serverUrl)
         session.authenticate()
+    }
+
+    function refreshTrashCount() {
+        if (backgroundTrashRefresh || loading || dirtySyncRunning || taskMoveRunning || taskUpdateRunning || completionUpdateRunning) {
+            return
+        }
+        if (accountSettings.accountId <= 0 || accountSettings.serviceId.length === 0 || accountSettings.serverUrl.length === 0) {
+            return
+        }
+        backgroundTrashRefresh = true
+        accountRequestGeneration += 1
+        api.requestGeneration = accountRequestGeneration
+        session.setAccount(accountSettings.accountId, accountSettings.providerId, accountSettings.serviceId, accountSettings.serverUrl)
+        session.authenticate()
+    }
+
+    function removeRestoredTrashItem(item) {
+        var href = String(item && item.href ? item.href : "")
+        if (href.length === 0) {
+            return
+        }
+        var next = []
+        for (var i = 0; i < trashItems.length; ++i) {
+            if (String(trashItems[i].href || "") !== href) {
+                next.push(trashItems[i])
+            }
+        }
+        trashItems = next
+        trashLoadedOnce = true
+        menuRevision += 1
     }
 
     function restoreTrashItem(item) {
@@ -1216,7 +1268,6 @@ Item {
         pendingMoveFailedCount = 0
         pendingMoveSkippedCount = 0
         loading = false
-        forceFullRefresh = true
         if (failed > 0) {
             statusText = i18n.tr("Moved %1 task(s), %2 failed, %3 skipped.").arg(moved).arg(failed).arg(skipped)
             syncStateText = i18n.tr("Sync failed")
@@ -1225,9 +1276,7 @@ Item {
             statusText = skipped > 0
                 ? i18n.tr("Moved %1 task(s). %2 skipped because they need sync first.").arg(moved).arg(skipped)
                 : i18n.tr("Moved %1 task(s).").arg(moved)
-            syncStateText = i18n.tr("Refreshing")
-            syncStateColor = "#2c7fb8"
-            refresh()
+            markUpToDateIfClean()
         }
     }
 
@@ -1552,6 +1601,7 @@ Item {
             loading = false
             statusText = i18n.tr("No lists found.")
             markUpToDateIfClean()
+            refreshTrashCount()
             return
         }
         loadNextPendingCalendar()
@@ -1576,6 +1626,7 @@ Item {
             if (dirtySyncRunning) return
             statusText = entries.length > 0 ? i18n.tr("Loaded %1 task(s).").arg(entries.length) : i18n.tr("No tasks found.")
             markUpToDateIfClean()
+            refreshTrashCount()
             return
         }
 
@@ -2687,6 +2738,7 @@ Item {
         taskMoveRunning = false
         dirtySyncRunning = false
         dirtySyncAfterRefresh = false
+        backgroundTrashRefresh = false
         pendingCompletionTask = ({})
         pendingCompletionQueue = []
         pendingCompletionTotal = 0

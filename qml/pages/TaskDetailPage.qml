@@ -3,6 +3,7 @@ import QtQuick.Layouts 1.3
 import Lomiri.Components 1.3
 import Lomiri.Components.Popups 1.3
 import "../NextCommon" as NextCommon
+import UTControls 1.0
 
 Page {
     id: page
@@ -23,7 +24,6 @@ Page {
     property string tagsText: ""
     property string notesText: ""
     property string dateDialogTarget: ""
-    property date calendarMonth: new Date()
     property string newTagText: ""
     property bool initializingFields: false
     property bool deletingTask: false
@@ -70,6 +70,13 @@ Page {
         interval: 80
         repeat: false
         onTriggered: page.performAutoSave()
+    }
+
+    Timer {
+        id: localDraftTimer
+        interval: 250
+        repeat: false
+        onTriggered: page.saveLocalDraftNow()
     }
 
     header: PageHeader {
@@ -294,96 +301,27 @@ Page {
             id: dateDialog
             width: Math.min(page.width - units.gu(4), units.gu(40))
             title: page.dateDialogTarget === "start" ? i18n.tr("Start date") : i18n.tr("Due date")
-            text: i18n.tr("Select a date.")
+            text: ""
 
-            NextCommon.AppButton {
-                text: i18n.tr("Today")
-                variant: "primary"
-                onClicked: {
-                    page.applyDateDialogValue(page.todayText())
+            CalendarDatePicker {
+                id: taskDatePicker
+                width: Math.min(dateDialog.width - units.gu(2), units.gu(34))
+                value: page.dateDialogTarget === "start" ? page.startText : page.dueText
+                okText: i18n.tr("OK")
+                todayTextLabel: i18n.tr("Today")
+                clearText: i18n.tr("Clear date")
+                cancelText: i18n.tr("Cancel")
+                onAccepted: {
+                    page.applyDateDialogValue(dateText)
                     PopupUtils.close(dateDialog)
                 }
-            }
-
-            RowLayout {
-                width: Math.min(dateDialog.width - units.gu(2), units.gu(34))
-                NextCommon.AppButton {
-                    text: "\u2039"
-                    onClicked: page.shiftCalendarMonth(-1)
-                }
-                Label {
-                    Layout.fillWidth: true
-                    text: page.monthTitle(page.calendarMonth)
-                    horizontalAlignment: Text.AlignHCenter
-                    font.bold: true
-                }
-                NextCommon.AppButton {
-                    text: "\u203a"
-                    onClicked: page.shiftCalendarMonth(1)
-                }
-            }
-
-            RowLayout {
-                width: Math.min(dateDialog.width - units.gu(2), units.gu(34))
-                Repeater {
-                    model: [i18n.tr("Mon"), i18n.tr("Tue"), i18n.tr("Wed"), i18n.tr("Thu"), i18n.tr("Fri"), i18n.tr("Sat"), i18n.tr("Sun")]
-                    Label {
-                        Layout.fillWidth: true
-                        text: modelData
-                        horizontalAlignment: Text.AlignHCenter
-                        opacity: 0.65
-                        font.bold: true
-                    }
-                }
-            }
-
-            Grid {
-                id: calendarGrid
-                width: Math.min(dateDialog.width - units.gu(2), units.gu(34))
-                columns: 7
-                spacing: units.gu(0.2)
-
-                Repeater {
-                    model: 42
-
-                    Rectangle {
-                        width: (calendarGrid.width - calendarGrid.spacing * 6) / 7
-                        height: units.gu(3.4)
-                        radius: units.gu(0.5)
-                        color: page.calendarCellSelected(index) ? "#2c7fb8" : (page.calendarCellToday(index) ? "#5a8f3c" : "transparent")
-                        border.width: page.calendarCellInMonth(index) ? 1 : 0
-                        border.color: theme.palette.normal.base
-                        opacity: page.calendarCellInMonth(index) ? 1.0 : 0.32
-
-                        Label {
-                            anchors.centerIn: parent
-                            text: page.calendarCellDay(index)
-                            color: parent.color === "transparent" ? theme.palette.normal.backgroundText : "white"
-                            font.bold: page.calendarCellToday(index) || page.calendarCellSelected(index)
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                page.applyDateDialogValue(page.calendarCellText(index))
-                                PopupUtils.close(dateDialog)
-                            }
-                        }
-                    }
-                }
-            }
-
-            NextCommon.AppButton {
-                text: i18n.tr("Clear date")
-                onClicked: {
+                onCleared: {
                     page.applyDateDialogValue("")
                     PopupUtils.close(dateDialog)
                 }
-            }
-
-            NextCommon.AppButton {
-                text: i18n.tr("Cancel")
-                onClicked: PopupUtils.close(dateDialog)
+                onCanceled: {
+                    PopupUtils.close(dateDialog)
+                }
             }
         }
     }
@@ -599,6 +537,7 @@ Page {
         clip: true
         boundsBehavior: Flickable.DragOverBounds
         property bool pullRefreshArmed: false
+        property bool pullRefreshRunning: false
 
         onContentYChanged: {
             if (contentY < -page.pullRefreshThreshold && tasksController && !tasksController.loading) {
@@ -608,9 +547,19 @@ Page {
 
         onMovementEnded: {
             if (pullRefreshArmed && tasksController && !tasksController.loading) {
+                pullRefreshRunning = true
                 page.refreshFromServer()
             }
             pullRefreshArmed = false
+        }
+
+        Connections {
+            target: tasksController
+            onLoadingChanged: {
+                if (!tasksController.loading) {
+                    detailFlickable.pullRefreshRunning = false
+                }
+            }
         }
 
         Rectangle {
@@ -623,14 +572,14 @@ Page {
             height: units.gu(3.2)
             radius: units.gu(1.6)
             color: "#2c7fb8"
-            opacity: detailFlickable.contentY < -units.gu(2) || (tasksController && tasksController.loading) ? 0.92 : 0
+            opacity: detailFlickable.contentY < -units.gu(2) || detailFlickable.pullRefreshRunning ? 0.92 : 0
             visible: opacity > 0
             z: 4
 
             Label {
                 id: refreshPullLabel
                 anchors.centerIn: parent
-                text: tasksController && tasksController.loading
+                text: detailFlickable.pullRefreshRunning
                     ? i18n.tr("Refreshing...")
                     : detailFlickable.contentY < -page.pullRefreshThreshold
                     ? i18n.tr("Release to refresh")
@@ -666,6 +615,7 @@ Page {
                 onActiveFocusChanged: {
                     page.updateInputEditingState()
                     if (!activeFocus) {
+                        page.saveLocalDraftNow()
                         Qt.callLater(page.refreshTaskFromController)
                     }
                 }
@@ -1221,6 +1171,7 @@ Page {
                         onActiveFocusChanged: {
                             page.updateInputEditingState()
                             if (!activeFocus) {
+                                page.saveLocalDraftNow()
                                 Qt.callLater(page.refreshTaskFromController)
                             }
                         }
@@ -1281,8 +1232,16 @@ Page {
         if (initializingFields || !tasksController || !dirty || page.taskReadOnly()) {
             return
         }
-        tasksController.updateTaskLocalDraft(task, currentChanges())
+        localDraftTimer.restart()
         autoSaveTimer.restart()
+    }
+
+    function saveLocalDraftNow() {
+        localDraftTimer.stop()
+        if (initializingFields || !tasksController || !dirty || page.taskReadOnly()) {
+            return
+        }
+        tasksController.updateTaskLocalDraft(task, currentChanges())
     }
 
     function commitAndSave() {
@@ -1294,6 +1253,7 @@ Page {
     }
 
     function performAutoSave() {
+        saveLocalDraftNow()
         autoSaveTimer.stop()
         if (!tasksController || !dirty || page.taskReadOnly()) {
             return
@@ -1547,8 +1507,6 @@ Page {
 
     function openDateDialog(target) {
         dateDialogTarget = target
-        var selected = target === "start" ? startText : dueText
-        calendarMonth = selected.length > 0 ? dateFromText(selected) : new Date()
         PopupUtils.open(datePickerDialog)
     }
 
@@ -1560,57 +1518,6 @@ Page {
             dueText = normalized
         }
         scheduleAutoSave()
-    }
-
-    function todayText() {
-        return formatDate(new Date())
-    }
-
-    function formatDate(date) {
-        function pad(value) { return value < 10 ? "0" + value : String(value) }
-        return date.getFullYear() + "-" + pad(date.getMonth() + 1) + "-" + pad(date.getDate())
-    }
-
-    function dateFromText(value) {
-        var text = normalizeDateText(value)
-        if (!/^\d{4}-\d{2}-\d{2}$/.test(text)) return new Date()
-        return new Date(parseInt(text.substring(0, 4), 10), parseInt(text.substring(5, 7), 10) - 1, parseInt(text.substring(8, 10), 10))
-    }
-
-    function shiftCalendarMonth(delta) {
-        calendarMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + delta, 1)
-    }
-
-    function monthTitle(date) {
-        var names = [i18n.tr("January"), i18n.tr("February"), i18n.tr("March"), i18n.tr("April"), i18n.tr("May"), i18n.tr("June"), i18n.tr("July"), i18n.tr("August"), i18n.tr("September"), i18n.tr("October"), i18n.tr("November"), i18n.tr("December")]
-        return names[date.getMonth()] + " " + date.getFullYear()
-    }
-
-    function calendarCellDate(index) {
-        var first = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), 1)
-        var mondayOffset = (first.getDay() + 6) % 7
-        return new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), 1 - mondayOffset + index)
-    }
-
-    function calendarCellDay(index) {
-        return String(calendarCellDate(index).getDate())
-    }
-
-    function calendarCellText(index) {
-        return formatDate(calendarCellDate(index))
-    }
-
-    function calendarCellInMonth(index) {
-        return calendarCellDate(index).getMonth() === calendarMonth.getMonth()
-    }
-
-    function calendarCellToday(index) {
-        return calendarCellText(index) === todayText()
-    }
-
-    function calendarCellSelected(index) {
-        var selected = dateDialogTarget === "start" ? startText : dueText
-        return normalizeDateText(selected) === calendarCellText(index)
     }
 
     function statusLabel() {

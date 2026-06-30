@@ -432,8 +432,7 @@ Item {
         if (!subItemDropEnabled || !childDragDropEnabled || !targetParentId || targetParentId === itemId(draggedItem)) {
             return false
         }
-        if (dragActive && !crossListDragEnabled
-                && (section !== draggedFromSectionId || String(parentId || "") !== String(draggedFromParentId || ""))) {
+        if (dragActive && !crossListDragEnabled && section !== draggedFromSectionId) {
             return false
         }
         if (findItemById(itemChildren(draggedItem), targetParentId)) {

@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.3.0 - 2026-06-30
+
+- Large feature release. Bugs and rough edges are expected.
+- Added Ubuntu Touch Content Hub import/export for task text.
+- Added tree/subtask display with drag-and-drop reordering and child drop support.
+- Added server-backed manual ordering, per-list sorting, and improved drag/drop controls.
+- Added multi-select bulk actions, including bulk delete and move.
+- Added task move-to-list support.
+- Added a first Trash bin view for deleted task lists and tasks, with restore support.
+- Expanded task detail editing for title, notes, status, dates, priority, progress, location, URL, and tags.
+- Improved offline-first cache, autosync, conflict handling, and sync status feedback.
+- Refined task list interactions, including completed checkboxes, read-only indicators, sync badges, and drag handles.
+- Updated shared suite UI components for a more consistent NextApps look.
+- Added Catalan to the starter translation set.
+
 ## 0.2.0 - 2026-06-26
 
 - Added Ubuntu Touch Content Hub support.

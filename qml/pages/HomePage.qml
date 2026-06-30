@@ -406,6 +406,14 @@ Page {
         return dataController.sortMode === "manual"
     }
 
+    function taskDragHandleVisible(task) {
+        return page.taskManualSortEnabled(task)
+            && page.settingEnabled("dragForMoveEnabled", true)
+            && page.searchQuery.length === 0
+            && !dataController.loading
+            && !page.selectionMode
+    }
+
     function swipeDeletes(offset) {
         if (!page.settingEnabled("swipeActionsEnabled", true)) {
             return false
@@ -1619,9 +1627,13 @@ Page {
 
             implicitHeight: units.gu(8.8)
             radius: units.gu(0.6)
-            color: placeholder ? "transparent" : (selected ? Qt.rgba(0.17, 0.50, 0.72, 0.18) : page.taskCardColor(itemData))
-            border.width: placeholder || selected ? 2 : page.taskFrameWidth(itemData)
-            border.color: placeholder || selected ? page.actionBlue : page.taskFrameColor(itemData)
+            color: placeholder
+                ? "transparent"
+                : (parentTarget
+                    ? Qt.rgba(0.17, 0.62, 0.27, 0.18)
+                    : (selected ? Qt.rgba(0.17, 0.50, 0.72, 0.18) : page.taskCardColor(itemData)))
+            border.width: placeholder || selected || parentTarget ? 2 : page.taskFrameWidth(itemData)
+            border.color: parentTarget ? "#2c9f45" : (placeholder || selected ? page.actionBlue : page.taskFrameColor(itemData))
             opacity: placeholder ? 0.55 : (itemData.completed ? 0.56 : 1.0)
 
             Rectangle {
@@ -1665,20 +1677,29 @@ Page {
                 spacing: units.gu(1)
 
                 Rectangle {
+                    id: completeBox
                     Layout.preferredWidth: units.gu(2.8)
                     Layout.preferredHeight: units.gu(2.8)
                     Layout.alignment: Qt.AlignVCenter
                     radius: units.gu(0.35)
-                    color: selected ? page.actionBlue : (itemData.completed ? "#5a8f3c" : "transparent")
+                    color: itemData.completed ? "#5a8f3c" : "transparent"
                     border.width: 2
-                    border.color: selected ? page.actionBlue : (itemData.completed ? "#5a8f3c" : theme.palette.normal.backgroundText)
+                    border.color: itemData.completed ? "#5a8f3c" : theme.palette.normal.backgroundText
+                    z: 8
 
                     Label {
                         anchors.centerIn: parent
                         text: "\u2713"
-                        visible: itemData.completed === true || selected
+                        visible: itemData.completed === true
                         color: "white"
                         font.bold: true
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        enabled: itemData && itemData.type === "task" && !dataController.loading && !dataController.taskReadOnly(itemData)
+                        preventStealing: true
+                        onClicked: dataController.toggleTaskCompleted(itemData)
                     }
                 }
 
@@ -1738,6 +1759,7 @@ Page {
                 Label {
                     Layout.preferredWidth: units.gu(3.2)
                     Layout.alignment: Qt.AlignVCenter
+                    visible: page.taskDragHandleVisible(itemData)
                     text: "\u2630"
                     color: theme.palette.normal.backgroundText
                     opacity: dragging ? 0.35 : 0.62
@@ -1911,12 +1933,9 @@ Page {
                         Layout.fillWidth: true
                         Layout.preferredHeight: units.gu(9.6)
                         radius: units.gu(0.6)
-                        color: theme.palette.normal.base
+                        color: theme.palette.normal.background
                         border.width: 1
-                        border.color: Qt.rgba(theme.palette.normal.backgroundText.r,
-                                              theme.palette.normal.backgroundText.g,
-                                              theme.palette.normal.backgroundText.b,
-                                              0.18)
+                        border.color: theme.palette.normal.base
 
                         RowLayout {
                             anchors {
@@ -2845,7 +2864,7 @@ Page {
             cardHeight: units.gu(8.8)
             taskSpacing: units.gu(1.2)
             dropPreviewHeight: units.gu(8.8)
-            dragAreaLeftMargin: units.gu(4.6)
+            dragAreaLeftMargin: units.gu(8.2)
             pullRefreshThreshold: page.pullRefreshThreshold
             pullToRefreshEnabled: page.settingEnabled("pullToRefreshEnabled", true)
             refreshIndicatorColor: page.actionBlue

@@ -1052,7 +1052,7 @@ msgstr "Svepåtgärder"
 
 #: qml/pages/SettingsPage.qml:73
 msgid "Reverse left/right actions"
-msgstr "Vänd vänster/höger-åtgärder"
+msgstr "Vänd vänster/höger svepåtgärder"
 
 #: qml/pages/SettingsPage.qml:75
 msgid "Drag to move"
@@ -1076,7 +1076,7 @@ msgstr "Visa trädlinjer"
 
 #: qml/pages/SettingsPage.qml:80
 msgid "Bulk selection"
-msgstr "Flerval"
+msgstr "Markera flera för bulk action"
 
 #: qml/pages/SettingsPage.qml:102
 msgid "Sync"

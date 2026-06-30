@@ -338,7 +338,9 @@ Item {
             var key = taskKey(task)
             var rows = key.length > 0 ? tx.executeSql("SELECT local_status FROM tasks WHERE task_key = ?", [key]) : null
             var existingStatus = rows && rows.rows.length > 0 ? (rows.rows.item(0).local_status || statusClean) : statusClean
-            var targetStatus = existingStatus === statusCreated ? statusCreated : statusEdited
+            var targetStatus = existingStatus === statusCreated || task.localStatus === statusCreated || task.isNew === true
+                ? statusCreated
+                : statusEdited
             upsertTaskRow(tx, task, targetStatus, now, false)
         })
         debugLog("NextTasks TasksCache saveLocalDraft keyAvailable=" + (taskKey(task).length > 0 ? "true" : "false"))
