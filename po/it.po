@@ -1228,3 +1228,36 @@ msgstr "Low (%1)"
 
 msgid "AI-assisted starter translation"
 msgstr "Traduzione iniziale assistita dall’IA"
+
+msgid "Trash bin"
+msgstr "Cestino"
+
+msgid "Loading trash bin..."
+msgstr "Caricamento del cestino..."
+
+msgid "Deleted task list"
+msgstr "Elenco attività eliminato"
+
+msgid "Deleted task"
+msgstr "Attività eliminata"
+
+msgid "Trash bin is empty."
+msgstr "Il cestino è vuoto."
+
+msgid "Restore"
+msgstr "Ripristina"
+
+msgid "Deleted %1"
+msgstr "Eliminato %1"
+
+msgid "Loaded %1 deleted item(s)."
+msgstr "Caricati %1 elementi eliminati."
+
+msgid "Item restored. Refreshing..."
+msgstr "Elemento ripristinato. Aggiornamento..."
+
+msgid "Restoring item..."
+msgstr "Ripristino elemento..."
+
+msgid "Deleted items are kept for a limited time by the server."
+msgstr "Gli elementi eliminati vengono conservati dal server per un periodo limitato."

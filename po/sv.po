@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nexttasks.cloudsite\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-21 00:18+0000\n"
+"POT-Creation-Date: 2026-06-30 19:12+0000\n"
 "PO-Revision-Date: 2026-06-21 00:00+0200\n"
 "Last-Translator: Etherghost\n"
 "Language-Team: Swedish\n"
@@ -12,947 +12,1105 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: qml/backend/AccountSessionAdapter.qml:73
-msgid ""
-"Authentication succeeded, but the required Online Accounts credentials were "
-"not available."
-msgstr ""
+#: qml/backend/TaskShareExportPage.qml:7
+#: qml/backend/TaskShareExportPageUbuntu.qml:7
+msgid "Share"
+msgstr "Dela"
 
-#: qml/backend/AccountSessionAdapter.qml:109
-msgid "Authentication failed: %1"
-msgstr "Autentisering misslyckades: %1"
+#: qml/backend/TaskShareExportPage.qml:40
+#: qml/backend/TaskShareExportPageUbuntu.qml:40
+msgid "The task text could not be prepared for sharing."
+msgstr "Task-texten kunde inte förberedas för delning."
 
-#: qml/backend/AccountSessionAdapter.qml:117
-msgid "Desktop test credentials are incomplete."
-msgstr "Testuppgifterna för desktop är ofullständiga."
+#: qml/backend/TaskShareExportPage.qml:46
+#: qml/backend/TaskShareExportPageUbuntu.qml:46
+msgid "Shared"
+msgstr "Delad"
 
-#: qml/backend/AccountSessionAdapter.qml:137
-msgid ""
-"No account selected. Open Account first and authorize a Nextcloud account."
-msgstr ""
+#: qml/backend/TaskShareImportHandler.qml:73
+#: qml/backend/TaskShareImportHandlerUbuntu.qml:73
+msgid "No shared content was received."
+msgstr "Inget delat innehåll togs emot."
 
-#: qml/backend/AccountSessionAdapter.qml:143
-msgid "No server URL configured. Open Account and authorize the OS account."
-msgstr ""
-"Ingen serveradress är konfigurerad. Öppna Konto och auktorisera OS-kontot."
+#: qml/backend/TaskShareImportHandler.qml:94
+#: qml/backend/TaskShareImportHandlerUbuntu.qml:94
+#: qml/backend/TasksController.qml:708 qml/pages/HomePage.qml:470
+msgid "The shared content did not contain readable text."
+msgstr "Det delade innehållet innehöll ingen läsbar text."
 
-#: qml/backend/AccountSessionAdapter.qml:168
-#, fuzzy
-msgid "Waiting for Online Accounts..."
-msgstr "Endast Ubuntu Touch Online Accounts"
-
-#: qml/backend/AccountSessionAdapter.qml:170
-msgid ""
-"Selected Online Accounts service was not found. Open Account and verify the "
-"account again."
-msgstr ""
-
-#: qml/backend/TasksApiClient.qml:25 qml/backend/TasksApiClient.qml:62
+#: qml/backend/TasksApiClient.qml:62 qml/backend/TasksApiClient.qml:239
 msgid "Account credentials are incomplete."
 msgstr "Kontouppgifterna är ofullständiga."
 
-#: qml/backend/TasksApiClient.qml:40
+#: qml/backend/TasksApiClient.qml:151
 msgid "Tasks calendar request failed with HTTP %1."
 msgstr "Begäran för task-kalendrar misslyckades med HTTP %1."
 
-#: qml/backend/TasksApiClient.qml:49
+#: qml/backend/TasksApiClient.qml:165
 msgid ""
 "Tasks calendar request failed because the network request could not be "
 "completed."
 msgstr ""
+"Begäran för task-kalendern misslyckades eftersom nätverksbegäran inte kunde "
+"slutföras."
 
-#: qml/backend/TasksApiClient.qml:53
+#: qml/backend/TasksApiClient.qml:169
 msgid "Tasks calendar request timed out."
 msgstr "Begäran för task-kalendrar tog för lång tid."
 
-#: qml/backend/TasksApiClient.qml:77
-msgid "Tasks request failed with HTTP %1."
-msgstr "Task-begäran misslyckades med HTTP %1."
-
-#: qml/backend/TasksApiClient.qml:82 qml/backend/TasksController.qml:387
-#: qml/backend/TasksController.qml:450 qml/backend/TasksController.qml:463
-#: qml/backend/TasksController.qml:714 qml/pages/HomePage.qml:138
-#: qml/pages/HomePage.qml:479 qml/pages/HomePage.qml:710
-#: qml/pages/HomePage.qml:959
+#: qml/backend/TasksApiClient.qml:244 qml/backend/TasksApiClient.qml:264
+#: qml/backend/TasksApiClient.qml:335 qml/backend/TasksController.qml:215
+#: qml/backend/TasksController.qml:624 qml/backend/TasksController.qml:770
+#: qml/backend/TasksController.qml:783 qml/backend/TasksController.qml:849
+#: qml/backend/TasksController.qml:955 qml/backend/TasksController.qml:987
+#: qml/backend/TasksController.qml:1518 qml/pages/HomePage.qml:226
+#: qml/pages/HomePage.qml:328 qml/pages/HomePage.qml:348
+#: qml/pages/HomePage.qml:806 qml/pages/HomePage.qml:819
+#: qml/pages/HomePage.qml:1046 qml/pages/HomePage.qml:1083
+#: qml/pages/HomePage.qml:1395 qml/pages/HomePage.qml:1578
+#: qml/pages/HomePage.qml:1581 qml/pages/HomePage.qml:1771
+#: qml/pages/HomePage.qml:2008 qml/pages/HomePage.qml:2409
+#: qml/pages/TaskDetailPage.qml:569
 msgid "Tasks"
 msgstr "Tasks"
 
-#: qml/backend/TasksApiClient.qml:86
+#: qml/backend/TasksApiClient.qml:259
+msgid "Tasks request failed with HTTP %1."
+msgstr "Task-begäran misslyckades med HTTP %1."
+
+#: qml/backend/TasksApiClient.qml:268
 msgid ""
 "Tasks request failed because the network request could not be completed."
 msgstr ""
+"Task-begäran misslyckades eftersom nätverksbegäran inte kunde slutföras."
 
-#: qml/backend/TasksApiClient.qml:90
+#: qml/backend/TasksApiClient.qml:272
 msgid "Tasks request timed out."
 msgstr "Task-begäran tog för lång tid."
 
-#: qml/backend/TasksApiClient.qml:101 qml/backend/TasksApiClient.qml:148
+#: qml/backend/TasksApiClient.qml:342
+#, fuzzy
+msgid "Task list creation is not available."
+msgstr "Det går inte att flytta uppgiften."
+
+#: qml/backend/TasksApiClient.qml:346 qml/backend/TasksApiClient.qml:360
+#: qml/backend/TasksController.qml:795 qml/backend/TasksController.qml:821
+msgid "Task list name is required."
+msgstr "Task-listans namn krävs."
+
+#: qml/backend/TasksApiClient.qml:356
+#, fuzzy
+msgid "Task list update is not available."
+msgstr "Det går inte att flytta uppgiften."
+
+#: qml/backend/TasksApiClient.qml:370
+#, fuzzy
+msgid "Task list deletion is not available."
+msgstr "Det går inte att flytta uppgiften."
+
+#: qml/backend/TasksApiClient.qml:374
+#, fuzzy
+msgid "Task list delete request is incomplete."
+msgstr "Uppgifter för att radera tasken är ofullständiga."
+
+#: qml/backend/TasksApiClient.qml:387 qml/backend/TasksApiClient.qml:442
 msgid "Task update data is incomplete."
 msgstr "Uppgifter för att uppdatera tasken är ofullständiga."
 
-#: qml/backend/TasksApiClient.qml:120 qml/pages/HomePage.qml:265
+#: qml/backend/TasksApiClient.qml:414 qml/backend/TasksApiClient.qml:701
+#: qml/pages/HomePage.qml:943
 msgid "Server version changed. Refresh tasks and try again."
 msgstr "Serverversionen har ändrats. Uppdatera tasks och försök igen."
 
-#: qml/backend/TasksApiClient.qml:125 qml/backend/TasksApiClient.qml:173
+#: qml/backend/TasksApiClient.qml:419 qml/backend/TasksApiClient.qml:482
+#: qml/backend/TasksApiClient.qml:706 qml/backend/TasksApiClient.qml:731
 msgid "Task update failed with HTTP %1."
 msgstr "Uppdatering av task misslyckades med HTTP %1."
 
-#: qml/backend/TasksApiClient.qml:133 qml/backend/TasksApiClient.qml:185
+#: qml/backend/TasksApiClient.qml:427 qml/backend/TasksApiClient.qml:491
 msgid "Task update failed because the network request could not be completed."
 msgstr ""
 "Uppdatering av task misslyckades eftersom nätverksbegäran inte kunde "
 "slutföras."
 
-#: qml/backend/TasksApiClient.qml:137 qml/backend/TasksApiClient.qml:189
+#: qml/backend/TasksApiClient.qml:431 qml/backend/TasksApiClient.qml:495
 msgid "Task update timed out."
 msgstr "Uppdatering av task tog för lång tid."
 
-#: qml/backend/TasksApiClient.qml:168
+#: qml/backend/TasksApiClient.qml:477 qml/backend/TasksApiClient.qml:718
+#: qml/backend/TasksApiClient.qml:908
 msgid "Server version changed. Local task was not uploaded."
 msgstr "Serverversionen har ändrats. Den lokala tasken laddades inte upp."
 
-#: qml/backend/TasksApiClient.qml:200
+#: qml/backend/TasksApiClient.qml:506
 msgid "Task create data is incomplete."
 msgstr "Uppgifter för att skapa tasken är ofullständiga."
 
-#: qml/backend/TasksApiClient.qml:218
+#: qml/backend/TasksApiClient.qml:539 qml/backend/TasksApiClient.qml:723
 msgid "Server rejected the new task because that resource already exists."
 msgstr "Servern nekade den nya tasken eftersom resursen redan finns."
 
-#: qml/backend/TasksApiClient.qml:223
+#: qml/backend/TasksApiClient.qml:544 qml/backend/TasksApiClient.qml:729
 msgid "Task create failed with HTTP %1."
 msgstr "Skapande av task misslyckades med HTTP %1."
 
-#: qml/backend/TasksApiClient.qml:235
+#: qml/backend/TasksApiClient.qml:553
 msgid "Task create failed because the network request could not be completed."
 msgstr ""
 "Skapande av task misslyckades eftersom nätverksbegäran inte kunde slutföras."
 
-#: qml/backend/TasksApiClient.qml:239
+#: qml/backend/TasksApiClient.qml:557
 msgid "Task create timed out."
 msgstr "Skapande av task tog för lång tid."
 
-#: qml/backend/TasksApiClient.qml:249
+#: qml/backend/TasksApiClient.qml:567
 msgid "Task delete data is incomplete."
 msgstr "Uppgifter för att radera tasken är ofullständiga."
 
-#: qml/backend/TasksApiClient.qml:271
+#: qml/backend/TasksApiClient.qml:600 qml/backend/TasksApiClient.qml:776
 msgid "Server version changed. Local delete was not uploaded."
 msgstr "Serverversionen har ändrats. Den lokala raderingen laddades inte upp."
 
-#: qml/backend/TasksApiClient.qml:276
+#: qml/backend/TasksApiClient.qml:605 qml/backend/TasksApiClient.qml:781
 msgid "Task delete failed with HTTP %1."
 msgstr "Radering av task misslyckades med HTTP %1."
 
-#: qml/backend/TasksApiClient.qml:284
+#: qml/backend/TasksApiClient.qml:613
 msgid "Task delete failed because the network request could not be completed."
 msgstr ""
 "Radering av task misslyckades eftersom nätverksbegäran inte kunde slutföras."
 
-#: qml/backend/TasksApiClient.qml:288
+#: qml/backend/TasksApiClient.qml:617
 msgid "Task delete timed out."
 msgstr "Radering av task tog för lång tid."
 
-#: qml/backend/TasksApiClient.qml:348
+#: qml/backend/TasksApiClient.qml:625
+msgid "Task move is not available."
+msgstr "Det går inte att flytta uppgiften."
+
+#: qml/backend/TasksApiClient.qml:632
+msgid "Task move data is incomplete."
+msgstr "Information för flytt av uppgiften saknas."
+
+#: qml/backend/TasksApiClient.qml:637
+msgid "Choose a different task list."
+msgstr "Välj en annan lista."
+
+#: qml/backend/TasksApiClient.qml:1001
+msgid "Read-only task calendar"
+msgstr "Skrivskyddad task-kalender"
+
+#: qml/backend/TasksApiClient.qml:1001
 msgid "Task calendar"
 msgstr "Task-kalender"
 
-#: qml/backend/TasksApiClient.qml:402 qml/backend/TasksApiClient.qml:483
-#: qml/backend/TasksCache.qml:234 qml/backend/TasksCache.qml:241
-#: qml/backend/TasksCache.qml:413 qml/backend/TasksCache.qml:451
-#: qml/backend/TasksCache.qml:497 qml/backend/TasksController.qml:984
-#: qml/backend/TasksController.qml:1006 qml/backend/TasksController.qml:1191
-#: qml/pages/TaskConflictResolutionPage.qml:28 qml/pages/TaskDetailPage.qml:27
-#: qml/pages/TaskDetailPage.qml:75 qml/pages/TaskDetailPage.qml:475
-#: qml/pages/TaskDetailPage.qml:1164
+#: qml/backend/TasksApiClient.qml:1074 qml/backend/TasksController.qml:2338
+#: qml/pages/TaskConflictResolutionPage.qml:37
+#: qml/pages/TaskDetailPage.qml:1256
 msgid "Untitled task"
 msgstr "Namnlös task"
 
-#: qml/backend/TasksApiClient.qml:404 qml/backend/TasksController.qml:1000
-#: qml/pages/HomePage.qml:207
+#: qml/backend/TasksApiClient.qml:1076 qml/backend/TasksController.qml:1975
+#: qml/pages/HomePage.qml:887
 msgid "Due %1"
 msgstr "Förfaller %1"
 
-#: qml/backend/TasksApiClient.qml:645 qml/backend/TasksController.qml:1303
-#: qml/pages/TaskDetailPage.qml:1311
+#: qml/backend/TasksApiClient.qml:1335 qml/backend/TasksController.qml:2514
+#: qml/pages/TaskDetailPage.qml:1620
 msgid "Completed"
 msgstr "Klar"
 
-#: qml/backend/TasksApiClient.qml:647 qml/backend/TasksController.qml:1305
-#: qml/pages/TaskDetailPage.qml:346 qml/pages/TaskDetailPage.qml:1312
+#: qml/backend/TasksApiClient.qml:1337 qml/backend/TasksController.qml:2516
+#: qml/pages/TaskDetailPage.qml:406 qml/pages/TaskDetailPage.qml:1621
 msgid "In progress"
-msgstr ""
+msgstr "Pågår"
 
-#: qml/backend/TasksApiClient.qml:648 qml/backend/TasksController.qml:1306
-#: qml/pages/TaskDetailPage.qml:347 qml/pages/TaskDetailPage.qml:1313
+#: qml/backend/TasksApiClient.qml:1338 qml/backend/TasksController.qml:2517
+#: qml/pages/TaskDetailPage.qml:407 qml/pages/TaskDetailPage.qml:1622
 #, fuzzy
 msgid "Canceled"
 msgstr "Avbryt"
 
-#: qml/backend/TasksApiClient.qml:649 qml/backend/TasksCache.qml:242
-#: qml/backend/TasksController.qml:1307 qml/pages/HomePage.qml:203
-#: qml/pages/HomePage.qml:212
+#: qml/backend/TasksApiClient.qml:1339 qml/backend/TasksCache.qml:358
+#: qml/backend/TasksController.qml:2518 qml/pages/HomePage.qml:883
+#: qml/pages/HomePage.qml:892
 msgid "Open task"
 msgstr "Öppen task"
 
-#: qml/backend/TasksApiClient.qml:662 qml/backend/TasksController.qml:1313
+#: qml/backend/TasksApiClient.qml:1352 qml/backend/TasksController.qml:2524
 msgid "High"
 msgstr "Hög"
 
-#: qml/backend/TasksApiClient.qml:663 qml/backend/TasksController.qml:1314
+#: qml/backend/TasksApiClient.qml:1353 qml/backend/TasksController.qml:2525
 msgid "Medium"
 msgstr "Medium"
 
-#: qml/backend/TasksApiClient.qml:664 qml/backend/TasksController.qml:1315
+#: qml/backend/TasksApiClient.qml:1354 qml/backend/TasksController.qml:2526
 msgid "Low"
 msgstr "Låg"
 
-#: qml/backend/TasksCache.qml:103 qml/backend/TasksCache.qml:167
-#: qml/backend/TasksController.qml:598 qml/backend/TasksController.qml:601
-#: qml/pages/HomePage.qml:780 qml/pages/HomePage.qml:1022
+#: qml/backend/TasksCache.qml:135 qml/backend/TasksCache.qml:233
+#: qml/backend/TasksController.qml:1329 qml/backend/TasksController.qml:1332
+#: qml/pages/HomePage.qml:1688 qml/pages/HomePage.qml:2171
+#: qml/pages/HomePage.qml:2519
 msgid "Untitled"
 msgstr "Namnlös"
 
-#: qml/backend/TasksController.qml:7
+#: qml/backend/TasksController.qml:8
 msgid "Select an account to load CalDAV task calendars."
 msgstr "Välj ett konto för att ladda CalDAV task-kalendrar."
 
-#: qml/backend/TasksController.qml:8 qml/backend/TasksController.qml:1411
+#: qml/backend/TasksController.qml:9 qml/backend/TasksController.qml:2655
 #, fuzzy
 msgid "No account"
 msgstr "Inget konto"
 
-#: qml/backend/TasksController.qml:15 qml/backend/TasksController.qml:366
-#: qml/backend/TasksController.qml:403 qml/backend/TasksController.qml:590
-#: qml/backend/TasksController.qml:682 qml/backend/TasksController.qml:717
-#: qml/backend/TasksController.qml:1401
+#: qml/backend/TasksController.qml:16 qml/backend/TasksController.qml:604
+#: qml/backend/TasksController.qml:641 qml/backend/TasksController.qml:1321
+#: qml/backend/TasksController.qml:1468 qml/backend/TasksController.qml:1521
+#: qml/backend/TasksController.qml:2645
 #, fuzzy
 msgid "My Tasks"
 msgstr "Tasks"
 
-#: qml/backend/TasksController.qml:122
+#: qml/backend/TasksController.qml:188
 msgid "Authentication failed"
 msgstr "Autentisering misslyckades"
 
-#: qml/backend/TasksController.qml:141 qml/backend/TasksController.qml:377
+#: qml/backend/TasksController.qml:228 qml/backend/TasksController.qml:615
 #, fuzzy
 msgid "Loaded %1 list(s)."
 msgstr "Laddade %1 objekt."
 
-#: qml/backend/TasksController.qml:141 qml/backend/TasksController.qml:377
-#: qml/backend/TasksController.qml:669
+#: qml/backend/TasksController.qml:228 qml/backend/TasksController.qml:615
+#: qml/backend/TasksController.qml:1448
 #, fuzzy
 msgid "No lists found."
 msgstr "Inga objekt hittades."
 
-#: qml/backend/TasksController.qml:142 qml/backend/TasksController.qml:163
-#: qml/backend/TasksController.qml:203 qml/backend/TasksController.qml:242
-#: qml/backend/TasksController.qml:267 qml/backend/TasksController.qml:293
-#: qml/backend/TasksController.qml:378 qml/backend/TasksController.qml:580
-#: qml/backend/TasksController.qml:670 qml/backend/TasksController.qml:687
-#: qml/backend/TasksController.qml:834 qml/backend/TasksController.qml:872
-#: qml/backend/TasksController.qml:873 qml/pages/HomePage.qml:168
-msgid "Up to date"
-msgstr "Uppdaterad"
-
-#: qml/backend/TasksController.qml:162 qml/backend/TasksController.qml:405
-#: qml/backend/TasksController.qml:686
+#: qml/backend/TasksController.qml:257 qml/backend/TasksController.qml:643
+#: qml/backend/TasksController.qml:1472
 #, fuzzy
 msgid "Loaded %1 task(s)."
 msgstr "Laddade %1 objekt."
 
-#: qml/backend/TasksController.qml:162 qml/backend/TasksController.qml:405
-#: qml/backend/TasksController.qml:686 qml/pages/HomePage.qml:1120
+#: qml/backend/TasksController.qml:257 qml/backend/TasksController.qml:643
+#: qml/backend/TasksController.qml:1472 qml/pages/HomePage.qml:2637
+#: qml/pages/HomePage.qml:2821
 msgid "No tasks found."
 msgstr "Inga tasks hittades."
 
-#: qml/backend/TasksController.qml:184 qml/backend/TasksController.qml:219
-#: qml/backend/TasksController.qml:801 qml/backend/TasksController.qml:869
-#: qml/pages/HomePage.qml:264 qml/pages/TaskDetailPage.qml:220
+#: qml/backend/TasksController.qml:278 qml/backend/TasksController.qml:312
+#: qml/backend/TasksController.qml:474 qml/backend/TasksController.qml:504
+#: qml/backend/TasksController.qml:539 qml/backend/TasksController.qml:1121
+#: qml/backend/TasksController.qml:1644 qml/backend/TasksController.qml:1731
+#: qml/pages/HomePage.qml:942 qml/pages/TaskDetailPage.qml:271
 msgid "Sync failed"
 msgstr "Synkronisering misslyckades"
 
-#: qml/backend/TasksController.qml:201
+#: qml/backend/TasksController.qml:295
 #, fuzzy
 msgid "Updated %1 tasks."
 msgstr "Laddade %1 objekt."
 
-#: qml/backend/TasksController.qml:202
+#: qml/backend/TasksController.qml:296
 msgid "Task marked completed."
 msgstr "Task markerad som klar."
 
-#: qml/backend/TasksController.qml:202
+#: qml/backend/TasksController.qml:296
 msgid "Task marked open."
 msgstr "Task markerad som öppen."
 
-#: qml/backend/TasksController.qml:241
+#: qml/backend/TasksController.qml:337
 msgid "Task saved."
 msgstr "Uppgiften sparades."
 
-#: qml/backend/TasksController.qml:266
+#: qml/backend/TasksController.qml:360
 msgid "Task created."
 msgstr "Task skapad."
 
-#: qml/backend/TasksController.qml:292
+#: qml/backend/TasksController.qml:384
 msgid "Task deleted."
 msgstr "Task raderad."
 
-#: qml/backend/TasksController.qml:325 qml/pages/HomePage.qml:242
-#: qml/pages/TaskConflictResolutionPage.qml:13
+#: qml/backend/TasksController.qml:441 qml/pages/HomePage.qml:919
+#: qml/pages/TaskConflictResolutionPage.qml:14
 msgid "Conflict"
 msgstr "Konflikt"
 
-#: qml/backend/TasksController.qml:355 qml/backend/TasksController.qml:392
+#: qml/backend/TasksController.qml:457
+msgid "Task list created. Refreshing..."
+msgstr "Uppgiftslista skapad. Uppdaterar..."
+
+#: qml/backend/TasksController.qml:458 qml/backend/TasksController.qml:488
+#: qml/backend/TasksController.qml:523 qml/backend/TasksController.qml:1127
+#: qml/backend/TasksController.qml:2654
+msgid "Refreshing"
+msgstr "Uppdaterar"
+
+#: qml/backend/TasksController.qml:487
+#, fuzzy
+msgid "Task list updated. Refreshing..."
+msgstr "Uppgiftslista skapad. Uppdaterar..."
+
+#: qml/backend/TasksController.qml:522
+#, fuzzy
+msgid "Task list deleted. Refreshing..."
+msgstr "Uppgiftslista skapad. Uppdaterar..."
+
+#: qml/backend/TasksController.qml:578 qml/backend/TasksController.qml:2651
+msgid "Account changed. Refreshing..."
+msgstr "Kontot ändrades. Uppdaterar..."
+
+#: qml/backend/TasksController.qml:593 qml/backend/TasksController.qml:630
 msgid "Loading..."
 msgstr "Laddar..."
 
-#: qml/backend/TasksController.qml:355 qml/backend/TasksController.qml:744
+#: qml/backend/TasksController.qml:593 qml/backend/TasksController.qml:1561
 msgid "Syncing local changes..."
-msgstr ""
+msgstr "Synkar lokala ändringar..."
 
-#: qml/backend/TasksController.qml:356 qml/backend/TasksController.qml:393
-#: qml/backend/TasksController.qml:745
+#: qml/backend/TasksController.qml:594 qml/backend/TasksController.qml:631
+#: qml/backend/TasksController.qml:800 qml/backend/TasksController.qml:826
+#: qml/backend/TasksController.qml:847 qml/backend/TasksController.qml:1085
+#: qml/backend/TasksController.qml:1562
 msgid "Syncing"
 msgstr "Synkroniserar"
 
-#: qml/backend/TasksController.qml:374 qml/backend/TasksController.qml:592
-#: qml/backend/TasksController.qml:711
+#: qml/backend/TasksController.qml:612 qml/backend/TasksController.qml:1323
+#: qml/backend/TasksController.qml:1515
 msgid "Lists"
 msgstr "Listor"
 
-#: qml/backend/TasksController.qml:436
+#: qml/backend/TasksController.qml:651 qml/backend/TasksController.qml:662
+#: qml/backend/TasksController.qml:863 qml/backend/TasksController.qml:1205
+msgid "This task is read-only."
+msgstr "Den här tasken är skrivskyddad."
+
+#: qml/backend/TasksController.qml:682
 msgid "No task list is available for new tasks."
-msgstr ""
+msgstr "Ingen task-lista är tillgänglig för nya tasks."
 
-#: qml/backend/TasksController.qml:442
-msgid "New task saved locally."
-msgstr "Ny task sparad lokalt."
+#: qml/backend/TasksController.qml:686 qml/backend/TasksController.qml:817
+#: qml/backend/TasksController.qml:842
+msgid "This task list is read-only."
+msgstr "Den här task-listan är skrivskyddad."
 
-#: qml/backend/TasksController.qml:443 qml/backend/TasksController.qml:490
-#: qml/backend/TasksController.qml:552 qml/backend/TasksController.qml:561
-#: qml/backend/TasksController.qml:569 qml/backend/TasksController.qml:815
+#: qml/backend/TasksController.qml:691 qml/pages/TaskDetailPage.qml:87
+#: qml/pages/TaskDetailPage.qml:1256
+#, fuzzy
+msgid "New task"
+msgstr "Öppen task"
+
+#: qml/backend/TasksController.qml:692 qml/backend/TasksController.qml:885
+#: qml/backend/TasksController.qml:933 qml/backend/TasksController.qml:1195
+#: qml/backend/TasksController.qml:1229 qml/backend/TasksController.qml:1270
+#: qml/backend/TasksController.qml:1278 qml/backend/TasksController.qml:1285
+#: qml/backend/TasksController.qml:1293 qml/backend/TasksController.qml:1549
+#: qml/backend/TasksController.qml:1658 qml/backend/TasksController.qml:1714
+#: qml/backend/TasksController.qml:2186 qml/backend/TasksController.qml:2305
 msgid "Waiting to sync"
 msgstr "Väntar på synk"
 
-#: qml/backend/TasksController.qml:477
+#: qml/backend/TasksController.qml:703
+#, fuzzy
+msgid "Choose a task list before importing shared text."
+msgstr "Öppna en lista innan du skapar en task."
+
+#: qml/backend/TasksController.qml:723
+msgid "Shared text imported as a local task. Syncing soon."
+msgstr "Delad text importerades som en lokal task. Synkas snart."
+
+#: qml/backend/TasksController.qml:751
+msgid "Shared %1"
+msgstr "Delad %1"
+
+#: qml/backend/TasksController.qml:799
+#, fuzzy
+msgid "Creating task list..."
+msgstr "Sparar uppgift..."
+
+#: qml/backend/TasksController.qml:825
+#, fuzzy
+msgid "Updating task list..."
+msgstr "Uppdaterar %1 tasks..."
+
+#: qml/backend/TasksController.qml:846
+#, fuzzy
+msgid "Deleting task list..."
+msgstr "Uppdaterar %1 tasks..."
+
+#: qml/backend/TasksController.qml:871
 msgid "Deleted local task draft."
 msgstr "Lokal task-draft raderad."
 
-#: qml/backend/TasksController.qml:489
+#: qml/backend/TasksController.qml:884
 msgid "Task deleted locally. Syncing deletion..."
 msgstr "Task raderad lokalt. Synkroniserar radering..."
 
-#: qml/backend/TasksController.qml:519
-msgid "%1 local task changes saved."
-msgstr ""
+#: qml/backend/TasksController.qml:932
+#, fuzzy
+msgid "%1 tasks deleted locally. Syncing deletions..."
+msgstr "Task raderad lokalt. Synkroniserar radering..."
 
-#: qml/backend/TasksController.qml:520
+#: qml/backend/TasksController.qml:937
+#, fuzzy
+msgid "%1 local task drafts deleted."
+msgstr "%1 lokala task-ändringar laddades upp."
+
+#: qml/backend/TasksController.qml:1041
+msgid "Choose a target task list."
+msgstr "Välj en mållista."
+
+#: qml/backend/TasksController.qml:1070
+msgid "Selected tasks must be synced before they can be moved."
+msgstr "Markerade uppgifter måste synkas innan de kan flyttas."
+
+#: qml/backend/TasksController.qml:1071
+#, fuzzy
+msgid "No tasks can be moved."
+msgstr "Inga markerade uppgifter kunde flyttas."
+
+#: qml/backend/TasksController.qml:1083
+msgid "Moving %1 tasks..."
+msgstr "Flyttar %1 uppgifter..."
+
+#: qml/backend/TasksController.qml:1084
+#, fuzzy
+msgid "Moving task..."
+msgstr "Flyttar %1 uppgifter..."
+
+#: qml/backend/TasksController.qml:1102
+#, fuzzy
+msgid "Moving task %1 of %2..."
+msgstr "Uppdaterar task %1 av %2..."
+
+#: qml/backend/TasksController.qml:1120
+msgid "Moved %1 task(s), %2 failed, %3 skipped."
+msgstr "Flyttade %1 uppgift(er), %2 misslyckades, %3 hoppades över."
+
+#: qml/backend/TasksController.qml:1125
+msgid "Moved %1 task(s). %2 skipped because they need sync first."
+msgstr ""
+"Flyttade %1 uppgift(er). %2 hoppades över eftersom de behöver synkas först."
+
+#: qml/backend/TasksController.qml:1126
+msgid "Moved %1 task(s)."
+msgstr "Flyttade %1 uppgift(er)."
+
+#: qml/backend/TasksController.qml:1161
+msgid "%1 local task changes saved."
+msgstr "%1 lokala task-ändringar sparades."
+
+#: qml/backend/TasksController.qml:1162
 #, fuzzy
 msgid "Task marked completed locally."
 msgstr "Task markerad som klar."
 
-#: qml/backend/TasksController.qml:520
+#: qml/backend/TasksController.qml:1162
 #, fuzzy
 msgid "Task marked open locally."
 msgstr "Task markerad som öppen."
 
-#: qml/backend/TasksController.qml:530
+#: qml/backend/TasksController.qml:1172
 msgid "Updating task %1 of %2..."
 msgstr "Uppdaterar task %1 av %2..."
 
-#: qml/backend/TasksController.qml:531
+#: qml/backend/TasksController.qml:1173
 msgid "Marking task completed..."
 msgstr "Markerar task som klar..."
 
-#: qml/backend/TasksController.qml:531
+#: qml/backend/TasksController.qml:1173
 msgid "Marking task open..."
 msgstr "Markerar task som öppen..."
 
-#: qml/backend/TasksController.qml:539
+#: qml/backend/TasksController.qml:1181
 msgid "Saving task..."
 msgstr "Sparar uppgift..."
 
-#: qml/backend/TasksController.qml:551 qml/backend/TasksController.qml:568
+#: qml/backend/TasksController.qml:1194 qml/backend/TasksController.qml:1292
 msgid "Local changes saved on this device"
 msgstr "Lokala ändringar sparade på den här enheten"
 
-#: qml/backend/TasksController.qml:560
+#: qml/backend/TasksController.qml:1212
+msgid "Task cannot be moved because it has no server identity yet."
+msgstr "Tasken kan inte flyttas eftersom den ännu saknar serveridentitet."
+
+#: qml/backend/TasksController.qml:1216
+#, fuzzy
+msgid "Task cannot be moved under itself."
+msgstr "Skapande av task tog för lång tid."
+
+#: qml/backend/TasksController.qml:1228
+#, fuzzy
+msgid "Subtask relationship saved locally."
+msgstr "Ny task sparad lokalt."
+
+#: qml/backend/TasksController.qml:1228
+#, fuzzy
+msgid "Task moved to top level locally."
+msgstr "Task markerad som klar."
+
+#: qml/backend/TasksController.qml:1269 qml/backend/TasksController.qml:1277
+#: qml/backend/TasksController.qml:1284 qml/backend/TasksController.qml:1713
 msgid "Local changes waiting to sync."
 msgstr "Lokala ändringar väntar på synk."
 
-#: qml/backend/TasksController.qml:589
+#: qml/backend/TasksController.qml:1320
 msgid "Views"
 msgstr "Vyer"
 
-#: qml/backend/TasksController.qml:591
+#: qml/backend/TasksController.qml:1322
 msgid "All lists"
 msgstr "Alla listor"
 
-#: qml/backend/TasksController.qml:609 qml/backend/TasksController.qml:627
-#: qml/pages/TaskDetailPage.qml:241 qml/pages/TaskDetailPage.qml:678
+#: qml/backend/TasksController.qml:1339 qml/pages/HomePage.qml:1111
+msgid "Create new list"
+msgstr "Skapa ny lista"
+
+#: qml/backend/TasksController.qml:1346 qml/backend/TasksController.qml:1369
+#: qml/pages/TaskDetailPage.qml:294 qml/pages/TaskDetailPage.qml:867
 msgid "Due date"
 msgstr "Förfallodatum"
 
-#: qml/backend/TasksController.qml:610 qml/pages/TaskDetailPage.qml:241
-#: qml/pages/TaskDetailPage.qml:633
+#: qml/backend/TasksController.qml:1347 qml/pages/TaskDetailPage.qml:294
+#: qml/pages/TaskDetailPage.qml:822
 msgid "Start date"
 msgstr "Startdatum"
 
-#: qml/backend/TasksController.qml:611 qml/pages/TaskDetailPage.qml:722
+#: qml/backend/TasksController.qml:1348 qml/pages/TaskDetailPage.qml:911
 msgid "Priority"
 msgstr "Prioritet"
 
-#: qml/backend/TasksController.qml:612
+#: qml/backend/TasksController.qml:1349
 msgid "Alphabetical"
 msgstr "Alfabetiskt"
 
-#: qml/backend/TasksController.qml:613
+#: qml/backend/TasksController.qml:1350
 msgid "Modified"
 msgstr "Ändrad"
 
-#: qml/backend/TasksController.qml:614
+#: qml/backend/TasksController.qml:1351
 msgid "Created"
 msgstr "Skapad"
 
-#: qml/backend/TasksController.qml:615
+#: qml/backend/TasksController.qml:1352
 msgid "List"
 msgstr "Lista"
 
-#: qml/backend/TasksController.qml:616
+#: qml/backend/TasksController.qml:1353
 msgid "Manual order"
 msgstr "Manuell ordning"
 
-#: qml/backend/TasksController.qml:720
+#: qml/backend/TasksController.qml:1524
 #, fuzzy
 msgid "Loaded cached tasks. Refreshing..."
 msgstr "Kontot ändrades. Uppdaterar..."
 
-#: qml/backend/TasksController.qml:771
+#: qml/backend/TasksController.qml:1548
+#, fuzzy
+msgid "New task waiting for a title before sync."
+msgstr "Ny task väntar på synk."
+
+#: qml/backend/TasksController.qml:1609
 #, fuzzy
 msgid "Uploading task %1 of %2..."
 msgstr "Uppdaterar task %1 av %2..."
 
-#: qml/backend/TasksController.qml:814
+#: qml/backend/TasksController.qml:1657
 msgid "Local version kept. It will be uploaded on the next sync."
 msgstr "Lokal version behölls. Den laddas upp vid nästa synk."
 
-#: qml/backend/TasksController.qml:824
+#: qml/backend/TasksController.qml:1667
 msgid "Server version is not available. Refresh and try again."
 msgstr "Serverversionen är inte tillgänglig. Uppdatera och försök igen."
 
-#: qml/backend/TasksController.qml:833
+#: qml/backend/TasksController.qml:1676
 msgid "Using server version."
 msgstr "Använder serverversionen."
 
-#: qml/backend/TasksController.qml:840
+#: qml/backend/TasksController.qml:1682
 msgid "Server version changed"
 msgstr "Serverversionen ändrades"
 
-#: qml/backend/TasksController.qml:858
+#: qml/backend/TasksController.qml:1720
 #, fuzzy
 msgid "Local changes uploaded. Refreshing..."
 msgstr "Kontot ändrades. Uppdaterar..."
 
-#: qml/backend/TasksController.qml:868
+#: qml/backend/TasksController.qml:1730
 msgid "Sync finished with %1 failed and %2 conflicts. Local changes were kept."
 msgstr ""
 "Synk klar med %1 misslyckade och %2 konflikter. Lokala ändringar behölls."
 
-#: qml/backend/TasksController.qml:872
+#: qml/backend/TasksController.qml:1734
 msgid "%1 local task changes uploaded."
 msgstr "%1 lokala task-ändringar laddades upp."
 
-#: qml/backend/TasksController.qml:1133
-msgid "Manual order is stored locally on this device only."
-msgstr "Manuell ordning sparas bara lokalt på den här enheten."
+#: qml/backend/TasksController.qml:1734 qml/backend/TasksController.qml:2308
+#: qml/pages/HomePage.qml:842
+msgid "Up to date"
+msgstr "Uppdaterad"
 
-#: qml/backend/TasksController.qml:1188
-#: qml/pages/TaskConflictResolutionPage.qml:118
+#: qml/backend/TasksController.qml:2185
+#, fuzzy
+msgid "Manual order updated."
+msgstr "Manuell ordning"
+
+#: qml/backend/TasksController.qml:2335
+#: qml/pages/TaskConflictResolutionPage.qml:130
 msgid "Server version is not available."
 msgstr "Serverversionen är inte tillgänglig."
 
-#: qml/backend/TasksController.qml:1192
+#: qml/backend/TasksController.qml:2339
 msgid "Status: %1"
 msgstr "Status: %1"
 
-#: qml/backend/TasksController.qml:1193
+#: qml/backend/TasksController.qml:2340
 msgid "Due: %1"
 msgstr "Förfaller: %1"
 
-#: qml/backend/TasksController.qml:1194
+#: qml/backend/TasksController.qml:2341
 msgid "Start: %1"
 msgstr "Start: %1"
 
-#: qml/backend/TasksController.qml:1195
+#: qml/backend/TasksController.qml:2342
 msgid "Priority: %1"
 msgstr "Prioritet: %1"
 
-#: qml/backend/TasksController.qml:1196
+#: qml/backend/TasksController.qml:2343
 #, javascript-format
 msgid "Progress: %1%"
 msgstr "Förlopp: %1%"
 
-#: qml/backend/TasksController.qml:1197
+#: qml/backend/TasksController.qml:2344
 msgid "Tags: %1"
 msgstr "Taggar: %1"
 
-#: qml/backend/TasksController.qml:1407
-msgid "Account changed. Refreshing..."
-msgstr "Kontot ändrades. Uppdaterar..."
-
-#: qml/backend/TasksController.qml:1408
+#: qml/backend/TasksController.qml:2652
 #, fuzzy
 msgid "Select an account to load tasks."
 msgstr "Välj ett konto för att ladda CalDAV task-kalendrar."
 
-#: qml/backend/TasksController.qml:1410
-msgid "Refreshing"
-msgstr "Uppdaterar"
-
-#: qml/pages/AboutPage.qml:12 qml/pages/HomePage.qml:1334
-msgid "About"
-msgstr "Om"
-
-#: qml/pages/AboutPage.qml:53
-msgid "Version %1"
-msgstr "Version %1"
-
-#: qml/pages/AboutPage.qml:74
-msgid "License"
-msgstr "Licens"
-
-#: qml/pages/AboutPage.qml:80
-msgid "This project is licensed under the MIT License."
-msgstr "Det här projektet är licensierat under MIT-licensen."
-
-#: qml/pages/AboutPage.qml:93
-msgid ""
-"This project is not affiliated with, endorsed by, or sponsored by Nextcloud "
-"GmbH or the Nextcloud project. Nextcloud is a trademark of its respective "
-"owners."
-msgstr ""
-
-#: qml/pages/AccountSelectionPage.qml:33
-msgid "Select an account and authorize it for NextTasks."
-msgstr "Välj ett konto och auktorisera det för NextTasks."
-
-#: qml/pages/AccountSelectionPage.qml:40
+#: qml/pages/HomePage.qml:420 qml/pages/HomePage.qml:424
 #, fuzzy
-msgid "Accounts"
-msgstr "Konto"
+msgid "Complete"
+msgstr "Klar"
 
-#: qml/pages/AccountSelectionPage.qml:88
-msgid ""
-"Authorization succeeded, but the Ubuntu Touch account did not expose a "
-"server address for NextTasks."
-msgstr ""
+#: qml/pages/HomePage.qml:420 qml/pages/HomePage.qml:424
+#: qml/pages/HomePage.qml:1017 qml/pages/HomePage.qml:1258
+#: qml/pages/HomePage.qml:1294 qml/pages/HomePage.qml:1343
+#: qml/pages/HomePage.qml:2714 qml/pages/TaskDetailPage.qml:529
+msgid "Delete"
+msgstr "Radera"
 
-#: qml/pages/AccountSelectionPage.qml:90
-msgid ""
-"Authorization succeeded for %1. Credentials are available to the app, but "
-"were not displayed or stored."
-msgstr ""
-
-#: qml/pages/AccountSelectionPage.qml:122
-msgid ""
-"Authorization failed: %1. If the system did not show an Online Accounts "
-"prompt, open System Settings > Accounts and allow NextTasks for this "
-"account, then try again."
-msgstr ""
-
-#: qml/pages/AccountSelectionPage.qml:145
-msgid "System account authorization completed. Verifying access..."
-msgstr "Systemkontots auktorisering är klar. Verifierar åtkomst..."
-
-#: qml/pages/AccountSelectionPage.qml:148
-msgid ""
-"System account authorization was cancelled or did not return an account."
-msgstr "Systemets kontoauktorisering avbröts eller returnerade inget konto."
-
-#: qml/pages/AccountSelectionPage.qml:209
-msgid "Open system accounts?"
-msgstr "Öppna systemets konton?"
-
-#: qml/pages/AccountSelectionPage.qml:213
-msgid "Open accounts"
-msgstr "Öppna konton"
-
-#: qml/pages/AccountSelectionPage.qml:222
-msgid "Later"
-msgstr "Senare"
-
-#: qml/pages/AccountSelectionPage.qml:251 qml/pages/HomePage.qml:1328
-msgid "Account"
-msgstr "Konto"
-
-#: qml/pages/AccountSelectionPage.qml:318
-msgid "Server address"
-msgstr "Serveradress"
-
-#: qml/pages/AccountSelectionPage.qml:326
-msgid "https://cloud.example.com"
-msgstr "https://cloud.example.com"
-
-#: qml/pages/AccountSelectionPage.qml:335
-msgid ""
-"This app uses Ubuntu Touch Online Accounts. Edit this only if the system "
-"account did not expose the correct server address."
-msgstr ""
-"Appen använder Ubuntu Touch Online Accounts. Ändra detta endast om "
-"systemkontot inte visar rätt serveradress."
-
-#: qml/pages/AccountSelectionPage.qml:343
-msgid "Available accounts"
-msgstr "Tillgängliga konton"
-
-#: qml/pages/AccountSelectionPage.qml:369
-msgid "No Nextcloud account found"
-msgstr "Inget Nextcloud-konto hittades"
-
-#: qml/pages/AccountSelectionPage.qml:376
-msgid ""
-"Add a Nextcloud or ownCloud account in Ubuntu Touch System Settings > "
-"Accounts. Then return here and select it."
-msgstr ""
-"Lägg till ett Nextcloud- eller ownCloud-konto i Ubuntu Touch "
-"systeminställningar > Konton. Gå sedan tillbaka hit och välj det."
-
-#: qml/pages/AccountSelectionPage.qml:388
-msgid "Open system accounts"
-msgstr "Öppna systemets konton"
-
-#: qml/pages/AccountSelectionPage.qml:510
-msgid "Allow NextTasks in Ubuntu Touch account settings first"
-msgstr "Tillåt först NextTasks i Ubuntu Touch-kontoinställningarna"
-
-#: qml/pages/AccountSelectionPage.qml:510
-msgid "Allowed for NextTasks"
-msgstr "Tillåtet för NextTasks"
-
-#: qml/pages/AccountSelectionPage.qml:511
-msgid "Nextcloud account discovered"
-msgstr "Nextcloud-konto hittat"
-
-#: qml/pages/AccountSelectionPage.qml:533
-msgid "Verify selected account"
-msgstr "Verifiera valt konto"
-
-#: qml/pages/AccountSelectionPage.qml:533
-msgid "Verifying account..."
-msgstr "Verifierar konto..."
-
-#: qml/pages/AccountSelectionPage.qml:592
-msgid "Selected %1. Verifying authorization..."
-msgstr "Valde %1. Verifierar auktorisering..."
-
-#: qml/pages/AccountSelectionPage.qml:650
-msgid "Saved account selected. Verify again if needed."
-msgstr "Sparat konto valt. Verifiera igen vid behov."
-
-#: qml/pages/AccountSelectionPage.qml:768
-#: qml/pages/AccountSelectionPage.qml:781
-msgid "Select an account first."
-msgstr "Välj ett konto först."
-
-#: qml/pages/AccountSelectionPage.qml:786
-msgid "Verifying Online Accounts authorization..."
-msgstr "Verifierar Online Accounts-auktorisering..."
-
-#: qml/pages/AccountSelectionPage.qml:806
-msgid ""
-"This account is not allowed for NextTasks yet. Open Ubuntu Touch System "
-"Settings > Accounts, allow NextTasks for this account, then return here."
-msgstr ""
-"Det här kontot är inte tillåtet för NextTasks än. Öppna Ubuntu Touch "
-"systeminställningar > Konton, tillåt NextTasks för detta konto och återvänd "
-"hit."
-
-#: qml/pages/AccountSelectionPage.qml:836
-msgid ""
-"Add a Nextcloud or ownCloud account in Ubuntu Touch System Settings, then "
-"return to NextTasks."
-msgstr ""
-"Lägg till ett Nextcloud- eller ownCloud-konto i Ubuntu Touch "
-"systeminställningar och återvänd sedan till NextTasks."
-
-#: qml/pages/AccountSelectionPage.qml:843
-msgid ""
-"Open Ubuntu Touch System Settings, select %1, allow NextTasks for that "
-"account, then return here. NextTasks will verify it automatically."
-msgstr ""
-"Öppna Ubuntu Touch systeminställningar, välj %1, tillåt NextTasks för det "
-"kontot och återvänd hit. NextTasks verifierar det automatiskt."
-
-#: qml/pages/AccountSelectionPage.qml:847
-msgid ""
-"Open Ubuntu Touch System Settings, select the Nextcloud account, allow "
-"NextTasks for that account, then return here. NextTasks will verify it "
-"automatically."
-msgstr ""
-"Öppna Ubuntu Touch systeminställningar, välj Nextcloud-kontot, tillåt "
-"NextTasks för det kontot och återvänd hit. NextTasks verifierar det "
-"automatiskt."
-
-#: qml/pages/AccountSelectionPage.qml:857
-msgid "Account permission detected. Verifying access..."
-msgstr "Kontobehörighet hittades. Verifierar åtkomst..."
-
-#: qml/pages/AccountSelectionPage.qml:861
-msgid ""
-"Waiting for account permission. If you already allowed NextTasks, return "
-"here and wait a moment."
-msgstr ""
-"Väntar på kontobehörighet. Om du redan har tillåtit NextTasks, återvänd hit "
-"och vänta en stund."
-
-#: qml/pages/AccountSelectionPage.qml:898
-msgid ""
-"No account is saved yet. Select a Nextcloud account below, authorize it, and "
-"verify access."
-msgstr ""
-
-#: qml/pages/AccountSelectionPage.qml:901
-msgid ""
-"%1 on %2\n"
-"providerId=%3 serviceId=%4"
-msgstr ""
-
-#: qml/pages/AccountSelectionPage.qml:902
+#: qml/pages/HomePage.qml:420 qml/pages/HomePage.qml:424
 #, fuzzy
-msgid "Saved account"
-msgstr "Konto"
+msgid "Reopen"
+msgstr "Öppna alla igen"
 
-#: qml/pages/AccountSelectionPage.qml:903
-msgid "server URL missing"
-msgstr "serveradress saknas"
+#: qml/pages/HomePage.qml:493
+msgid "No task list is available for imported text."
+msgstr "Ingen task-lista är tillgänglig för importerad text."
 
-#: qml/pages/AccountSelectionPage.qml:915
-#: qml/pages/AccountSelectionPage.qml:943
+#: qml/pages/HomePage.qml:726
+msgid "This will delete %1 selected tasks."
+msgstr "Detta raderar %1 markerade uppgifter."
+
+#: qml/pages/HomePage.qml:728
+msgid "%1 local-only drafts will be removed from this device."
+msgstr "%1 enbart lokala utkast tas bort från den här enheten."
+
+#: qml/pages/HomePage.qml:731
 #, fuzzy
-msgid "No account selected"
-msgstr "Nextcloud-konto hittat"
+msgid "%1 tasks have unsynced local changes that will be discarded."
+msgstr "Den här tasken har lokala ändringar som väntar på synk."
 
-#: qml/pages/AccountSelectionPage.qml:926
-msgid "The selected Ubuntu Touch account did not expose a server address."
-msgstr "Det valda Ubuntu Touch-kontot exponerade ingen serveradress."
-
-#: qml/pages/HomePage.qml:190
+#: qml/pages/HomePage.qml:867
 msgid "%1 tasks have conflicts."
 msgstr "%1 tasks har konflikter."
 
-#: qml/pages/HomePage.qml:193 qml/pages/TaskDetailPage.qml:1157
+#: qml/pages/HomePage.qml:870
+#, fuzzy
+msgid "%1 tasks have unsynced local changes."
+msgstr "%1 tasks har konflikter."
+
+#: qml/pages/HomePage.qml:873 qml/pages/TaskDetailPage.qml:1446
 msgid "Sync: %1"
 msgstr "Synk: %1"
 
-#: qml/pages/HomePage.qml:195
+#: qml/pages/HomePage.qml:875
 msgid "No status message."
 msgstr "Inget statusmeddelande."
 
-#: qml/pages/HomePage.qml:217
+#: qml/pages/HomePage.qml:897
 msgid "Choose a list"
 msgstr "Välj en lista"
 
-#: qml/pages/HomePage.qml:219
+#: qml/pages/HomePage.qml:899
 msgid "Completed tasks are shown"
 msgstr "Klara tasks visas"
 
-#: qml/pages/HomePage.qml:220
+#: qml/pages/HomePage.qml:900
 msgid "Open tasks"
 msgstr "Öppna tasks"
 
-#: qml/pages/HomePage.qml:221 qml/pages/HomePage.qml:1239
+#: qml/pages/HomePage.qml:901
 msgid "Sort: %1"
 msgstr "Sortering: %1"
 
-#: qml/pages/HomePage.qml:243
+#: qml/pages/HomePage.qml:918
+msgid "Read-only"
+msgstr "Skrivskyddad"
+
+#: qml/pages/HomePage.qml:920
 msgid "Delete pending"
 msgstr "Radering väntar"
 
-#: qml/pages/HomePage.qml:244
+#: qml/pages/HomePage.qml:921
 msgid "New"
 msgstr "Ny"
 
-#: qml/pages/HomePage.qml:245
+#: qml/pages/HomePage.qml:922
 msgid "Unsynced"
 msgstr "Osynkad"
 
-#: qml/pages/HomePage.qml:301
+#: qml/pages/HomePage.qml:956
 msgid "Search"
 msgstr "Sök"
 
-#: qml/pages/HomePage.qml:472
+#: qml/pages/HomePage.qml:1000
+msgid "%1 selected"
+msgstr "%1 markerade"
+
+#: qml/pages/HomePage.qml:1009
+msgid "Move"
+msgstr "Flytta"
+
+#: qml/pages/HomePage.qml:1031 qml/pages/HomePage.qml:1068
 msgid "Choose task list"
 msgstr "Välj task-lista"
 
-#: qml/pages/HomePage.qml:473
+#: qml/pages/HomePage.qml:1036
 msgid "Select where the new task should be created."
 msgstr "Välj var den nya tasken ska skapas."
 
-#: qml/pages/HomePage.qml:488 qml/pages/HomePage.qml:549
-#: qml/pages/TaskDetailPage.qml:329 qml/pages/TaskDetailPage.qml:365
-#: qml/pages/TaskDetailPage.qml:417 qml/pages/TaskDetailPage.qml:443
+#: qml/pages/HomePage.qml:1057 qml/pages/HomePage.qml:1094
+#: qml/pages/HomePage.qml:1151 qml/pages/HomePage.qml:1235
+#: qml/pages/HomePage.qml:1271 qml/pages/HomePage.qml:1308
+#: qml/pages/HomePage.qml:1360 qml/pages/HomePage.qml:1412
+#: qml/pages/HomePage.qml:1502 qml/pages/TaskDetailPage.qml:383
+#: qml/pages/TaskDetailPage.qml:429 qml/pages/TaskDetailPage.qml:541
+#: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:15
+#: vendor/NextCommon/qml/NextCommon/ConfirmDialog.qml:9
+#: vendor/NextCommon/qml/NextCommon/TimePicker.qml:16
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: qml/pages/HomePage.qml:499 qml/pages/TaskDetailPage.qml:203
+#: qml/pages/HomePage.qml:1073
+#, fuzzy
+msgid "Select where the shared text task should be created."
+msgstr "Välj var den nya tasken ska skapas."
+
+#: qml/pages/HomePage.qml:1116
+msgid "Enter a name for the new task list."
+msgstr "Ange ett namn för den nya task-listan."
+
+#: qml/pages/HomePage.qml:1124 qml/pages/HomePage.qml:1175
+#, fuzzy
+msgid "List name"
+msgstr "Lista"
+
+#: qml/pages/HomePage.qml:1139
+#, fuzzy
+msgid "Create"
+msgstr "Skapad"
+
+#: qml/pages/HomePage.qml:1162
+#, fuzzy
+msgid "Task list"
+msgstr "Task-listor"
+
+#: qml/pages/HomePage.qml:1167
+msgid "Rename the list, change its color, or delete it."
+msgstr "Byt namn på listan, ändra färg eller radera den."
+
+#: qml/pages/HomePage.qml:1186
+msgid "Color"
+msgstr "Färg"
+
+#: qml/pages/HomePage.qml:1217
+msgid "Save"
+msgstr "Spara"
+
+#: qml/pages/HomePage.qml:1225
+#, fuzzy
+msgid "Delete list"
+msgstr "Radera task"
+
+#: qml/pages/HomePage.qml:1246
+#, fuzzy
+msgid "Delete task list?"
+msgstr "Radera task?"
+
+#: qml/pages/HomePage.qml:1251
+#, fuzzy
+msgid "The list and its tasks will be removed from the server and this device."
+msgstr "Tasken raderas från den här enheten och synkas till servern."
+
+#: qml/pages/HomePage.qml:1282 qml/pages/TaskDetailPage.qml:515
+msgid "Delete task?"
+msgstr "Radera task?"
+
+#: qml/pages/HomePage.qml:1287 qml/pages/TaskDetailPage.qml:522
+msgid "The task will be deleted from this device and synced to the server."
+msgstr "Tasken raderas från den här enheten och synkas till servern."
+
+#: qml/pages/HomePage.qml:1322
+msgid "Delete selected tasks?"
+msgstr "Radera markerade uppgifter?"
+
+#: qml/pages/HomePage.qml:1352
+#, fuzzy
+msgid "No selected tasks could be deleted."
+msgstr "Inga markerade uppgifter kunde flyttas."
+
+#: qml/pages/HomePage.qml:1371
+msgid "Move selected tasks"
+msgstr "Flytta markerade uppgifter"
+
+#: qml/pages/HomePage.qml:1384
+msgid "Choose the target list. Tasks with unsynced local changes are skipped."
+msgstr "Välj mållista. Uppgifter med osynkade lokala ändringar hoppas över."
+
+#: qml/pages/HomePage.qml:1403
+msgid "No selected tasks could be moved."
+msgstr "Inga markerade uppgifter kunde flyttas."
+
+#: qml/pages/HomePage.qml:1423 qml/pages/TaskDetailPage.qml:237
 msgid "Sync status"
 msgstr "Synkstatus"
 
-#: qml/pages/HomePage.qml:503 qml/pages/TaskDetailPage.qml:207
-#: qml/pages/TaskDetailPage.qml:970
+#: qml/pages/HomePage.qml:1443 qml/pages/TaskDetailPage.qml:258
+#: qml/pages/TaskDetailPage.qml:1166
 msgid "Resolve conflict"
 msgstr "Lös konflikt"
 
-#: qml/pages/HomePage.qml:514 qml/pages/TaskDetailPage.qml:218
+#: qml/pages/HomePage.qml:1456 qml/pages/TaskDetailPage.qml:270
 msgid "Refresh"
 msgstr "Uppdatera"
 
-#: qml/pages/HomePage.qml:525 qml/pages/HomePage.qml:585
-#: qml/pages/TaskDetailPage.qml:229
+#: qml/pages/HomePage.qml:1469 qml/pages/HomePage.qml:1552
+#: qml/pages/HomePage.qml:1591 qml/pages/TaskDetailPage.qml:282
+#: qml/pages/TaskDetailPage.qml:582
 msgid "Close"
 msgstr "Stäng"
 
-#: qml/pages/HomePage.qml:536
+#: qml/pages/HomePage.qml:1480
 msgid "Reopen completed tasks?"
 msgstr "Öppna klara tasks igen?"
 
-#: qml/pages/HomePage.qml:537
+#: qml/pages/HomePage.qml:1485
 msgid "This will mark all completed tasks in this list as open again."
 msgstr "Detta markerar alla klara tasks i den här listan som öppna igen."
 
-#: qml/pages/HomePage.qml:540 qml/pages/HomePage.qml:1104
+#: qml/pages/HomePage.qml:1492 qml/pages/HomePage.qml:2628
+#: qml/pages/HomePage.qml:2811
 msgid "Reopen all"
 msgstr "Öppna alla igen"
 
-#: qml/pages/HomePage.qml:560
+#: qml/pages/HomePage.qml:1514
+msgid "Sort %1"
+msgstr "Sortera %1"
+
+#: qml/pages/HomePage.qml:1515
 msgid "Sort tasks"
 msgstr "Sortera tasks"
 
-#: qml/pages/HomePage.qml:562
-msgid "Manual order is stored locally on this Ubuntu Touch device only."
-msgstr "Manuell ordning sparas bara lokalt på den här Ubuntu Touch-enheten."
+#: qml/pages/HomePage.qml:1521
+msgid ""
+"Manual order is saved to the task list using Nextcloud-compatible task order "
+"values."
+msgstr ""
+"Manuell ordning sparas i task-listan med Nextcloud-kompatibla "
+"sorteringsvärden."
 
-#: qml/pages/HomePage.qml:563
+#: qml/pages/HomePage.qml:1522
 msgid "Uses standard task sort concepts."
 msgstr "Använder standardbegrepp för tasksortering."
 
-#: qml/pages/HomePage.qml:579
+#: qml/pages/HomePage.qml:1544
 msgid "Ascending"
 msgstr "Stigande"
 
-#: qml/pages/HomePage.qml:579
+#: qml/pages/HomePage.qml:1544
 msgid "Descending"
 msgstr "Fallande"
 
-#: qml/pages/HomePage.qml:641
+#: qml/pages/HomePage.qml:1563
+msgid "Sort list"
+msgstr "Sortera lista"
+
+#: qml/pages/HomePage.qml:1568
+msgid "Choose which task list to sort."
+msgstr "Välj vilken uppgiftslista som ska sorteras."
+
+#: qml/pages/HomePage.qml:1852 qml/pages/HomePage.qml:2729
+#: qml/pages/TaskDetailPage.qml:632
 msgid "Refreshing..."
 msgstr "Uppdaterar..."
 
-#: qml/pages/HomePage.qml:643
+#: qml/pages/HomePage.qml:1854 qml/pages/HomePage.qml:2728
+#: qml/pages/TaskDetailPage.qml:634
 msgid "Release to refresh"
 msgstr "Släpp för att uppdatera"
 
-#: qml/pages/HomePage.qml:644
+#: qml/pages/HomePage.qml:1855 qml/pages/HomePage.qml:2727
+#: qml/pages/SettingsPage.qml:74 qml/pages/TaskDetailPage.qml:635
 msgid "Pull to refresh"
 msgstr "Dra för att uppdatera"
 
-#: qml/pages/HomePage.qml:828 qml/pages/HomePage.qml:1069
-msgid "Done"
-msgstr "Klar"
-
-#: qml/pages/HomePage.qml:920
+#: qml/pages/HomePage.qml:2355 qml/pages/HomePage.qml:2794
 msgid "Hide completed tasks (%1)"
 msgstr "Dölj klara tasks (%1)"
 
-#: qml/pages/HomePage.qml:921
+#: qml/pages/HomePage.qml:2356 qml/pages/HomePage.qml:2795
 msgid "Show completed tasks (%1)"
 msgstr "Visa klara tasks (%1)"
 
-#: qml/pages/HomePage.qml:1128
+#: qml/pages/HomePage.qml:2643 qml/pages/HomePage.qml:2821
 msgid "No matching items"
 msgstr "Inga matchande objekt"
 
-#: qml/pages/HomePage.qml:1202
-msgid "Task Lists"
-msgstr "Task-listor"
+#: qml/pages/HomePage.qml:2715
+#, fuzzy
+msgid "Toggle complete"
+msgstr "Visa klara"
 
-#: qml/pages/HomePage.qml:1322 qml/pages/LanguageSelectionPage.qml:18
+#: qml/pages/HomePage.qml:2880
+#: vendor/NextCommon/qml/NextCommon/LanguagePage.qml:14
 msgid "Language"
 msgstr "Språk"
 
-#: qml/pages/LanguageSelectionPage.qml:12
-msgid "Default"
-msgstr "Standard"
+#: qml/pages/HomePage.qml:2881
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:247
+msgid "Account"
+msgstr "Konto"
 
-#: qml/pages/LanguageSelectionPage.qml:12
-msgid "Follow system language"
-msgstr "Följ systemspråk"
-
-#: qml/pages/LanguageSelectionPage.qml:13
-msgid "Built-in source language"
-msgstr "Inbyggt källspråk"
-
-#: qml/pages/LanguageSelectionPage.qml:14
-msgid "Initial translation"
-msgstr "Initial översättning"
-
-#: qml/pages/LanguageSelectionPage.qml:38
-msgid ""
-"Choose the language this app should use. Restart the app after changing "
-"language."
-msgstr ""
-
-#: qml/pages/SettingsPage.qml:12
+#: qml/pages/HomePage.qml:2882 qml/pages/SettingsPage.qml:12
+#: vendor/NextCommon/qml/NextCommon/SettingsShell.qml:8
 msgid "Settings"
 msgstr "Inställningar"
 
-#: qml/pages/SettingsPage.qml:35
-msgid "Sync"
-msgstr "Synk"
+#: qml/pages/HomePage.qml:2883
+#: vendor/NextCommon/qml/NextCommon/AboutPage.qml:17
+msgid "About"
+msgstr "Om"
 
-#: qml/pages/SettingsPage.qml:40
-msgid "Sync while app is active"
-msgstr "Synka när appen är aktiv"
-
-#: qml/pages/SettingsPage.qml:46
-msgid "Sync on startup"
-msgstr "Synka vid start"
-
-#: qml/pages/SettingsPage.qml:53
+#: qml/pages/LanguageSelectionPage.qml:8
+#: vendor/NextCommon/qml/NextCommon/LanguagePage.qml:11
 msgid ""
-"These settings are placeholders until the app-specific API, cache, and sync "
-"controller are implemented."
+"Some translations are AI-assisted and not fully reviewed. You can help "
+"improve translations in the project repository."
 msgstr ""
+"Vissa översättningar är AI-assisterade och inte helt granskade. Du kan "
+"hjälpa till att förbättra översättningarna i projektets repository."
 
-#: qml/pages/SettingsPage.qml:66
+#: qml/pages/LanguageSelectionPage.qml:10
+msgid "Default"
+msgstr "Standard"
+
+#: qml/pages/LanguageSelectionPage.qml:10
+msgid "Follow system language"
+msgstr "Följ systemspråk"
+
+#: qml/pages/LanguageSelectionPage.qml:11
+msgid "Built-in source language"
+msgstr "Inbyggt källspråk"
+
+#: qml/pages/LanguageSelectionPage.qml:12
+msgid "Initial translation"
+msgstr "Initial översättning"
+
+#: qml/pages/LanguageSelectionPage.qml:13
+#: qml/pages/LanguageSelectionPage.qml:14
+#: qml/pages/LanguageSelectionPage.qml:15
+#: qml/pages/LanguageSelectionPage.qml:16
+#: qml/pages/LanguageSelectionPage.qml:17
+#: qml/pages/LanguageSelectionPage.qml:18
+#: qml/pages/LanguageSelectionPage.qml:19
+#: qml/pages/LanguageSelectionPage.qml:20
+#: qml/pages/LanguageSelectionPage.qml:21
+#: qml/pages/LanguageSelectionPage.qml:22
+#: qml/pages/LanguageSelectionPage.qml:23
+msgid "AI-assisted starter translation"
+msgstr "AI-assisterad startöversättning"
+
+#: qml/pages/SettingsPage.qml:72
 msgid "Swipe actions"
 msgstr "Svepåtgärder"
 
-#: qml/pages/SettingsPage.qml:72
+#: qml/pages/SettingsPage.qml:73
+msgid "Reverse left/right actions"
+msgstr "Vänd vänster/höger-åtgärder"
+
+#: qml/pages/SettingsPage.qml:75
+msgid "Drag to move"
+msgstr "Dra för att flytta"
+
+#: qml/pages/SettingsPage.qml:76
+msgid "Level 0 drag/drop"
+msgstr "Dra/släpp på nivå 0"
+
+#: qml/pages/SettingsPage.qml:77
+msgid "Children drag/drop"
+msgstr "Dra/släpp underuppgifter"
+
+#: qml/pages/SettingsPage.qml:78
+msgid "Expanded by default"
+msgstr "Utfälld som standard"
+
+#: qml/pages/SettingsPage.qml:79
+msgid "Show tree lines"
+msgstr "Visa trädlinjer"
+
+#: qml/pages/SettingsPage.qml:80
+msgid "Bulk selection"
+msgstr "Flerval"
+
+#: qml/pages/SettingsPage.qml:102
+msgid "Sync"
+msgstr "Synk"
+
+#: qml/pages/SettingsPage.qml:112
+msgid "Sync on startup"
+msgstr "Synka vid start"
+
+#: qml/pages/SettingsPage.qml:144
+msgid "List interaction"
+msgstr "Listinteraktion"
+
+#: qml/pages/SettingsPage.qml:150
+msgid "Configure list gestures and tree-list behavior."
+msgstr "Konfigurera listgester och beteende för trädlistor."
+
+#: qml/pages/SettingsPage.qml:202
+msgid "Read-only lists"
+msgstr "Skrivskyddade listor"
+
+#: qml/pages/SettingsPage.qml:208
 msgid ""
-"Choose where destructive swipe actions should appear. Ubuntu Touch style is "
-"the default."
+"Some servers expose Deck cards as read-only task lists. You can hide them "
+"from NextTasks."
 msgstr ""
-"Välj var destruktiva svepåtgärder ska visas. Ubuntu Touch-stil är standard."
+"Vissa servrar visar Deck-kort som skrivskyddade task-listor. Du kan dölja "
+"dem från NextTasks."
 
-#: qml/pages/SettingsPage.qml:79
-msgid "Ubuntu Touch style"
-msgstr "Ubuntu Touch-stil"
+#: qml/pages/SettingsPage.qml:219
+msgid "Show read-only lists"
+msgstr "Visa skrivskyddade listor"
 
-#: qml/pages/SettingsPage.qml:79
-msgid "Use platform conventions for swipe actions."
-msgstr "Använd plattformens konventioner för svepåtgärder."
-
-#: qml/pages/SettingsPage.qml:80
-msgid "Android style"
-msgstr "Android-stil"
-
-#: qml/pages/SettingsPage.qml:80
-msgid "Match the Android client where practical."
-msgstr "Matcha Android-klienten där det är praktiskt."
-
-#: qml/pages/TaskConflictResolutionPage.qml:37
+#: qml/pages/TaskConflictResolutionPage.qml:46
 msgid ""
 "The server changed this task while you had local edits. Review one version, "
 "then choose which version to keep."
@@ -960,354 +1118,712 @@ msgstr ""
 "Servern ändrade den här tasken medan du hade lokala ändringar. Granska en "
 "version och välj sedan vilken version som ska behållas."
 
-#: qml/pages/TaskConflictResolutionPage.qml:49
-#: qml/pages/TaskConflictResolutionPage.qml:122
+#: qml/pages/TaskConflictResolutionPage.qml:57
+#: qml/pages/TaskConflictResolutionPage.qml:134
 msgid "Server version"
 msgstr "Serverversion"
 
-#: qml/pages/TaskConflictResolutionPage.qml:56
-#: qml/pages/TaskConflictResolutionPage.qml:128
+#: qml/pages/TaskConflictResolutionPage.qml:65
+#: qml/pages/TaskConflictResolutionPage.qml:140
 msgid "Local version"
 msgstr "Lokal version"
 
-#: qml/pages/TaskConflictResolutionPage.qml:101
+#: qml/pages/TaskConflictResolutionPage.qml:111
 msgid "Use server version"
 msgstr "Använd serverversion"
 
-#: qml/pages/TaskConflictResolutionPage.qml:102
+#: qml/pages/TaskConflictResolutionPage.qml:112
 msgid "Keep local version"
 msgstr "Behåll lokal version"
 
-#: qml/pages/TaskConflictResolutionPage.qml:121
+#: qml/pages/TaskConflictResolutionPage.qml:133
 msgid "Server version - ETag available"
 msgstr "Serverversion - ETag finns"
 
-#: qml/pages/TaskConflictResolutionPage.qml:127
+#: qml/pages/TaskConflictResolutionPage.qml:139
 msgid "Local version - unsynced"
 msgstr "Lokal version - osynkad"
 
-#: qml/pages/TaskDetailPage.qml:242
+#: qml/pages/TaskDetailPage.qml:295
 #, fuzzy
 msgid "Select a date."
 msgstr "Ange startdatum"
 
-#: qml/pages/TaskDetailPage.qml:245
+#: qml/pages/TaskDetailPage.qml:298
+#: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:13
 msgid "Today"
-msgstr ""
+msgstr "Idag"
 
-#: qml/pages/TaskDetailPage.qml:273
+#: qml/pages/TaskDetailPage.qml:327
+#: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:209
 msgid "Fri"
-msgstr ""
+msgstr "Fre"
 
-#: qml/pages/TaskDetailPage.qml:273
+#: qml/pages/TaskDetailPage.qml:327
+#: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:209
 msgid "Mon"
-msgstr ""
+msgstr "Mån"
 
-#: qml/pages/TaskDetailPage.qml:273
+#: qml/pages/TaskDetailPage.qml:327
+#: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:209
 #, fuzzy
 msgid "Sat"
 msgstr "Status"
 
-#: qml/pages/TaskDetailPage.qml:273
+#: qml/pages/TaskDetailPage.qml:327
+#: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:209
 msgid "Sun"
-msgstr ""
+msgstr "Sön"
 
-#: qml/pages/TaskDetailPage.qml:273
+#: qml/pages/TaskDetailPage.qml:327
+#: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:209
 msgid "Thu"
-msgstr ""
+msgstr "Tor"
 
-#: qml/pages/TaskDetailPage.qml:273
+#: qml/pages/TaskDetailPage.qml:327
+#: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:209
 msgid "Tue"
-msgstr ""
+msgstr "Tis"
 
-#: qml/pages/TaskDetailPage.qml:273
+#: qml/pages/TaskDetailPage.qml:327
+#: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:209
 msgid "Wed"
-msgstr ""
+msgstr "Ons"
 
-#: qml/pages/TaskDetailPage.qml:321
+#: qml/pages/TaskDetailPage.qml:375
 #, fuzzy
 msgid "Clear date"
 msgstr "Startdatum"
 
-#: qml/pages/TaskDetailPage.qml:340 qml/pages/TaskDetailPage.qml:583
+#: qml/pages/TaskDetailPage.qml:394 qml/pages/TaskDetailPage.qml:772
 msgid "Status"
 msgstr "Status"
 
-#: qml/pages/TaskDetailPage.qml:341
+#: qml/pages/TaskDetailPage.qml:399
 #, fuzzy
 msgid "Choose task status."
 msgstr "Välj en lista"
 
-#: qml/pages/TaskDetailPage.qml:345 qml/pages/TaskDetailPage.qml:1314
+#: qml/pages/TaskDetailPage.qml:405 qml/pages/TaskDetailPage.qml:1623
 msgid "Needs action"
 msgstr "Behöver åtgärd"
 
-#: qml/pages/TaskDetailPage.qml:376 qml/pages/TaskDetailPage.qml:921
+#: qml/pages/TaskDetailPage.qml:440 qml/pages/TaskDetailPage.qml:1112
 msgid "Select tags"
-msgstr ""
+msgstr "Välj taggar"
 
-#: qml/pages/TaskDetailPage.qml:377
+#: qml/pages/TaskDetailPage.qml:453
 msgid "No tags yet. Type above to create one."
-msgstr ""
+msgstr "Inga taggar ännu. Skriv ovan för att skapa en."
 
-#: qml/pages/TaskDetailPage.qml:377
+#: qml/pages/TaskDetailPage.qml:453
 #, fuzzy
 msgid "Selected: %1"
 msgstr "Skapad: %1"
 
-#: qml/pages/TaskDetailPage.qml:382
+#: qml/pages/TaskDetailPage.qml:462
 msgid "New tag"
-msgstr ""
+msgstr "Ny tagg"
 
-#: qml/pages/TaskDetailPage.qml:398
+#: qml/pages/TaskDetailPage.qml:482
 msgid "Add tag"
-msgstr ""
+msgstr "Lägg till tagg"
 
-#: qml/pages/TaskDetailPage.qml:407
+#: qml/pages/TaskDetailPage.qml:492
 msgid "Clear tags"
-msgstr ""
+msgstr "Rensa taggar"
 
-#: qml/pages/TaskDetailPage.qml:428
-msgid "Delete task?"
-msgstr "Radera task?"
+#: qml/pages/TaskDetailPage.qml:504
+msgid "Done"
+msgstr "Klar"
 
-#: qml/pages/TaskDetailPage.qml:430
+#: qml/pages/TaskDetailPage.qml:521
 msgid ""
 "This task has local changes. Deleting it will discard those local changes."
 msgstr ""
 "Den här tasken har lokala ändringar. Radering kastar de lokala ändringarna."
 
-#: qml/pages/TaskDetailPage.qml:431
-msgid "The task will be deleted from this device and synced to the server."
-msgstr "Tasken raderas från den här enheten och synkas till servern."
+#: qml/pages/TaskDetailPage.qml:552
+msgid "Move task"
+msgstr "Flytta uppgift"
 
-#: qml/pages/TaskDetailPage.qml:434
-msgid "Delete"
-msgstr "Radera"
+#: qml/pages/TaskDetailPage.qml:558
+msgid "Sync this task before moving it to another list."
+msgstr "Synka tasken innan den flyttas till en annan lista."
 
-#: qml/pages/TaskDetailPage.qml:500
+#: qml/pages/TaskDetailPage.qml:559
+msgid "Choose the target list."
+msgstr "Välj mållista."
+
+#: qml/pages/TaskDetailPage.qml:658
+#, fuzzy
+msgid "Task title"
+msgstr "Task-listor"
+
+#: qml/pages/TaskDetailPage.qml:689
 msgid "Details"
 msgstr "Detaljer"
 
-#: qml/pages/TaskDetailPage.qml:533
+#: qml/pages/TaskDetailPage.qml:722
 msgid "Notes"
 msgstr "Anteckningar"
 
-#: qml/pages/TaskDetailPage.qml:640
+#: qml/pages/TaskDetailPage.qml:829
 #, fuzzy
 msgid "No start date"
 msgstr "Ange startdatum"
 
-#: qml/pages/TaskDetailPage.qml:685
+#: qml/pages/TaskDetailPage.qml:874
 #, fuzzy
 msgid "No due date"
 msgstr "Ange förfallodatum"
 
-#: qml/pages/TaskDetailPage.qml:797
+#: qml/pages/TaskDetailPage.qml:986
 #, fuzzy, javascript-format
 msgid "%1% completed"
 msgstr "Dölj klara"
 
-#: qml/pages/TaskDetailPage.qml:804
+#: qml/pages/TaskDetailPage.qml:993
 msgid "Progress"
-msgstr ""
+msgstr "Förlopp"
 
-#: qml/pages/TaskDetailPage.qml:854 qml/pages/TaskDetailPage.qml:862
+#: qml/pages/TaskDetailPage.qml:1043 qml/pages/TaskDetailPage.qml:1052
 #, fuzzy
 msgid "Set location"
 msgstr "Svepåtgärder"
 
-#: qml/pages/TaskDetailPage.qml:879 qml/pages/TaskDetailPage.qml:887
+#: qml/pages/TaskDetailPage.qml:1069 qml/pages/TaskDetailPage.qml:1078
 msgid "Set a URL"
 msgstr "Ange en URL"
 
-#: qml/pages/TaskDetailPage.qml:928
+#: qml/pages/TaskDetailPage.qml:1119
 msgid "No tags"
 msgstr "Inga taggar"
 
-#: qml/pages/TaskDetailPage.qml:946
+#: qml/pages/TaskDetailPage.qml:1137
 msgid "List: %1"
 msgstr "Lista: %1"
 
-#: qml/pages/TaskDetailPage.qml:946
+#: qml/pages/TaskDetailPage.qml:1137
 msgid "No list"
 msgstr "Ingen lista"
 
-#: qml/pages/TaskDetailPage.qml:957
-msgid "Modified: %1"
-msgstr "Ändrad: %1"
-
-#: qml/pages/TaskDetailPage.qml:958
-msgid "Created: %1"
-msgstr "Skapad: %1"
-
-#: qml/pages/TaskDetailPage.qml:988
-msgid "Delete task"
-msgstr "Radera task"
-
-#: qml/pages/TaskDetailPage.qml:1028
-msgid "No notes."
-msgstr "Inga anteckningar."
-
-#: qml/pages/TaskDetailPage.qml:1147
-msgid "This task has a conflict."
-msgstr "Den här tasken har en konflikt."
-
-#: qml/pages/TaskDetailPage.qml:1149
-msgid "This task has local changes waiting to sync."
-msgstr "Den här tasken har lokala ändringar som väntar på synk."
-
-#: qml/pages/TaskDetailPage.qml:1151
-msgid "This task is up to date."
-msgstr "Den här tasken är uppdaterad."
-
-#: qml/pages/TaskDetailPage.qml:1274
-msgid "April"
-msgstr "April"
-
-#: qml/pages/TaskDetailPage.qml:1274
-msgid "August"
-msgstr "Augusti"
-
-#: qml/pages/TaskDetailPage.qml:1274
-msgid "December"
-msgstr "December"
-
-#: qml/pages/TaskDetailPage.qml:1274
-msgid "February"
-msgstr "Februari"
-
-#: qml/pages/TaskDetailPage.qml:1274
-msgid "January"
-msgstr "Januari"
-
-#: qml/pages/TaskDetailPage.qml:1274
-msgid "July"
-msgstr "Juli"
-
-#: qml/pages/TaskDetailPage.qml:1274
-msgid "June"
-msgstr "Juni"
-
-#: qml/pages/TaskDetailPage.qml:1274
-msgid "March"
-msgstr "Mars"
-
-#: qml/pages/TaskDetailPage.qml:1274
-msgid "May"
-msgstr "Maj"
-
-#: qml/pages/TaskDetailPage.qml:1274
-msgid "November"
-msgstr "November"
-
-#: qml/pages/TaskDetailPage.qml:1274
-msgid "October"
-msgstr "Oktober"
-
-#: qml/pages/TaskDetailPage.qml:1274
-msgid "September"
-msgstr "September"
-
-#: qml/pages/TaskDetailPage.qml:1435
-msgid "No priority assigned (0)"
-msgstr "Ingen prioritet angiven (0)"
-
-#: qml/pages/TaskDetailPage.qml:1436
-msgid "High (%1)"
-msgstr "Hög (%1)"
-
-#: qml/pages/TaskDetailPage.qml:1437
-msgid "Medium (5)"
-msgstr "Medium (5)"
-
-#: qml/pages/TaskDetailPage.qml:1438
-msgid "Low (%1)"
-msgstr "Låg (%1)"
-
-#: qml/backend/TasksApiClient.qml:359
-msgid "Task move is not available."
-msgstr "Det går inte att flytta uppgiften."
-
-#: qml/backend/TasksApiClient.qml:366
-msgid "Task move data is incomplete."
-msgstr "Information för flytt av uppgiften saknas."
-
-#: qml/backend/TasksApiClient.qml:371
-msgid "Choose a different task list."
-msgstr "Välj en annan lista."
-
-#: qml/backend/TasksController.qml:859
-msgid "Choose a target task list."
-msgstr "Välj en mållista."
-
-#: qml/backend/TasksController.qml:884
-msgid "Selected tasks must be synced before they can be moved."
-msgstr "Markerade uppgifter måste synkas innan de kan flyttas."
-
-#: qml/backend/TasksController.qml:897
-msgid "Moving %1 tasks..."
-msgstr "Flyttar %1 uppgifter..."
-
-#: qml/backend/TasksController.qml:934
-msgid "Moved %1 task(s), %2 failed, %3 skipped."
-msgstr "Flyttade %1 uppgift(er), %2 misslyckades, %3 hoppades över."
-
-#: qml/backend/TasksController.qml:939
-msgid "Moved %1 task(s). %2 skipped because they need sync first."
-msgstr "Flyttade %1 uppgift(er). %2 hoppades över eftersom de behöver synkas först."
-
-#: qml/backend/TasksController.qml:940
-msgid "Moved %1 task(s)."
-msgstr "Flyttade %1 uppgift(er)."
-
-msgid "%1 selected"
-msgstr "%1 markerade"
-
-msgid "Move"
-msgstr "Flytta"
-
-msgid "This will delete %1 selected tasks."
-msgstr "Detta raderar %1 markerade uppgifter."
-
-msgid "Delete selected tasks?"
-msgstr "Radera markerade uppgifter?"
-
-#: qml/pages/HomePage.qml:966
-msgid "Move selected tasks"
-msgstr "Flytta markerade uppgifter"
-
-#: qml/pages/HomePage.qml:967
-msgid "Choose the target list. Tasks with unsynced local changes are skipped."
-msgstr "Välj mållista. Uppgifter med osynkade lokala ändringar hoppas över."
-
-#: qml/pages/HomePage.qml:982
-msgid "No selected tasks could be moved."
-msgstr "Inga markerade uppgifter kunde flyttas."
-
-#: qml/pages/TaskDetailPage.qml:462
-msgid "Move task"
-msgstr "Flytta uppgift"
-
-#: qml/pages/TaskDetailPage.qml:465
-msgid "Choose the target list."
-msgstr "Välj mållista."
-
-#: qml/pages/TaskDetailPage.qml:1046
+#: qml/pages/TaskDetailPage.qml:1145
 msgid "Move to another list"
 msgstr "Flytta till annan lista"
 
-msgid "Task list created. Refreshing..."
-msgstr "Uppgiftslista skapad. Uppdaterar..."
+#: qml/pages/TaskDetailPage.qml:1156
+msgid "Modified: %1"
+msgstr "Ändrad: %1"
 
-msgid "Sort %1"
-msgstr "Sortera %1"
+#: qml/pages/TaskDetailPage.qml:1157
+msgid "Created: %1"
+msgstr "Skapad: %1"
 
-msgid "Sort list"
-msgstr "Sortera lista"
+#: qml/pages/TaskDetailPage.qml:1175
+msgid "Delete task"
+msgstr "Radera task"
 
-msgid "Choose which task list to sort."
-msgstr "Välj vilken uppgiftslista som ska sorteras."
+#: qml/pages/TaskDetailPage.qml:1214
+msgid "No notes."
+msgstr "Inga anteckningar."
+
+#: qml/pages/TaskDetailPage.qml:1395
+#, fuzzy
+msgid "Sharing is not available."
+msgstr "Serverversionen är inte tillgänglig."
+
+#: qml/pages/TaskDetailPage.qml:1436
+msgid "This task has a conflict."
+msgstr "Den här tasken har en konflikt."
+
+#: qml/pages/TaskDetailPage.qml:1438
+msgid "This task has local changes waiting to sync."
+msgstr "Den här tasken har lokala ändringar som väntar på synk."
+
+#: qml/pages/TaskDetailPage.qml:1440
+msgid "This task is up to date."
+msgstr "Den här tasken är uppdaterad."
+
+#: qml/pages/TaskDetailPage.qml:1583
+#: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:68
+msgid "April"
+msgstr "April"
+
+#: qml/pages/TaskDetailPage.qml:1583
+#: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:72
+msgid "August"
+msgstr "Augusti"
+
+#: qml/pages/TaskDetailPage.qml:1583
+#: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:76
+msgid "December"
+msgstr "December"
+
+#: qml/pages/TaskDetailPage.qml:1583
+#: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:66
+msgid "February"
+msgstr "Februari"
+
+#: qml/pages/TaskDetailPage.qml:1583
+#: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:65
+msgid "January"
+msgstr "Januari"
+
+#: qml/pages/TaskDetailPage.qml:1583
+#: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:71
+msgid "July"
+msgstr "Juli"
+
+#: qml/pages/TaskDetailPage.qml:1583
+#: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:70
+msgid "June"
+msgstr "Juni"
+
+#: qml/pages/TaskDetailPage.qml:1583
+#: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:67
+msgid "March"
+msgstr "Mars"
+
+#: qml/pages/TaskDetailPage.qml:1583
+#: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:69
+msgid "May"
+msgstr "Maj"
+
+#: qml/pages/TaskDetailPage.qml:1583
+#: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:75
+msgid "November"
+msgstr "November"
+
+#: qml/pages/TaskDetailPage.qml:1583
+#: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:74
+msgid "October"
+msgstr "Oktober"
+
+#: qml/pages/TaskDetailPage.qml:1583
+#: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:73
+msgid "September"
+msgstr "September"
+
+#: qml/pages/TaskDetailPage.qml:1744
+msgid "No priority assigned (0)"
+msgstr "Ingen prioritet angiven (0)"
+
+#: qml/pages/TaskDetailPage.qml:1745
+msgid "High (%1)"
+msgstr "Hög (%1)"
+
+#: qml/pages/TaskDetailPage.qml:1746
+msgid "Medium (5)"
+msgstr "Medium (5)"
+
+#: qml/pages/TaskDetailPage.qml:1747
+msgid "Low (%1)"
+msgstr "Låg (%1)"
+
+#: vendor/NextCommon/qml/NextCommon/AboutPage.qml:58
+msgid "Version %1"
+msgstr "Version %1"
+
+#: vendor/NextCommon/qml/NextCommon/AboutPage.qml:79
+msgid "License"
+msgstr "Licens"
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:41
+#, fuzzy
+msgid "Select an account and authorize it for %1."
+msgstr "Välj ett konto och auktorisera det för NextTasks."
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:48
+#, fuzzy
+msgid "Accounts"
+msgstr "Konto"
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:87
+#, fuzzy
+msgid ""
+"Authorization succeeded, but the Ubuntu Touch account did not expose a "
+"server address for %1."
+msgstr "Det valda Ubuntu Touch-kontot exponerade ingen serveradress."
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:89
+msgid ""
+"Authorization succeeded for %1. Credentials are available to the app, but "
+"were not displayed or stored."
+msgstr ""
+"Auktorisering lyckades för %1. Uppgifterna är tillgängliga för appen men "
+"visades eller sparades inte."
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:118
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:857
+msgid ""
+"Ubuntu Touch Online Accounts did not allow %1 to use this account yet. Check "
+"that %1 is enabled for this account in System Settings > Accounts, then "
+"return here."
+msgstr ""
+"Ubuntu Touch Online Accounts tillåter ännu inte att %1 använder det här "
+"kontot. Kontrollera att %1 är aktiverad för kontot i Systeminställningar > "
+"Konton och återvänd hit."
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:121
+msgid ""
+"Authorization failed: %1. If the system did not show an Online Accounts "
+"prompt, open System Settings > Accounts and allow %2 for this account, then "
+"try again."
+msgstr ""
+"Auktorisering misslyckades: %1. Om systemet inte visade en Online Accounts-"
+"fråga, öppna Systeminställningar > Konton och tillåt %2 för kontot. Försök "
+"sedan igen."
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:202
+#, fuzzy
+msgid "Allow account access"
+msgstr "Tillgängliga konton"
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:208
+#, fuzzy
+msgid "Open System Settings"
+msgstr "Öppna systemets konton"
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:218
+#: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:12
+#: vendor/NextCommon/qml/NextCommon/TimePicker.qml:13
+msgid "OK"
+msgstr "OK"
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:314
+msgid "Server address"
+msgstr "Serveradress"
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:322
+msgid "https://cloud.example.com"
+msgstr "https://cloud.example.com"
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:331
+msgid ""
+"This app uses Ubuntu Touch Online Accounts. Edit this only if the system "
+"account did not expose the correct server address."
+msgstr ""
+"Appen använder Ubuntu Touch Online Accounts. Ändra detta endast om "
+"systemkontot inte visar rätt serveradress."
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:339
+msgid "Available accounts"
+msgstr "Tillgängliga konton"
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:365
+msgid "No Nextcloud account found"
+msgstr "Inget Nextcloud-konto hittades"
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:372
+msgid ""
+"Add a Nextcloud or ownCloud account in Ubuntu Touch System Settings > "
+"Accounts. Then return here and select it."
+msgstr ""
+"Lägg till ett Nextcloud- eller ownCloud-konto i Ubuntu Touch "
+"systeminställningar > Konton. Gå sedan tillbaka hit och välj det."
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:384
+msgid "How to add an account"
+msgstr "Så lägger du till ett konto"
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:506
+#, fuzzy
+msgid "Allow %1 in Ubuntu Touch account settings first"
+msgstr "Tillåt först NextTasks i Ubuntu Touch-kontoinställningarna"
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:506
+#, fuzzy
+msgid "Allowed for %1"
+msgstr "Tillåtet för NextTasks"
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:507
+msgid "Nextcloud account discovered"
+msgstr "Nextcloud-konto hittat"
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:529
+msgid "Verify selected account"
+msgstr "Verifiera valt konto"
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:529
+msgid "Verifying account..."
+msgstr "Verifierar konto..."
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:551
+msgid "How to allow this account"
+msgstr "Så tillåter du det här kontot"
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:604
+msgid "Selected %1. Verifying authorization..."
+msgstr "Valde %1. Verifierar auktorisering..."
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:670
+msgid "Saved account selected. Verify again if needed."
+msgstr "Sparat konto valt. Verifiera igen vid behov."
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:788
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:801
+msgid "Select an account first."
+msgstr "Välj ett konto först."
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:806
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:853
+msgid "Verifying Online Accounts authorization..."
+msgstr "Verifierar Online Accounts-auktorisering..."
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:814
+msgid ""
+"Waiting for Ubuntu Touch Online Accounts to confirm permission for %1. If "
+"this does not finish, check that %1 is allowed for this account in System "
+"Settings > Accounts."
+msgstr ""
+"Väntar på att Ubuntu Touch Online Accounts ska bekräfta behörighet för %1. "
+"Om detta inte slutförs, kontrollera att %1 är tillåten för kontot i "
+"Systeminställningar > Konton."
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:832
+#, fuzzy
+msgid "Refreshing Ubuntu Touch account permission for %1..."
+msgstr "Tillåt först NextTasks i Ubuntu Touch-kontoinställningarna"
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:870
+msgid "Checking account permission for %1..."
+msgstr "Kontrollerar kontobehörighet för %1..."
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:894
+#, fuzzy
+msgid ""
+"Open Ubuntu Touch System Settings manually, go to Accounts, add a Nextcloud "
+"or ownCloud account, then return to %1 and select it."
+msgstr ""
+"Öppna Ubuntu Touch systeminställningar, välj Nextcloud-kontot, tillåt "
+"NextTasks för det kontot och återvänd hit. NextTasks verifierar det "
+"automatiskt."
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:901
+#, fuzzy
+msgid ""
+"Open Ubuntu Touch System Settings manually, go to Accounts, select %1, allow "
+"%2 for that account, then return here. %2 will verify it automatically."
+msgstr ""
+"Öppna Ubuntu Touch systeminställningar, välj %1, tillåt NextTasks för det "
+"kontot och återvänd hit. NextTasks verifierar det automatiskt."
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:905
+#, fuzzy
+msgid ""
+"Open Ubuntu Touch System Settings manually, go to Accounts, select the "
+"Nextcloud account, allow %1 for that account, then return here. %1 will "
+"verify it automatically."
+msgstr ""
+"Öppna Ubuntu Touch systeminställningar, välj Nextcloud-kontot, tillåt "
+"NextTasks för det kontot och återvänd hit. NextTasks verifierar det "
+"automatiskt."
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:927
+msgid "Account permission detected. Verifying access..."
+msgstr "Kontobehörighet hittades. Verifierar åtkomst..."
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:931
+#, fuzzy
+msgid ""
+"Waiting for account permission. If you already allowed %1, return here and "
+"wait a moment."
+msgstr ""
+"Väntar på kontobehörighet. Om du redan har tillåtit NextTasks, återvänd hit "
+"och vänta en stund."
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:968
+msgid ""
+"No account is saved yet. Select a Nextcloud account below, authorize it, and "
+"verify access."
+msgstr ""
+"Inget konto är sparat ännu. Välj ett Nextcloud-konto nedan, auktorisera det "
+"och verifiera åtkomst."
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:971
+msgid ""
+"%1 on %2\n"
+"providerId=%3 serviceId=%4"
+msgstr ""
+"%1 på %2\n"
+"providerId=%3 serviceId=%4"
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:972
+#, fuzzy
+msgid "Saved account"
+msgstr "Konto"
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:973
+msgid "server URL missing"
+msgstr "serveradress saknas"
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:985
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:1013
+#, fuzzy
+msgid "No account selected"
+msgstr "Nextcloud-konto hittat"
+
+#: vendor/NextCommon/qml/NextCommon/AccountPage.qml:996
+msgid "The selected Ubuntu Touch account did not expose a server address."
+msgstr "Det valda Ubuntu Touch-kontot exponerade ingen serveradress."
+
+#: vendor/NextCommon/qml/NextCommon/AccountSessionAdapter.qml:66
+msgid ""
+"Authentication succeeded, but the required Online Accounts credentials were "
+"not available."
+msgstr ""
+"Autentisering lyckades, men nödvändiga uppgifter från Online Accounts var "
+"inte tillgängliga."
+
+#: vendor/NextCommon/qml/NextCommon/AccountSessionAdapter.qml:98
+msgid "Authentication failed: %1"
+msgstr "Autentisering misslyckades: %1"
+
+#: vendor/NextCommon/qml/NextCommon/AccountSessionAdapter.qml:127
+msgid "Desktop test credentials are incomplete."
+msgstr "Testuppgifterna för desktop är ofullständiga."
+
+#: vendor/NextCommon/qml/NextCommon/AccountSessionAdapter.qml:146
+msgid ""
+"No account selected. Open Account first and authorize a Nextcloud account."
+msgstr ""
+"Inget konto valt. Öppna Konto först och auktorisera ett Nextcloud-konto."
+
+#: vendor/NextCommon/qml/NextCommon/AccountSessionAdapter.qml:152
+msgid "No server URL configured. Open Account and authorize the OS account."
+msgstr ""
+"Ingen serveradress är konfigurerad. Öppna Konto och auktorisera OS-kontot."
+
+#: vendor/NextCommon/qml/NextCommon/AccountSessionAdapter.qml:170
+#, fuzzy
+msgid "Waiting for Online Accounts..."
+msgstr "Endast Ubuntu Touch Online Accounts"
+
+#: vendor/NextCommon/qml/NextCommon/AccountSessionAdapter.qml:172
+msgid ""
+"Selected Online Accounts service was not found. Open Account and verify the "
+"account again."
+msgstr ""
+"Den valda Online Accounts-tjänsten hittades inte. Öppna Konto och verifiera "
+"kontot igen."
+
+#: vendor/NextCommon/qml/NextCommon/CalendarDatePicker.qml:14
+#: vendor/NextCommon/qml/NextCommon/TimePicker.qml:15
+#, fuzzy
+msgid "Clear"
+msgstr "Startdatum"
+
+#: vendor/NextCommon/qml/NextCommon/ConfirmDialog.qml:8
+#, fuzzy
+msgid "Confirm"
+msgstr "Konflikt"
+
+#: vendor/NextCommon/qml/NextCommon/LanguagePage.qml:34
+msgid ""
+"Choose the language %1 should use. Restart the app after changing language."
+msgstr ""
+"Välj vilket språk %1 ska använda. Starta om appen efter språkbyte."
+
+#: vendor/NextCommon/qml/NextCommon/LanguagePage.qml:131
+msgid "%1 will follow the system language after restart."
+msgstr "%1 följer systemspråket efter omstart."
+
+#: vendor/NextCommon/qml/NextCommon/LanguagePage.qml:132
+msgid "%1 will use %2 after restart."
+msgstr "%1 använder %2 efter omstart."
+
+#: vendor/NextCommon/qml/NextCommon/TimePicker.qml:14
+#, fuzzy
+msgid "Now"
+msgstr "Låg"
+
+#: vendor/NextCommon/qml/NextCommon/TimePicker.qml:139
+msgid "Hour"
+msgstr "Timme"
+
+#: vendor/NextCommon/qml/NextCommon/TimePicker.qml:183
+msgid "Min"
+msgstr "Min"
+
+#~ msgid "Auto-upload local changes"
+#~ msgstr "Ladda upp lokala ändringar automatiskt"
+
+#~ msgid "Sync while app is active"
+#~ msgstr "Synka när appen är aktiv"
+
+#~ msgid "Manual order is stored locally on this device only."
+#~ msgstr "Manuell ordning sparas bara lokalt på den här enheten."
+
+#~ msgid "This project is licensed under the MIT License."
+#~ msgstr "Det här projektet är licensierat under MIT-licensen."
+
+#~ msgid "System account authorization completed. Verifying access..."
+#~ msgstr "Systemkontots auktorisering är klar. Verifierar åtkomst..."
+
+#~ msgid ""
+#~ "System account authorization was cancelled or did not return an account."
+#~ msgstr "Systemets kontoauktorisering avbröts eller returnerade inget konto."
+
+#~ msgid "Open system accounts?"
+#~ msgstr "Öppna systemets konton?"
+
+#~ msgid "Open accounts"
+#~ msgstr "Öppna konton"
+
+#~ msgid "Later"
+#~ msgstr "Senare"
+
+#~ msgid ""
+#~ "This account is not allowed for NextTasks yet. Open Ubuntu Touch System "
+#~ "Settings > Accounts, allow NextTasks for this account, then return here."
+#~ msgstr ""
+#~ "Det här kontot är inte tillåtet för NextTasks än. Öppna Ubuntu Touch "
+#~ "systeminställningar > Konton, tillåt NextTasks för detta konto och "
+#~ "återvänd hit."
+
+#~ msgid ""
+#~ "Add a Nextcloud or ownCloud account in Ubuntu Touch System Settings, then "
+#~ "return to NextTasks."
+#~ msgstr ""
+#~ "Lägg till ett Nextcloud- eller ownCloud-konto i Ubuntu Touch "
+#~ "systeminställningar och återvänd sedan till NextTasks."
+
+#~ msgid "Manual order is stored locally on this Ubuntu Touch device only."
+#~ msgstr "Manuell ordning sparas bara lokalt på den här Ubuntu Touch-enheten."
+
+#~ msgid ""
+#~ "Choose where destructive swipe actions should appear. Ubuntu Touch style "
+#~ "is the default."
+#~ msgstr ""
+#~ "Välj var destruktiva svepåtgärder ska visas. Ubuntu Touch-stil är "
+#~ "standard."
+
+#~ msgid "Ubuntu Touch style"
+#~ msgstr "Ubuntu Touch-stil"
+
+#~ msgid "Use platform conventions for swipe actions."
+#~ msgstr "Använd plattformens konventioner för svepåtgärder."
+
+#~ msgid "Android style"
+#~ msgstr "Android-stil"
+
+#~ msgid "Match the Android client where practical."
+#~ msgstr "Matcha Android-klienten där det är praktiskt."
+
+#~ msgid "Manual sorting"
+#~ msgstr "Manuell sortering"
+
+#~ msgid ""
+#~ "Enable manual task ordering with drag and drop. When manual sorting is "
+#~ "used, swipe gestures are disabled for that manually sorted list."
+#~ msgstr ""
+#~ "Aktivera manuell sortering av uppgifter med dra-släpp. När manuell "
+#~ "sortering används stängs swipe-gester av för den manuellt sorterade "
+#~ "listan."
+
+#~ msgid "Enable drag and drop sorting"
+#~ msgstr "Aktivera dra-släpp-sortering"
 
 #~ msgid "New, not synced"
 #~ msgstr "Ny, inte synkad"
@@ -1318,23 +1834,11 @@ msgstr "Välj vilken uppgiftslista som ska sorteras."
 #~ msgid "Delete pending."
 #~ msgstr "Radering väntar."
 
-#~ msgid "New task waiting to sync."
-#~ msgstr "Ny task väntar på synk."
-
-#~ msgid "Open a list before creating a task."
-#~ msgstr "Öppna en lista innan du skapar en task."
-
-#~ msgid "Updating %1 tasks..."
-#~ msgstr "Uppdaterar %1 tasks..."
-
 #~ msgid "%1 completed task(s) shown."
 #~ msgstr "%1 klara task(s) visas."
 
 #~ msgid "%1 completed task(s) hidden."
 #~ msgstr "%1 klara task(s) är dolda."
-
-#~ msgid "Show completed"
-#~ msgstr "Visa klara"
 
 #~ msgid "YYYY-MM-DD"
 #~ msgstr "ÅÅÅÅ-MM-DD"
@@ -1363,6 +1867,47 @@ msgstr "Välj vilken uppgiftslista som ska sorteras."
 
 #~ msgid "Foundation status"
 #~ msgstr "Grundstatus"
+msgid "Trash bin is not available."
+msgstr "Papperskorgen är inte tillgänglig."
 
-msgid "AI-assisted starter translation"
-msgstr "AI-assisterad startöversättning"
+msgid "Trash bin request is incomplete."
+msgstr "Begäran till papperskorgen är ofullständig."
+
+msgid "Trash restore is not available."
+msgstr "Återställning från papperskorgen är inte tillgänglig."
+
+msgid "Trash restore request is incomplete."
+msgstr "Begäran om återställning är ofullständig."
+
+msgid "Deleted task list"
+msgstr "Borttagen task-lista"
+
+msgid "Deleted task"
+msgstr "Borttagen task"
+
+msgid "Trash bin"
+msgstr "Papperskorg"
+
+msgid "Loaded %1 deleted item(s)."
+msgstr "Laddade %1 borttagna objekt."
+
+msgid "Trash bin is empty."
+msgstr "Papperskorgen är tom."
+
+msgid "Item restored. Refreshing..."
+msgstr "Objektet återställdes. Uppdaterar..."
+
+msgid "Loading trash bin..."
+msgstr "Laddar papperskorgen..."
+
+msgid "Restoring item..."
+msgstr "Återställer objekt..."
+
+msgid "Deleted %1"
+msgstr "Borttagen %1"
+
+msgid "Restore"
+msgstr "Återställ"
+
+msgid "Deleted items are kept for a limited time by the server."
+msgstr "Borttagna objekt sparas en begränsad tid av servern."

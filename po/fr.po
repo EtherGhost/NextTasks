@@ -1194,3 +1194,36 @@ msgstr "Low (%1)"
 
 msgid "AI-assisted starter translation"
 msgstr "Traduction initiale assistée par IA"
+
+msgid "Trash bin"
+msgstr "Corbeille"
+
+msgid "Loading trash bin..."
+msgstr "Chargement de la corbeille..."
+
+msgid "Deleted task list"
+msgstr "Liste de tâches supprimée"
+
+msgid "Deleted task"
+msgstr "Tâche supprimée"
+
+msgid "Trash bin is empty."
+msgstr "La corbeille est vide."
+
+msgid "Restore"
+msgstr "Restaurer"
+
+msgid "Deleted %1"
+msgstr "Supprimé %1"
+
+msgid "Loaded %1 deleted item(s)."
+msgstr "%1 éléments supprimés chargés."
+
+msgid "Item restored. Refreshing..."
+msgstr "Élément restauré. Actualisation..."
+
+msgid "Restoring item..."
+msgstr "Restauration de l’élément..."
+
+msgid "Deleted items are kept for a limited time by the server."
+msgstr "Les éléments supprimés sont conservés par le serveur pendant une durée limitée."

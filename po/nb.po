@@ -1194,3 +1194,36 @@ msgstr "Low (%1)"
 
 msgid "AI-assisted starter translation"
 msgstr "KI-assistert startoversettelse"
+
+msgid "Trash bin"
+msgstr "Papirkurv"
+
+msgid "Loading trash bin..."
+msgstr "Laster papirkurv..."
+
+msgid "Deleted task list"
+msgstr "Slettet oppgaveliste"
+
+msgid "Deleted task"
+msgstr "Slettet oppgave"
+
+msgid "Trash bin is empty."
+msgstr "Papirkurven er tom."
+
+msgid "Restore"
+msgstr "Gjenopprett"
+
+msgid "Deleted %1"
+msgstr "Slettet %1"
+
+msgid "Loaded %1 deleted item(s)."
+msgstr "Lastet %1 slettede element(er)."
+
+msgid "Item restored. Refreshing..."
+msgstr "Element gjenopprettet. Oppdaterer..."
+
+msgid "Restoring item..."
+msgstr "Gjenoppretter element..."
+
+msgid "Deleted items are kept for a limited time by the server."
+msgstr "Slettede elementer beholdes av serveren i en begrenset tid."

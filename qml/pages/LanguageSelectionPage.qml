@@ -10,6 +10,7 @@ NextCommon.LanguagePage {
         { "code": "", "label": i18n.tr("Follow system language"), "detail": i18n.tr("Default") },
         { "code": "en", "label": "English", "detail": i18n.tr("Built-in source language") },
         { "code": "sv", "label": "Svenska", "detail": i18n.tr("Initial translation") },
+        { "code": "ca", "label": "Català", "detail": i18n.tr("AI-assisted starter translation") },
         { "code": "da", "label": "Dansk", "detail": i18n.tr("AI-assisted starter translation") },
         { "code": "de", "label": "Deutsch", "detail": i18n.tr("AI-assisted starter translation") },
         { "code": "es", "label": "Español", "detail": i18n.tr("AI-assisted starter translation") },

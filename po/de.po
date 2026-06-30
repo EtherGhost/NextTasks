@@ -1192,3 +1192,36 @@ msgstr "Low (%1)"
 
 msgid "AI-assisted starter translation"
 msgstr "KI-gestützte Starterübersetzung"
+
+msgid "Trash bin"
+msgstr "Papierkorb"
+
+msgid "Loading trash bin..."
+msgstr "Papierkorb wird geladen..."
+
+msgid "Deleted task list"
+msgstr "Gelöschte Aufgabenliste"
+
+msgid "Deleted task"
+msgstr "Gelöschte Aufgabe"
+
+msgid "Trash bin is empty."
+msgstr "Der Papierkorb ist leer."
+
+msgid "Restore"
+msgstr "Wiederherstellen"
+
+msgid "Deleted %1"
+msgstr "Gelöscht %1"
+
+msgid "Loaded %1 deleted item(s)."
+msgstr "%1 gelöschte Elemente geladen."
+
+msgid "Item restored. Refreshing..."
+msgstr "Element wiederhergestellt. Aktualisierung..."
+
+msgid "Restoring item..."
+msgstr "Element wird wiederhergestellt..."
+
+msgid "Deleted items are kept for a limited time by the server."
+msgstr "Gelöschte Elemente werden vom Server nur für begrenzte Zeit aufbewahrt."

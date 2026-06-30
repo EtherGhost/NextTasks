@@ -1194,3 +1194,36 @@ msgstr "Low (%1)"
 
 msgid "AI-assisted starter translation"
 msgstr "AI-ondersteunde startvertaling"
+
+msgid "Trash bin"
+msgstr "Prullenbak"
+
+msgid "Loading trash bin..."
+msgstr "Prullenbak laden..."
+
+msgid "Deleted task list"
+msgstr "Verwijderde takenlijst"
+
+msgid "Deleted task"
+msgstr "Verwijderde taak"
+
+msgid "Trash bin is empty."
+msgstr "De prullenbak is leeg."
+
+msgid "Restore"
+msgstr "Herstellen"
+
+msgid "Deleted %1"
+msgstr "Verwijderd %1"
+
+msgid "Loaded %1 deleted item(s)."
+msgstr "%1 verwijderde items geladen."
+
+msgid "Item restored. Refreshing..."
+msgstr "Item hersteld. Vernieuwen..."
+
+msgid "Restoring item..."
+msgstr "Item herstellen..."
+
+msgid "Deleted items are kept for a limited time by the server."
+msgstr "Verwijderde items worden tijdelijk door de server bewaard."

@@ -1194,3 +1194,36 @@ msgstr "Low (%1)"
 
 msgid "AI-assisted starter translation"
 msgstr "Tekoälyavusteinen aloituskäännös"
+
+msgid "Trash bin"
+msgstr "Roskakori"
+
+msgid "Loading trash bin..."
+msgstr "Ladataan roskakoria..."
+
+msgid "Deleted task list"
+msgstr "Poistettu tehtävälista"
+
+msgid "Deleted task"
+msgstr "Poistettu tehtävä"
+
+msgid "Trash bin is empty."
+msgstr "Roskakori on tyhjä."
+
+msgid "Restore"
+msgstr "Palauta"
+
+msgid "Deleted %1"
+msgstr "Poistettu %1"
+
+msgid "Loaded %1 deleted item(s)."
+msgstr "Ladattiin %1 poistettua kohdetta."
+
+msgid "Item restored. Refreshing..."
+msgstr "Kohde palautettu. Päivitetään..."
+
+msgid "Restoring item..."
+msgstr "Palautetaan kohdetta..."
+
+msgid "Deleted items are kept for a limited time by the server."
+msgstr "Palvelin säilyttää poistettuja kohteita rajoitetun ajan."

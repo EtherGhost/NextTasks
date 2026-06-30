@@ -1228,3 +1228,36 @@ msgstr "Low (%1)"
 
 msgid "AI-assisted starter translation"
 msgstr "Начальный перевод с помощью ИИ"
+
+msgid "Trash bin"
+msgstr "Корзина"
+
+msgid "Loading trash bin..."
+msgstr "Загрузка корзины..."
+
+msgid "Deleted task list"
+msgstr "Удалённый список задач"
+
+msgid "Deleted task"
+msgstr "Удалённая задача"
+
+msgid "Trash bin is empty."
+msgstr "Корзина пуста."
+
+msgid "Restore"
+msgstr "Восстановить"
+
+msgid "Deleted %1"
+msgstr "Удалено %1"
+
+msgid "Loaded %1 deleted item(s)."
+msgstr "Загружено удалённых элементов: %1."
+
+msgid "Item restored. Refreshing..."
+msgstr "Элемент восстановлен. Обновление..."
+
+msgid "Restoring item..."
+msgstr "Восстановление элемента..."
+
+msgid "Deleted items are kept for a limited time by the server."
+msgstr "Удалённые элементы хранятся на сервере ограниченное время."
