@@ -3,6 +3,7 @@ import QtQuick.LocalStorage 2.0 as Sql
 
 Item {
     id: cache
+    function debugLog() {}
 
     readonly property string statusClean: ""
     readonly property string statusEdited: "LOCAL_EDITED"
@@ -19,7 +20,7 @@ Item {
         }
         database = null
         databaseName = scopedName
-        console.log("NextTasks TasksCache scope changed")
+        debugLog("NextTasks TasksCache scope changed")
     }
 
     function safeScopeName(scopeKey) {
@@ -55,6 +56,7 @@ Item {
                 "title TEXT NOT NULL, " +
                 "ctag TEXT DEFAULT '', " +
                 "color TEXT DEFAULT '', " +
+                "read_only INTEGER DEFAULT 0, " +
                 "updated_at INTEGER NOT NULL)"
             )
             tx.executeSql(
@@ -64,6 +66,7 @@ Item {
                 "deleted_at INTEGER NOT NULL)"
             )
             addColumnIfMissing(tx, "calendars", "color", "TEXT DEFAULT ''")
+            addColumnIfMissing(tx, "calendars", "read_only", "INTEGER DEFAULT 0")
             tx.executeSql(
                 "CREATE TABLE IF NOT EXISTS tasks (" +
                 "task_key TEXT PRIMARY KEY, " +
@@ -92,6 +95,7 @@ Item {
                 "start_value TEXT DEFAULT '', " +
                 "start_text TEXT DEFAULT '', " +
                 "parent_uid TEXT DEFAULT '', " +
+                "read_only INTEGER DEFAULT 0, " +
                 "etag TEXT DEFAULT '', " +
                 "raw_todo TEXT DEFAULT '', " +
                 "completed INTEGER DEFAULT 0, " +
@@ -105,6 +109,7 @@ Item {
             )
             addColumnIfMissing(tx, "tasks", "conflict_etag", "TEXT DEFAULT ''")
             addColumnIfMissing(tx, "tasks", "sort_order", "INTEGER DEFAULT 0")
+            addColumnIfMissing(tx, "tasks", "read_only", "INTEGER DEFAULT 0")
             tx.executeSql("CREATE INDEX IF NOT EXISTS idx_tasks_calendar ON tasks(calendar_href)")
             tx.executeSql("CREATE INDEX IF NOT EXISTS idx_tasks_local_status ON tasks(local_status, local_modified)")
             purgeDeletedCalendarTasks(tx)
@@ -122,7 +127,7 @@ Item {
     function loadCalendars() {
         var result = []
         db().readTransaction(function(tx) {
-            var rows = tx.executeSql("SELECT href, title, ctag, color FROM calendars ORDER BY title COLLATE NOCASE ASC")
+            var rows = tx.executeSql("SELECT href, title, ctag, color, read_only FROM calendars ORDER BY title COLLATE NOCASE ASC")
             for (var i = 0; i < rows.rows.length; ++i) {
                 var row = rows.rows.item(i)
                 result.push({
@@ -130,11 +135,12 @@ Item {
                     "href": row.href || "",
                     "title": row.title || i18n.tr("Untitled"),
                     "ctag": row.ctag || "",
-                    "color": row.color || ""
+                    "color": row.color || "",
+                    "readOnly": Number(row.read_only || 0) === 1
                 })
             }
         })
-        console.log("NextTasks TasksCache loadCalendars count=" + result.length)
+        debugLog("NextTasks TasksCache loadCalendars count=" + result.length)
         return result
     }
 
@@ -147,7 +153,7 @@ Item {
             tx.executeSql("DELETE FROM calendars")
             tx.executeSql("DELETE FROM tasks WHERE local_status IS NULL OR local_status = '' OR local_status = 'CLEAN'")
         })
-        console.log("NextTasks TasksCache cleared clean server data for current scope")
+        debugLog("NextTasks TasksCache cleared clean server data for current scope")
     }
 
     function loadTasksForCalendar(calendarHref) {
@@ -161,7 +167,7 @@ Item {
                 result.push(rowToTask(rows.rows.item(i)))
             }
         })
-        console.log("NextTasks TasksCache loadTasks count=" + result.length + " scoped=" + (href.length > 0 ? "true" : "false"))
+        debugLog("NextTasks TasksCache loadTasks count=" + result.length + " scoped=" + (href.length > 0 ? "true" : "false"))
         return result
     }
 
@@ -193,7 +199,7 @@ Item {
                 result.push(task)
             }
         })
-        console.log("NextTasks TasksCache loadLocalChanges count=" + result.length)
+        debugLog("NextTasks TasksCache loadLocalChanges count=" + result.length)
         return result
     }
 
@@ -219,13 +225,13 @@ Item {
                 var canonicalHref = canonicalCalendarHref(href)
                 var tombstoneRows = tx.executeSql("SELECT href FROM deleted_calendars WHERE href = ?", [canonicalHref])
                 if (tombstoneRows.rows.length > 0) {
-                    console.log("NextTasks TasksCache replaceCalendars skipped tombstoned calendar")
+                    debugLog("NextTasks TasksCache replaceCalendars skipped tombstoned calendar")
                     continue
                 }
                 seen[canonicalHref] = true
                 tx.executeSql(
-                    "INSERT OR REPLACE INTO calendars (href, title, ctag, color, updated_at) VALUES (?, ?, ?, ?, ?)",
-                    [href, calendar.title || i18n.tr("Untitled"), calendar.ctag || "", calendar.color || "", now]
+                    "INSERT OR REPLACE INTO calendars (href, title, ctag, color, read_only, updated_at) VALUES (?, ?, ?, ?, ?, ?)",
+                    [href, calendar.title || i18n.tr("Untitled"), calendar.ctag || "", calendar.color || "", calendar.readOnly === true ? 1 : 0, now]
                 )
             }
             var rows = tx.executeSql("SELECT href FROM calendars")
@@ -238,7 +244,7 @@ Item {
             }
             purgeDeletedCalendarTasks(tx)
         })
-        console.log("NextTasks TasksCache replaceCalendars count=" + (calendars ? calendars.length : 0))
+        debugLog("NextTasks TasksCache replaceCalendars count=" + (calendars ? calendars.length : 0))
     }
 
     function deleteCalendar(calendarHref) {
@@ -262,7 +268,16 @@ Item {
             tx.executeSql("INSERT OR REPLACE INTO deleted_calendars (href, title, deleted_at) VALUES (?, ?, ?)", [canonicalHref, title, now])
             purgeDeletedCalendarTasks(tx)
         })
-        console.log("NextTasks TasksCache deleteCalendar hrefAvailable=true")
+        debugLog("NextTasks TasksCache deleteCalendar hrefAvailable=true")
+    }
+
+    function removeDeletedCalendarTombstone(calendarHref) {
+        var canonicalHref = canonicalCalendarHref(calendarHref)
+        if (canonicalHref.length === 0) return
+        db().transaction(function(tx) {
+            tx.executeSql("DELETE FROM deleted_calendars WHERE href = ?", [canonicalHref])
+        })
+        debugLog("NextTasks TasksCache restored deleted calendar tombstone")
     }
 
     function deleteTasksForCalendarHref(tx, calendarHref, cleanOnly) {
@@ -314,7 +329,7 @@ Item {
                 }
             }
         })
-        console.log("NextTasks TasksCache replaceCalendarTasks count=" + (tasks ? tasks.length : 0))
+        debugLog("NextTasks TasksCache replaceCalendarTasks count=" + (tasks ? tasks.length : 0))
     }
 
     function saveLocalDraft(task) {
@@ -326,7 +341,7 @@ Item {
             var targetStatus = existingStatus === statusCreated ? statusCreated : statusEdited
             upsertTaskRow(tx, task, targetStatus, now, false)
         })
-        console.log("NextTasks TasksCache saveLocalDraft keyAvailable=" + (taskKey(task).length > 0 ? "true" : "false"))
+        debugLog("NextTasks TasksCache saveLocalDraft keyAvailable=" + (taskKey(task).length > 0 ? "true" : "false"))
     }
 
     function createLocalTask(calendarHref, calendarTitle) {
@@ -371,6 +386,7 @@ Item {
             "startText": "",
             "uid": uid,
             "parentUid": "",
+            "readOnly": false,
             "href": href,
             "etag": "",
             "rawTodo": rawTodo,
@@ -386,7 +402,7 @@ Item {
             "conflict": false,
             "localModified": now
         }
-        console.log("NextTasks TasksCache createLocalTask keyAvailable=true stored=false")
+        debugLog("NextTasks TasksCache createLocalTask keyAvailable=true stored=false")
         return task
     }
 
@@ -414,14 +430,14 @@ Item {
                         "UPDATE tasks SET local_status = ?, etag = ?, raw_todo = ?, conflict = 0, conflict_etag = '', updated_at = ? WHERE task_key = ?",
                         [statusEdited, task.etag || "", task.rawTodo || "", now, oldKey.length > 0 ? oldKey : key]
                     )
-                    console.log("NextTasks TasksCache saveUploadedTask converted newer created draft to edited")
+                    debugLog("NextTasks TasksCache saveUploadedTask converted newer created draft to edited")
                     return
                 }
                 tx.executeSql(
                     "UPDATE tasks SET etag = ?, raw_todo = ?, conflict = 0, conflict_etag = '', updated_at = ? WHERE task_key = ?",
                     [task.etag || "", task.rawTodo || "", now, oldKey.length > 0 ? oldKey : key]
                 )
-                console.log("NextTasks TasksCache saveUploadedTask preserved newer local draft with refreshed etag")
+                debugLog("NextTasks TasksCache saveUploadedTask preserved newer local draft with refreshed etag")
                 return
             }
             if (oldKey.length > 0 && oldKey !== key) {
@@ -429,7 +445,7 @@ Item {
             }
             upsertTaskRow(tx, task, statusClean, now, false)
         })
-        console.log("NextTasks TasksCache saveUploadedTask keyAvailable=" + (taskKey(task).length > 0 ? "true" : "false"))
+        debugLog("NextTasks TasksCache saveUploadedTask keyAvailable=" + (taskKey(task).length > 0 ? "true" : "false"))
     }
 
     function markConflict(task, serverTask) {
@@ -451,7 +467,7 @@ Item {
                 )
             }
         })
-        console.log("NextTasks TasksCache markConflict keyAvailable=true")
+        debugLog("NextTasks TasksCache markConflict keyAvailable=true")
     }
 
     function keepLocalTaskAfterConflict(task) {
@@ -465,7 +481,7 @@ Item {
                 [now, key]
             )
         })
-        console.log("NextTasks TasksCache keepLocalTaskAfterConflict keyAvailable=true")
+        debugLog("NextTasks TasksCache keepLocalTaskAfterConflict keyAvailable=true")
     }
 
     function discardLocalTaskAndUseServer(task, serverTask) {
@@ -479,7 +495,7 @@ Item {
         db().transaction(function(tx) {
             upsertTaskRow(tx, serverTask, statusClean, now, false)
         })
-        console.log("NextTasks TasksCache discardLocalTaskAndUseServer keyAvailable=true")
+        debugLog("NextTasks TasksCache discardLocalTaskAndUseServer keyAvailable=true")
     }
 
     function markDeleted(task) {
@@ -495,7 +511,7 @@ Item {
                 tx.executeSql("UPDATE tasks SET local_status = ?, local_modified = ?, conflict = 0, updated_at = ? WHERE task_key = ?", [statusDeleted, now, now, key])
             }
         })
-        console.log("NextTasks TasksCache markDeleted keyAvailable=true")
+        debugLog("NextTasks TasksCache markDeleted keyAvailable=true")
     }
 
     function deleteTask(task) {
@@ -504,7 +520,7 @@ Item {
         db().transaction(function(tx) {
             tx.executeSql("DELETE FROM tasks WHERE task_key = ?", [key])
         })
-        console.log("NextTasks TasksCache deleteTask keyAvailable=true")
+        debugLog("NextTasks TasksCache deleteTask keyAvailable=true")
     }
 
     function upsertServerTask(tx, task, now) {
@@ -534,9 +550,9 @@ Item {
             "INSERT OR REPLACE INTO tasks (" +
             "task_key, href, uid, calendar_href, calendar_title, title, subtitle, detail, due, due_text, description, " +
             "priority, priority_text, percent_complete, location, url, tags, status_value, created, created_text, " +
-            "last_modified, last_modified_text, sort_order, start_value, start_text, parent_uid, etag, raw_todo, completed, " +
+            "last_modified, last_modified_text, sort_order, start_value, start_text, parent_uid, read_only, etag, raw_todo, completed, " +
             "cancelled, hidden_until, local_status, local_modified, conflict, conflict_etag, updated_at) " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [
                 key,
                 task.href || "",
@@ -564,6 +580,7 @@ Item {
                 task.start || "",
                 task.startText || "",
                 task.parentUid || "",
+                task.readOnly === true ? 1 : 0,
                 task.etag || "",
                 task.rawTodo || "",
                 task.completed ? 1 : 0,
@@ -604,6 +621,7 @@ Item {
             "startText": row.start_text || "",
             "uid": row.uid || "",
             "parentUid": row.parent_uid || "",
+            "readOnly": Number(row.read_only || 0) === 1,
             "href": row.href || "",
             "etag": row.etag || "",
             "rawTodo": row.raw_todo || "",

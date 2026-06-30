@@ -4,6 +4,8 @@ import "qrc:/NextCommon" as NextCommon
 
 Item {
     id: controller
+    function debugLog() {}
+
     property bool loading: false
     property string statusText: i18n.tr("Select an account to load CalDAV task calendars.")
     property string syncStateText: i18n.tr("No account")
@@ -12,6 +14,11 @@ Item {
     property var entries: []
     property var calendars: []
     property var allTasks: []
+    property var trashItems: []
+    property bool trashLoadedOnce: false
+    property string trashBinHref: ""
+    property int trashRetentionSeconds: 0
+    property var pendingTrashRestoreItem: ({})
     property string viewMode: "myTasks"
     property string titleText: i18n.tr("My Tasks")
     property string selectedCalendarHref: ""
@@ -66,7 +73,27 @@ Item {
     property string sortMode: sortSettings.sortMode
     property bool sortAscending: sortSettings.sortAscending
     property var sortModeByScope: parseJsonMap(sortSettings.sortModeByScopeJson)
+    property bool syncWhileActive: true
+    property bool syncOnStartup: true
+    property bool showReadOnlyLists: true
     property int accountRequestGeneration: 0
+
+    onShowReadOnlyListsChanged: {
+        calendars = filteredCalendars(tasksCache.loadCalendars())
+        allTasks = tasksForKnownCalendars(tasksCache.loadAllTasks(), calendars)
+        applyCurrentViewFilter()
+        menuRevision += 1
+    }
+
+    onSyncWhileActiveChanged: {
+        if (!syncWhileActive) {
+            autoDirtySyncTimer.stop()
+            dirtySyncQueuedAfterLoading = false
+            dirtySyncQueuedAfterInteraction = false
+        } else {
+            scheduleDirtyAutoSync()
+        }
+    }
 
     Settings {
         id: accountSettings
@@ -111,7 +138,7 @@ Item {
         logPrefix: "NextTasks"
         onAuthenticated: function(userName, secret, serverUrl, accountId, serviceId) {
             if (!controller.isCurrentAccountResponse(accountId, serviceId, serverUrl)) {
-                console.log("NextTasks Controller ignored stale auth response accountId=" + accountId + " serviceId=" + serviceId)
+                debugLog("NextTasks Controller ignored stale auth response accountId=" + accountId + " serviceId=" + serviceId)
                 return
             }
             controller.accountAvatarUrl = avatarUrl(serverUrl, userName)
@@ -148,6 +175,14 @@ Item {
                 }
                 return
             }
+            if (controller.pendingTrashRestoreItem && String(controller.pendingTrashRestoreItem.href || "").length > 0) {
+                api.restoreTrashItem(serverUrl, userName, secret, controller.pendingTrashRestoreItem, controller.trashBinHref)
+                return
+            }
+            if (controller.viewMode === "trash") {
+                api.loadTrash(serverUrl, userName, secret, "")
+                return
+            }
             controller.requestRemoteRefresh()
         }
         onFailed: {
@@ -174,10 +209,10 @@ Item {
         id: api
         onCalendarsLoaded: function(entries, generation) {
             if (!controller.isCurrentApiGeneration(generation)) {
-                console.log("NextTasks Controller ignored stale calendars response generation=" + generation)
+                debugLog("NextTasks Controller ignored stale calendars response generation=" + generation)
                 return
             }
-            console.log(
+            debugLog(
                 "NextTasks Controller applying calendars"
                 + " generation=" + generation
                 + " accountId=" + accountSettings.accountId
@@ -185,7 +220,7 @@ Item {
                 + " scopeHash=" + controller.stableHash(controller.accountKey())
             )
             tasksCache.replaceCalendars(entries)
-            controller.calendars = tasksCache.loadCalendars()
+            controller.calendars = controller.filteredCalendars(tasksCache.loadCalendars())
             controller.menuRevision += 1
             if (controller.pendingOpenCalendarTitle.length > 0) {
                 var createdCalendar = controller.findCalendarByTitle(controller.pendingOpenCalendarTitle)
@@ -213,10 +248,10 @@ Item {
         }
         onTasksLoaded: function(calendarTitle, calendarHref, entries, generation) {
             if (!controller.isCurrentApiGeneration(generation)) {
-                console.log("NextTasks Controller ignored stale tasks response generation=" + generation)
+                debugLog("NextTasks Controller ignored stale tasks response generation=" + generation)
                 return
             }
-            console.log(
+            debugLog(
                 "NextTasks Controller applying tasks"
                 + " generation=" + generation
                 + " accountId=" + accountSettings.accountId
@@ -243,7 +278,7 @@ Item {
         }
         onFailed: function(message, generation) {
             if (!controller.isCurrentApiGeneration(generation)) {
-                console.log("NextTasks Controller ignored stale API failure generation=" + generation)
+                debugLog("NextTasks Controller ignored stale API failure generation=" + generation)
                 return
             }
             controller.completionUpdateRunning = false
@@ -260,7 +295,7 @@ Item {
         }
         onTaskCompletionUpdated: function(completed, generation) {
             if (!controller.isCurrentApiGeneration(generation)) {
-                console.log("NextTasks Controller ignored stale completion response generation=" + generation)
+                debugLog("NextTasks Controller ignored stale completion response generation=" + generation)
                 return
             }
             controller.pendingCompletionQueue.shift()
@@ -280,7 +315,7 @@ Item {
         }
         onTaskCompletionFailed: function(message, generation) {
             if (!controller.isCurrentApiGeneration(generation)) {
-                console.log("NextTasks Controller ignored stale completion failure generation=" + generation)
+                debugLog("NextTasks Controller ignored stale completion failure generation=" + generation)
                 return
             }
             controller.completionUpdateRunning = false
@@ -294,7 +329,7 @@ Item {
         }
         onTaskUpdated: function(updatedTask, generation) {
             if (!controller.isCurrentApiGeneration(generation)) {
-                console.log("NextTasks Controller ignored stale task update response generation=" + generation)
+                debugLog("NextTasks Controller ignored stale task update response generation=" + generation)
                 return
             }
             controller.applyLocalTaskIdentity(updatedTask, controller.pendingUpdateTask)
@@ -320,7 +355,7 @@ Item {
         }
         onTaskCreated: function(createdTask, generation) {
             if (!controller.isCurrentApiGeneration(generation)) {
-                console.log("NextTasks Controller ignored stale task create response generation=" + generation)
+                debugLog("NextTasks Controller ignored stale task create response generation=" + generation)
                 return
             }
             controller.applyLocalTaskIdentity(createdTask, controller.pendingUpdateTask)
@@ -346,7 +381,7 @@ Item {
         }
         onTaskDeleted: function(deletedTask, generation) {
             if (!controller.isCurrentApiGeneration(generation)) {
-                console.log("NextTasks Controller ignored stale task delete response generation=" + generation)
+                debugLog("NextTasks Controller ignored stale task delete response generation=" + generation)
                 return
             }
             tasksCache.deleteTask(deletedTask)
@@ -370,7 +405,7 @@ Item {
         }
         onTaskMoved: function(sourceTask, movedTask, generation) {
             if (!controller.isCurrentApiGeneration(generation)) {
-                console.log("NextTasks Controller ignored stale task move response generation=" + generation)
+                debugLog("NextTasks Controller ignored stale task move response generation=" + generation)
                 return
             }
             tasksCache.deleteTask(sourceTask)
@@ -386,7 +421,7 @@ Item {
         }
         onTaskMoveFailed: function(message, generation) {
             if (!controller.isCurrentApiGeneration(generation)) {
-                console.log("NextTasks Controller ignored stale task move failure generation=" + generation)
+                debugLog("NextTasks Controller ignored stale task move failure generation=" + generation)
                 return
             }
             controller.pendingMoveFailedCount += 1
@@ -399,7 +434,7 @@ Item {
         }
         onTaskConflict: function(localTask, serverTask, message, generation) {
             if (!controller.isCurrentApiGeneration(generation)) {
-                console.log("NextTasks Controller ignored stale task conflict generation=" + generation)
+                debugLog("NextTasks Controller ignored stale task conflict generation=" + generation)
                 return
             }
             tasksCache.markConflict(localTask, serverTask)
@@ -424,7 +459,7 @@ Item {
         }
         onCalendarCreated: function(generation) {
             if (!controller.isCurrentApiGeneration(generation)) {
-                console.log("NextTasks Controller ignored stale calendar create response generation=" + generation)
+                debugLog("NextTasks Controller ignored stale calendar create response generation=" + generation)
                 return
             }
             var createdTitle = controller.pendingCalendarTitle
@@ -442,7 +477,7 @@ Item {
         }
         onCalendarCreateFailed: function(message, generation) {
             if (!controller.isCurrentApiGeneration(generation)) {
-                console.log("NextTasks Controller ignored stale calendar create failure generation=" + generation)
+                debugLog("NextTasks Controller ignored stale calendar create failure generation=" + generation)
                 return
             }
             controller.loading = false
@@ -456,7 +491,7 @@ Item {
         }
         onCalendarUpdated: function(generation) {
             if (!controller.isCurrentApiGeneration(generation)) {
-                console.log("NextTasks Controller ignored stale calendar update response generation=" + generation)
+                debugLog("NextTasks Controller ignored stale calendar update response generation=" + generation)
                 return
             }
             controller.loading = false
@@ -472,7 +507,7 @@ Item {
         }
         onCalendarUpdateFailed: function(message, generation) {
             if (!controller.isCurrentApiGeneration(generation)) {
-                console.log("NextTasks Controller ignored stale calendar update failure generation=" + generation)
+                debugLog("NextTasks Controller ignored stale calendar update failure generation=" + generation)
                 return
             }
             controller.loading = false
@@ -486,7 +521,7 @@ Item {
         }
         onCalendarDeleted: function(generation) {
             if (!controller.isCurrentApiGeneration(generation)) {
-                console.log("NextTasks Controller ignored stale calendar delete response generation=" + generation)
+                debugLog("NextTasks Controller ignored stale calendar delete response generation=" + generation)
                 return
             }
             var deletedHref = controller.pendingCalendar.href || ""
@@ -507,7 +542,7 @@ Item {
         }
         onCalendarDeleteFailed: function(message, generation) {
             if (!controller.isCurrentApiGeneration(generation)) {
-                console.log("NextTasks Controller ignored stale calendar delete failure generation=" + generation)
+                debugLog("NextTasks Controller ignored stale calendar delete failure generation=" + generation)
                 return
             }
             controller.loading = false
@@ -519,6 +554,58 @@ Item {
             controller.syncStateText = i18n.tr("Sync failed")
             controller.syncStateColor = "#b37a2a"
         }
+        onTrashLoaded: function(items, trashBinHref, retentionSeconds, generation) {
+            if (!controller.isCurrentApiGeneration(generation)) {
+                debugLog("NextTasks Controller ignored stale trash response generation=" + generation)
+                return
+            }
+            controller.trashItems = items || []
+            controller.trashLoadedOnce = true
+            controller.trashBinHref = trashBinHref || ""
+            controller.trashRetentionSeconds = retentionSeconds || 0
+            controller.loading = false
+            controller.titleText = i18n.tr("Trash bin")
+            controller.statusText = controller.trashItems.length > 0
+                ? i18n.tr("Loaded %1 deleted item(s).").arg(controller.trashItems.length)
+                : i18n.tr("Trash bin is empty.")
+            controller.markUpToDateIfClean()
+        }
+        onTrashLoadFailed: function(message, generation) {
+            if (!controller.isCurrentApiGeneration(generation)) {
+                debugLog("NextTasks Controller ignored stale trash load failure generation=" + generation)
+                return
+            }
+            controller.loading = false
+            controller.statusText = message
+            controller.syncStateText = i18n.tr("Sync failed")
+            controller.syncStateColor = "#b37a2a"
+        }
+        onTrashItemRestored: function(item, generation) {
+            if (!controller.isCurrentApiGeneration(generation)) {
+                debugLog("NextTasks Controller ignored stale trash restore response generation=" + generation)
+                return
+            }
+            if (item && item.type === "trashCalendar") {
+                tasksCache.removeDeletedCalendarTombstone(item.href || "")
+                tasksCache.removeDeletedCalendarTombstone(item.sourceCalendarUri || "")
+            }
+            controller.pendingTrashRestoreItem = ({})
+            controller.statusText = i18n.tr("Item restored. Refreshing...")
+            controller.syncStateText = i18n.tr("Refreshing")
+            controller.syncStateColor = "#2c7fb8"
+            controller.loadTrashBin()
+        }
+        onTrashItemRestoreFailed: function(message, generation) {
+            if (!controller.isCurrentApiGeneration(generation)) {
+                debugLog("NextTasks Controller ignored stale trash restore failure generation=" + generation)
+                return
+            }
+            controller.loading = false
+            controller.pendingTrashRestoreItem = ({})
+            controller.statusText = message
+            controller.syncStateText = i18n.tr("Sync failed")
+            controller.syncStateColor = "#b37a2a"
+        }
     }
 
     TasksCache {
@@ -526,8 +613,12 @@ Item {
     }
 
     function refresh() {
+        if (viewMode === "trash") {
+            loadTrashBin()
+            return
+        }
         if (loading && !forceFullRefresh) {
-            console.log("NextTasks Controller refresh skipped while loading")
+            debugLog("NextTasks Controller refresh skipped while loading")
             return
         }
         accountRequestGeneration += 1
@@ -540,7 +631,7 @@ Item {
             skipNextCachedLoad = true
         }
         tasksCache.setScope(key)
-        console.log(
+        debugLog(
             "NextTasks Controller refresh"
             + " generation=" + accountRequestGeneration
             + " accountId=" + accountSettings.accountId
@@ -599,6 +690,36 @@ Item {
         refresh()
     }
 
+    function loadTrashBin() {
+        selectedCalendarHref = ""
+        selectedCalendarTitle = ""
+        viewMode = "trash"
+        titleText = i18n.tr("Trash bin")
+        loading = true
+        statusText = i18n.tr("Loading trash bin...")
+        syncStateText = i18n.tr("Refreshing")
+        syncStateColor = "#2c7fb8"
+        accountRequestGeneration += 1
+        api.requestGeneration = accountRequestGeneration
+        session.setAccount(accountSettings.accountId, accountSettings.providerId, accountSettings.serviceId, accountSettings.serverUrl)
+        session.authenticate()
+    }
+
+    function restoreTrashItem(item) {
+        if (!item || String(item.href || "").length === 0 || loading) {
+            return
+        }
+        pendingTrashRestoreItem = item
+        loading = true
+        statusText = i18n.tr("Restoring item...")
+        syncStateText = i18n.tr("Syncing")
+        syncStateColor = "#2c7fb8"
+        accountRequestGeneration += 1
+        api.requestGeneration = accountRequestGeneration
+        session.setAccount(accountSettings.accountId, accountSettings.providerId, accountSettings.serviceId, accountSettings.serverUrl)
+        session.authenticate()
+    }
+
     function openCalendar(href, title) {
         selectedCalendarHref = href || ""
         selectedCalendarTitle = title || i18n.tr("Tasks")
@@ -627,11 +748,19 @@ Item {
         if (!task || task.type !== "task" || loading) {
             return
         }
+        if (taskReadOnly(task)) {
+            statusText = i18n.tr("This task is read-only.")
+            return
+        }
         updateTaskCompletionQueue([task], !task.completed)
     }
 
     function saveTask(task, changes) {
         if (!task || task.type !== "task") {
+            return
+        }
+        if (taskReadOnly(task)) {
+            statusText = i18n.tr("This task is read-only.")
             return
         }
         var localTask = mergeTaskChanges(taskByKey(task) || task, changes || {})
@@ -654,8 +783,12 @@ Item {
             statusText = i18n.tr("No task list is available for new tasks.")
             return null
         }
+        if (calendarReadOnly(targetCalendar)) {
+            statusText = i18n.tr("This task list is read-only.")
+            return null
+        }
         var task = tasksCache.createLocalTask(targetCalendar.href, targetCalendar.title)
-        console.log("NextTasks Controller createTaskInCalendar queued localStatus=" + String(task.localStatus || "") + " isNew=" + (task.isNew === true ? "true" : "false"))
+        debugLog("NextTasks Controller createTaskInCalendar queued localStatus=" + String(task.localStatus || "") + " isNew=" + (task.isNew === true ? "true" : "false"))
         statusText = i18n.tr("New task")
         syncStateText = i18n.tr("Waiting to sync")
         syncStateColor = "#b37a2a"
@@ -731,13 +864,17 @@ Item {
 
     function createTargetCalendar() {
         if (viewMode === "calendarTasks" && selectedCalendarHref.length > 0) {
-            return {"href": selectedCalendarHref, "title": selectedCalendarTitle || i18n.tr("Tasks")}
+            var selectedCalendar = calendarByHref(selectedCalendarHref)
+            if (calendarReadOnly(selectedCalendar)) {
+                return null
+            }
+            return {"href": selectedCalendarHref, "title": selectedCalendarTitle || i18n.tr("Tasks"), "readOnly": false}
         }
         return null
     }
 
     function availableCreateCalendars() {
-        var source = calendars.length > 0 ? calendars : tasksCache.loadCalendars()
+        var source = writableCalendars(calendars.length > 0 ? calendars : tasksCache.loadCalendars())
         var result = []
         for (var i = 0; i < source.length; ++i) {
             var calendar = source[i]
@@ -777,6 +914,10 @@ Item {
         if (!calendar || String(calendar.href || "").length === 0 || loading) {
             return
         }
+        if (calendarReadOnly(calendar)) {
+            statusText = i18n.tr("This task list is read-only.")
+            return
+        }
         if (name.length === 0) {
             statusText = i18n.tr("Task list name is required.")
             return
@@ -798,6 +939,10 @@ Item {
         if (!calendar || String(calendar.href || "").length === 0 || loading) {
             return
         }
+        if (calendarReadOnly(calendar)) {
+            statusText = i18n.tr("This task list is read-only.")
+            return
+        }
         loading = true
         statusText = i18n.tr("Deleting task list...")
         syncStateText = i18n.tr("Syncing")
@@ -813,6 +958,10 @@ Item {
 
     function deleteTask(task) {
         if (!task || task.type !== "task" || loading) {
+            return
+        }
+        if (taskReadOnly(task)) {
+            statusText = i18n.tr("This task is read-only.")
             return
         }
         tasksCache.markDeleted(task)
@@ -849,6 +998,9 @@ Item {
         for (var i = 0; i < source.length; ++i) {
             var task = source[i]
             if (!task || task.type !== "task" || task.deleted) {
+                continue
+            }
+            if (taskReadOnly(task)) {
                 continue
             }
             var key = taskKey(task)
@@ -890,7 +1042,7 @@ Item {
     }
 
     function availableMoveCalendars(task) {
-        var source = calendars.length > 0 ? calendars : tasksCache.loadCalendars()
+        var source = writableCalendars(calendars.length > 0 ? calendars : tasksCache.loadCalendars())
         var currentHref = calendarHrefForTask(task)
         var currentTitle = normalizedCalendarTitle(task && task.calendarTitle ? task.calendarTitle : "")
         var result = []
@@ -908,7 +1060,7 @@ Item {
     }
 
     function availableMoveCalendarsForTasks(tasks) {
-        var source = calendars.length > 0 ? calendars : tasksCache.loadCalendars()
+        var source = writableCalendars(calendars.length > 0 ? calendars : tasksCache.loadCalendars())
         var selected = tasks || []
         var selectedCalendarHrefs = {}
         var selectedCalendarTitles = {}
@@ -974,6 +1126,9 @@ Item {
             if (!task || task.type !== "task") {
                 continue
             }
+            if (taskReadOnly(task)) {
+                return false
+            }
             if (sameCalendarHref(calendarHrefForTask(task), targetHref) || sameCalendarTitle(task.calendarTitle, targetTitle)) {
                 return false
             }
@@ -993,6 +1148,10 @@ Item {
         for (var i = 0; i < source.length; ++i) {
             var task = source[i]
             if (!task || task.type !== "task") {
+                skipped += 1
+                continue
+            }
+            if (taskReadOnly(task)) {
                 skipped += 1
                 continue
             }
@@ -1086,11 +1245,15 @@ Item {
         }
         for (var i = 0; i < tasks.length; ++i) {
             var task = tasks[i]
-            var changes = taskToChanges(task)
+            if (taskReadOnly(task)) {
+                continue
+            }
+            var sourceTask = taskByKey(task) || task
+            var changes = taskToChanges(sourceTask)
             changes.status = completed ? "COMPLETED" : "NEEDS-ACTION"
             changes.completed = completed === true
             changes.percentComplete = completed ? "100" : "0"
-            var localTask = mergeTaskChanges(task, changes)
+            var localTask = mergeTaskChanges(sourceTask, changes)
             tasksCache.saveLocalDraft(localTask)
             upsertTask(localTask)
         }
@@ -1128,15 +1291,88 @@ Item {
         tasksCache.saveLocalDraft(localTask)
         upsertTask(localTask)
         applyCurrentViewFilter()
-        console.log("NextTasks Controller updateTaskLocalDraft queued localStatus=" + String(localTask.localStatus || "") + " isNew=" + (localTask.isNew === true ? "true" : "false"))
+        debugLog("NextTasks Controller updateTaskLocalDraft queued localStatus=" + String(localTask.localStatus || "") + " isNew=" + (localTask.isNew === true ? "true" : "false"))
         statusText = i18n.tr("Local changes saved on this device")
         syncStateText = i18n.tr("Waiting to sync")
         syncStateColor = "#b37a2a"
         scheduleDirtyAutoSync()
     }
 
+    function updateTaskParent(task, parentUid) {
+        if (!task || task.type !== "task") {
+            return false
+        }
+        if (taskReadOnly(task)) {
+            statusText = i18n.tr("This task is read-only.")
+            return false
+        }
+        var sourceTask = taskByKey(task) || task
+        var uid = String(sourceTask.uid || "")
+        var targetParentUid = String(parentUid || "")
+        if (uid.length === 0) {
+            statusText = i18n.tr("Task cannot be moved because it has no server identity yet.")
+            return false
+        }
+        if (uid === targetParentUid || taskParentCreatesCycle(uid, targetParentUid)) {
+            statusText = i18n.tr("Task cannot be moved under itself.")
+            return false
+        }
+        if (String(sourceTask.parentUid || "") === targetParentUid) {
+            return true
+        }
+        var changes = taskToChanges(sourceTask)
+        changes.parentUid = targetParentUid
+        var localTask = mergeTaskChanges(sourceTask, changes)
+        tasksCache.saveLocalDraft(localTask)
+        upsertTask(localTask)
+        applyCurrentViewFilter()
+        statusText = targetParentUid.length > 0 ? i18n.tr("Subtask relationship saved locally.") : i18n.tr("Task moved to top level locally.")
+        syncStateText = i18n.tr("Waiting to sync")
+        syncStateColor = "#b37a2a"
+        scheduleDirtyAutoSync()
+        return true
+    }
+
+    function taskParentCreatesCycle(taskUid, parentUid) {
+        var currentParentUid = String(parentUid || "")
+        var seen = {}
+        while (currentParentUid.length > 0) {
+            if (currentParentUid === taskUid || seen[currentParentUid] === true) {
+                return true
+            }
+            seen[currentParentUid] = true
+            var parentTask = taskByUid(currentParentUid)
+            currentParentUid = parentTask ? String(parentTask.parentUid || "") : ""
+        }
+        return false
+    }
+
+    function taskByUid(uid) {
+        var targetUid = String(uid || "")
+        if (targetUid.length === 0) {
+            return null
+        }
+        for (var i = 0; i < allTasks.length; ++i) {
+            if (String(allTasks[i] && allTasks[i].uid ? allTasks[i].uid : "") === targetUid) {
+                return allTasks[i]
+            }
+        }
+        return null
+    }
+
     function scheduleDirtyAutoSync() {
         updateDirtySummary()
+        if (!syncWhileActive) {
+            autoDirtySyncTimer.stop()
+            dirtySyncQueuedAfterLoading = false
+            dirtySyncQueuedAfterInteraction = false
+            if (tasksCache.loadLocalChanges().length > 0) {
+                statusText = i18n.tr("Local changes waiting to sync.")
+                syncStateText = i18n.tr("Waiting to sync")
+                syncStateColor = "#b37a2a"
+            }
+            return
+        }
         if (userSyncPaused) {
             dirtySyncQueuedAfterInteraction = true
             statusText = i18n.tr("Local changes waiting to sync.")
@@ -1161,6 +1397,10 @@ Item {
     }
 
     function autoDirtySyncNow() {
+        if (!syncWhileActive) {
+            autoDirtySyncTimer.stop()
+            return
+        }
         if (userSyncPaused) {
             dirtySyncQueuedAfterInteraction = true
             return
@@ -1181,6 +1421,7 @@ Item {
             {"type": "header", "label": i18n.tr("Views")},
             {"type": "myTasks", "label": i18n.tr("My Tasks"), "count": visibleTasks(allTasks, true).length},
             {"type": "calendarList", "label": i18n.tr("All lists"), "count": calendars.length},
+            {"type": "trash", "label": i18n.tr("Trash bin"), "count": trashLoadedOnce ? trashItems.length : -1},
             {"type": "header", "label": i18n.tr("Lists")}
         ]
         for (var i = 0; i < calendars.length; ++i) {
@@ -1191,7 +1432,8 @@ Item {
                 "count": countTasksForCalendar(calendar.href || ""),
                 "href": calendar.href || "",
                 "title": calendar.title || i18n.tr("Untitled"),
-                "color": calendar.color || ""
+                "color": calendar.color || "",
+                "readOnly": calendar.readOnly === true
             })
         }
         items.push({
@@ -1202,7 +1444,7 @@ Item {
     }
 
     function sortOptions() {
-        return [
+        var options = [
             {"value": "due", "label": i18n.tr("Due date")},
             {"value": "start", "label": i18n.tr("Start date")},
             {"value": "priority", "label": i18n.tr("Priority")},
@@ -1212,6 +1454,7 @@ Item {
             {"value": "list", "label": i18n.tr("List")},
             {"value": "manual", "label": i18n.tr("Manual order")}
         ]
+        return options
     }
 
     function sortModeLabel() {
@@ -1273,6 +1516,7 @@ Item {
         if (!item) return false
         if (item.type === "myTasks") return viewMode === "myTasks"
         if (item.type === "calendarList") return viewMode === "calendarList"
+        if (item.type === "trash") return viewMode === "trash"
         if (item.type === "calendar") return viewMode === "calendarTasks" && item.href === selectedCalendarHref
         return false
     }
@@ -1283,19 +1527,21 @@ Item {
             showMyTasks()
         } else if (item.type === "calendarList") {
             showCalendarList()
+        } else if (item.type === "trash") {
+            loadTrashBin()
         } else if (item.type === "calendar") {
             openCalendar(item.href, item.title)
         }
     }
 
     function loadMyTasksFromCalendars(sourceCalendars) {
-        pendingCalendars = sourceCalendars || []
+        pendingCalendars = filteredCalendars(sourceCalendars || [])
         pendingTasks = []
         pendingCalendarIndex = 0
         allTasks = []
         entries = []
         menuRevision += 1
-        console.log(
+        debugLog(
             "NextTasks Controller loadMyTasksFromCalendars"
             + " generation=" + accountRequestGeneration
             + " accountId=" + accountSettings.accountId
@@ -1316,7 +1562,7 @@ Item {
             allTasks = tasksForKnownCalendars(tasksCache.loadAllTasks(), calendars)
             menuRevision += 1
             entries = visibleTasks(allTasks, true)
-            console.log(
+            debugLog(
                 "NextTasks Controller finished task load"
                 + " generation=" + accountRequestGeneration
                 + " accountId=" + accountSettings.accountId
@@ -1335,7 +1581,7 @@ Item {
 
         var calendar = pendingCalendars[pendingCalendarIndex]
         pendingCalendarIndex += 1
-        console.log(
+        debugLog(
             "NextTasks Controller loading calendar tasks"
             + " generation=" + accountRequestGeneration
             + " accountId=" + accountSettings.accountId
@@ -1357,9 +1603,9 @@ Item {
 
     function loadCachedState() {
         tasksCache.setScope(accountKey())
-        calendars = tasksCache.loadCalendars()
+        calendars = filteredCalendars(tasksCache.loadCalendars())
         allTasks = tasksForKnownCalendars(tasksCache.loadAllTasks(), calendars)
-        console.log(
+        debugLog(
             "NextTasks Controller cached state"
             + " accountId=" + accountSettings.accountId
             + " calendars=" + calendars.length
@@ -1372,6 +1618,8 @@ Item {
         if (viewMode === "calendarList") {
             entries = calendars
             titleText = i18n.tr("Lists")
+        } else if (viewMode === "trash") {
+            titleText = i18n.tr("Trash bin")
         } else if (viewMode === "calendarTasks" && selectedCalendarHref.length > 0) {
             entries = visibleTasks(tasksCache.loadTasksForCalendar(selectedCalendarHref), true)
             titleText = selectedCalendarTitle || i18n.tr("Tasks")
@@ -1399,7 +1647,7 @@ Item {
             return
         }
         dirtySyncQueue = syncableLocalChanges(tasksCache.loadLocalChanges())
-        console.log("NextTasks Controller startDirtySync queue=" + dirtySyncQueue.length)
+        debugLog("NextTasks Controller startDirtySync queue=" + dirtySyncQueue.length)
         if (dirtySyncQueue.length === 0) {
             suppressDirtySyncViewReload = false
             var pendingLocalChanges = tasksCache.loadLocalChanges()
@@ -1426,6 +1674,10 @@ Item {
     }
 
     function runQueuedDirtySyncIfReady() {
+        if (!syncWhileActive) {
+            dirtySyncQueuedAfterLoading = false
+            return
+        }
         if (!dirtySyncQueuedAfterLoading || loading || dirtySyncRunning) {
             return
         }
@@ -1460,7 +1712,7 @@ Item {
         pendingUpdateTask = dirtySyncQueue[0]
         pendingUpdateChanges = taskToChanges(pendingUpdateTask)
         taskUpdateRunning = true
-        console.log("NextTasks Controller startNextDirtySync localStatus=" + String(pendingUpdateTask.localStatus || "") + " isNew=" + (pendingUpdateTask.isNew === true ? "true" : "false") + " deleted=" + (pendingUpdateTask.deleted === true ? "true" : "false"))
+        debugLog("NextTasks Controller startNextDirtySync localStatus=" + String(pendingUpdateTask.localStatus || "") + " isNew=" + (pendingUpdateTask.isNew === true ? "true" : "false") + " deleted=" + (pendingUpdateTask.deleted === true ? "true" : "false"))
         statusText = i18n.tr("Uploading task %1 of %2...").arg(dirtySyncTotal - dirtySyncQueue.length + 1).arg(dirtySyncTotal)
         if (pendingUpdateTask.localStatus === tasksCache.statusCreated || pendingUpdateTask.isNew) {
             api.createTask(currentServerUrl, currentUserName, currentSecret, pendingUpdateTask, pendingUpdateChanges)
@@ -1473,7 +1725,7 @@ Item {
 
     function handleDirtyWriteFailure(message, generation) {
         if (!isCurrentApiGeneration(generation)) {
-            console.log("NextTasks Controller ignored stale dirty write failure generation=" + generation)
+            debugLog("NextTasks Controller ignored stale dirty write failure generation=" + generation)
             return
         }
         taskUpdateRunning = false
@@ -1607,8 +1859,10 @@ Item {
 
     function decorateTasks(tasks, calendarTitle, calendarHref) {
         var result = []
+        var readOnly = calendarReadOnly(calendarByHref(calendarHref))
         for (var i = 0; i < tasks.length; ++i) {
             var task = tasks[i]
+            task.readOnly = readOnly
             task.calendarTitle = calendarTitle || ""
             task.calendarHref = calendarHref || ""
             result.push(task)
@@ -1641,6 +1895,67 @@ Item {
             }
         }
         return result
+    }
+
+    function filteredCalendars(sourceCalendars) {
+        var source = sourceCalendars || []
+        if (showReadOnlyLists) {
+            return source
+        }
+        var result = []
+        for (var i = 0; i < source.length; ++i) {
+            if (!calendarHiddenByReadOnlySetting(source[i])) {
+                result.push(source[i])
+            }
+        }
+        return result
+    }
+
+    function writableCalendars(sourceCalendars) {
+        var source = sourceCalendars || []
+        var result = []
+        for (var i = 0; i < source.length; ++i) {
+            if (!calendarReadOnly(source[i])) {
+                result.push(source[i])
+            }
+        }
+        return result
+    }
+
+    function calendarByHref(calendarHref) {
+        var href = normalizedCalendarHref(calendarHref)
+        for (var i = 0; i < calendars.length; ++i) {
+            if (normalizedCalendarHref(calendars[i].href || "") === href) {
+                return calendars[i]
+            }
+        }
+        var cached = tasksCache.loadCalendars()
+        for (var j = 0; j < cached.length; ++j) {
+            if (normalizedCalendarHref(cached[j].href || "") === href) {
+                return cached[j]
+            }
+        }
+        return null
+    }
+
+    function calendarReadOnly(calendar) {
+        return calendar && (calendar.readOnly === true || calendarExternallyManaged(calendar))
+    }
+
+    function calendarExternallyManaged(calendar) {
+        if (!calendar) {
+            return false
+        }
+        var title = String(calendar.title || "")
+        return title.indexOf("Deck:") === 0
+    }
+
+    function calendarHiddenByReadOnlySetting(calendar) {
+        return !showReadOnlyLists && calendarReadOnly(calendar)
+    }
+
+    function taskReadOnly(task) {
+        return task && (task.readOnly === true || calendarReadOnly(calendarByHref(calendarHrefForTask(task))))
     }
 
     function applyLocalTaskIdentity(target, source) {
@@ -1762,6 +2077,7 @@ Item {
         result.tags = String(changes.tags || "")
         result.description = String(changes.description || "")
         result.sortOrder = Number(changes.sortOrder || source.sortOrder || 0)
+        result.parentUid = String(changes.parentUid !== undefined ? changes.parentUid : (source.parentUid || ""))
         result.subtitle = statusSubtitle(result.status, result.completed)
         result.detail = result.dueText.length > 0 ? i18n.tr("Due %1").arg(result.dueText) : ""
         result.localStatus = wasNew ? tasksCache.statusCreated : tasksCache.statusEdited
@@ -1786,7 +2102,8 @@ Item {
             "url": task.url || "",
             "tags": task.tags || "",
             "description": task.description || "",
-            "sortOrder": Number(task.sortOrder || 0)
+            "sortOrder": Number(task.sortOrder || 0),
+            "parentUid": task.parentUid || ""
         }
     }
 
@@ -1921,15 +2238,21 @@ Item {
 
     function manualReorderSource(task) {
         var calendarHref = String(task && task.calendarHref ? task.calendarHref : selectedCalendarHref)
+        var parentUid = String(task && task.parentUid ? task.parentUid : "")
         var source = tasksForCurrentScope()
         var result = []
         for (var i = 0; i < source.length; ++i) {
             var candidate = source[i]
-            if (candidate && candidate.type === "task" && !candidate.completed && !candidate.deleted && String(candidate.calendarHref || "") === calendarHref) {
+            if (candidate
+                    && candidate.type === "task"
+                    && !candidate.completed
+                    && !candidate.deleted
+                    && String(candidate.calendarHref || "") === calendarHref
+                    && String(candidate.parentUid || "") === parentUid) {
                 result.push(candidate)
             }
         }
-        return visibleTasks(result, true)
+        return visibleTasks(result, false)
     }
 
     function applyManualOrderForList(orderedTasks, movedTask, refreshView) {
@@ -2021,20 +2344,24 @@ Item {
     function currentSortMode() {
         var key = currentSortScope()
         if (sortModeByScope && sortModeByScope[key]) {
-            return sortModeByScope[key]
+            return normalizedSortMode(sortModeByScope[key])
         }
         if (viewMode === "calendarTasks" && selectedCalendarHref.length > 0) {
             return "due"
         }
-        return sortSettings.sortMode
+        return normalizedSortMode(sortSettings.sortMode)
     }
 
     function sortModeForCalendar(calendarHref) {
         var key = sortScopeForCalendar(calendarHref)
         if (sortModeByScope && sortModeByScope[key]) {
-            return sortModeByScope[key]
+            return normalizedSortMode(sortModeByScope[key])
         }
         return "due"
+    }
+
+    function normalizedSortMode(mode) {
+        return mode || "due"
     }
 
     function visibleSortCalendars() {
@@ -2376,6 +2703,7 @@ Item {
         pendingCalendar = ({})
         pendingCalendarColor = ""
         pendingOpenCalendarTitle = ""
+        pendingTrashRestoreItem = ({})
         dirtySyncQueue = []
         dirtySyncTotal = 0
         currentUserName = ""
@@ -2390,6 +2718,10 @@ Item {
         entries = []
         calendars = []
         allTasks = []
+        trashItems = []
+        trashLoadedOnce = false
+        trashBinHref = ""
+        trashRetentionSeconds = 0
         pendingCalendars = []
         pendingTasks = []
         pendingCalendarIndex = 0
@@ -2414,6 +2746,7 @@ Item {
         pendingCalendar = ({})
         pendingCalendarColor = ""
         pendingOpenCalendarTitle = ""
+        pendingTrashRestoreItem = ({})
         dirtySyncQueue = []
         dirtySyncTotal = 0
         conflictTasksCount = 0
@@ -2491,6 +2824,12 @@ Item {
     Component.onCompleted: {
         activeAccountKey = accountKey()
         session.setAccount(accountSettings.accountId, accountSettings.providerId, accountSettings.serviceId, accountSettings.serverUrl)
-        refresh()
+        tasksCache.setScope(activeAccountKey)
+        if (syncOnStartup) {
+            refresh()
+        } else {
+            loadCachedState()
+            markUpToDateIfClean()
+        }
     }
 }

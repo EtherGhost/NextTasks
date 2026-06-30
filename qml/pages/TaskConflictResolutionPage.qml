@@ -14,7 +14,8 @@ Page {
         title: i18n.tr("Conflict")
     }
 
-    ColumnLayout {
+    Flickable {
+        id: pageFlickable
         anchors {
             top: header.bottom
             left: parent.left
@@ -22,92 +23,103 @@ Page {
             bottom: parent.bottom
             margins: units.gu(2)
         }
-        spacing: units.gu(1.25)
+        contentWidth: width
+        contentHeight: contentColumn.implicitHeight
+        clip: true
 
-        Label {
-            Layout.fillWidth: true
-            text: task.title || i18n.tr("Untitled task")
-            font.bold: true
-            wrapMode: Text.WordWrap
-            maximumLineCount: 2
-            elide: Text.ElideRight
-        }
+        ColumnLayout {
+            id: contentColumn
+            width: pageFlickable.width
+            spacing: units.gu(1.25)
 
-        NextCommon.StatusRow {
-            Layout.fillWidth: true
-            text: i18n.tr("The server changed this task while you had local edits. Review one version, then choose which version to keep.")
-            accentColor: page.selectedVersion === "server" ? "#c7162b" : "#c65d00"
-        }
+            Label {
+                Layout.fillWidth: true
+                text: task.title || i18n.tr("Untitled task")
+                font.bold: true
+                wrapMode: Text.WordWrap
+                maximumLineCount: 2
+                elide: Text.ElideRight
+            }
 
-        RowLayout {
-            Layout.fillWidth: true
-            spacing: units.gu(1)
+            NextCommon.StatusRow {
+                Layout.fillWidth: true
+                text: i18n.tr("The server changed this task while you had local edits. Review one version, then choose which version to keep.")
+                accentColor: page.selectedVersion === "server" ? "#c7162b" : "#c65d00"
+            }
+
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: units.gu(1)
+
+                NextCommon.AppButton {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: units.gu(4.8)
+                    text: i18n.tr("Server version")
+                    selected: page.selectedVersion === "server"
+                    onClicked: page.selectedVersion = "server"
+                }
+
+                NextCommon.AppButton {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: units.gu(4.8)
+                    text: i18n.tr("Local version")
+                    selected: page.selectedVersion === "local"
+                    onClicked: page.selectedVersion = "local"
+                }
+            }
+
+            Rectangle {
+                Layout.fillWidth: true
+                Layout.preferredHeight: Math.max(units.gu(22), Math.min(units.gu(36), page.height - header.height - units.gu(26)))
+                radius: units.gu(0.5)
+                color: "transparent"
+                border.width: 1
+                border.color: page.selectedVersion === "server" ? "#c7162b" : "#c65d00"
+
+                ColumnLayout {
+                    anchors {
+                        fill: parent
+                        margins: units.gu(1)
+                    }
+                    spacing: units.gu(0.75)
+
+                    Label {
+                        Layout.fillWidth: true
+                        text: page.selectedVersion === "server"
+                            ? page.serverConflictMetadata()
+                            : page.localConflictMetadata()
+                        wrapMode: Text.WordWrap
+                        maximumLineCount: 2
+                        opacity: 0.72
+                    }
+
+                    TextArea {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        readOnly: true
+                        text: tasksController
+                            ? tasksController.conflictPreviewText(task, page.selectedVersion)
+                            : ""
+                    }
+                }
+            }
 
             NextCommon.AppButton {
                 Layout.fillWidth: true
-                text: i18n.tr("Server version")
-                selected: page.selectedVersion === "server"
-                onClicked: page.selectedVersion = "server"
-            }
-
-            NextCommon.AppButton {
-                Layout.fillWidth: true
-                text: i18n.tr("Local version")
-                selected: page.selectedVersion === "local"
-                onClicked: page.selectedVersion = "local"
-            }
-        }
-
-        Rectangle {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            radius: units.gu(0.5)
-            color: "transparent"
-            border.width: 1
-            border.color: page.selectedVersion === "server" ? "#c7162b" : "#c65d00"
-
-            ColumnLayout {
-                anchors {
-                    fill: parent
-                    margins: units.gu(1)
+                Layout.preferredHeight: units.gu(5)
+                text: page.selectedVersion === "server"
+                    ? i18n.tr("Use server version")
+                    : i18n.tr("Keep local version")
+                variant: "primary"
+                enabled: task.conflict === true && tasksController && !tasksController.loading
+                onClicked: {
+                    if (page.selectedVersion === "server") {
+                        tasksController.discardLocalTaskAndUseServer(task)
+                    } else {
+                        tasksController.keepLocalTaskAfterConflict(task)
+                    }
+                    pageStack.pop()
                 }
-                spacing: units.gu(0.75)
-
-                Label {
-                    Layout.fillWidth: true
-                    text: page.selectedVersion === "server"
-                        ? page.serverConflictMetadata()
-                        : page.localConflictMetadata()
-                    wrapMode: Text.WordWrap
-                    maximumLineCount: 2
-                    opacity: 0.72
-                }
-
-                TextArea {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    readOnly: true
-                    text: tasksController
-                        ? tasksController.conflictPreviewText(task, page.selectedVersion)
-                        : ""
-                }
-            }
-        }
-
-        NextCommon.AppButton {
-            Layout.fillWidth: true
-            text: page.selectedVersion === "server"
-                ? i18n.tr("Use server version")
-                : i18n.tr("Keep local version")
-            variant: "primary"
-            enabled: task.conflict === true && tasksController && !tasksController.loading
-            onClicked: {
-                if (page.selectedVersion === "server") {
-                    tasksController.discardLocalTaskAndUseServer(task)
-                } else {
-                    tasksController.keepLocalTaskAfterConflict(task)
-                }
-                pageStack.pop()
             }
         }
     }

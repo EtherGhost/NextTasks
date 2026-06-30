@@ -275,7 +275,7 @@ void CalDavNetwork::loadCalendars(int generation,
     request.setRawHeader("Depth", "1");
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/xml; charset=utf-8"));
 
-    const QByteArray body = QByteArrayLiteral("<?xml version=\"1.0\"?><d:propfind xmlns:d=\"DAV:\" xmlns:cs=\"http://calendarserver.org/ns/\" xmlns:c=\"urn:ietf:params:xml:ns:caldav\" xmlns:x1=\"http://apple.com/ns/ical/\"><d:prop><d:displayname/><cs:getctag/><c:supported-calendar-component-set/><x1:calendar-color/></d:prop></d:propfind>");
+    const QByteArray body = QByteArrayLiteral("<?xml version=\"1.0\"?><d:propfind xmlns:d=\"DAV:\" xmlns:cs=\"http://calendarserver.org/ns/\" xmlns:c=\"urn:ietf:params:xml:ns:caldav\" xmlns:x1=\"http://apple.com/ns/ical/\"><d:prop><d:displayname/><cs:getctag/><c:supported-calendar-component-set/><x1:calendar-color/><d:current-user-privilege-set/></d:prop></d:propfind>");
     QNetworkReply *reply = requestManager->sendCustomRequest(request, QByteArrayLiteral("PROPFIND"), body);
     connect(reply, &QNetworkReply::finished, this, [this, reply, requestManager, generation, calendarHomeHref]() {
         const int status = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
@@ -329,6 +329,138 @@ void CalDavNetwork::loadTasks(int generation,
             return;
         }
         emit tasksLoadFailed(tr("Tasks request failed because the network request could not be completed."), generation);
+    });
+}
+
+void CalDavNetwork::loadTrashCollections(int generation,
+                                         const QString &serverUrl,
+                                         const QString &userName,
+                                         const QString &secret,
+                                         const QString &calendarHomeHref)
+{
+    if (normalizedServerUrl(serverUrl).isEmpty() || userName.isEmpty() || secret.isEmpty() || calendarHomeHref.trimmed().isEmpty()) {
+        emit trashCollectionsLoadFailed(tr("Trash bin request is incomplete."), generation);
+        return;
+    }
+
+    QNetworkAccessManager *requestManager = isolatedManager();
+    QNetworkRequest request = authorizedRequest(serverUrl, userName, secret, calendarHomeHref);
+    request.setRawHeader("Depth", "1");
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/xml; charset=utf-8"));
+
+    const QByteArray body = QByteArrayLiteral(
+        "<?xml version=\"1.0\"?>"
+        "<d:propfind xmlns:d=\"DAV:\" xmlns:c=\"urn:ietf:params:xml:ns:caldav\" xmlns:nc=\"http://nextcloud.com/ns\" xmlns:x1=\"http://apple.com/ns/ical/\">"
+        "<d:prop><d:displayname/><d:resourcetype/><nc:trash-bin-retention-duration/><nc:deleted-at/><nc:calendar-uri/><nc:source-calendar-uri/><x1:calendar-color/><c:supported-calendar-component-set/></d:prop>"
+        "</d:propfind>");
+    QNetworkReply *reply = requestManager->sendCustomRequest(request, QByteArrayLiteral("PROPFIND"), body);
+    connect(reply, &QNetworkReply::finished, this, [this, reply, requestManager, generation, calendarHomeHref]() {
+        const int status = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+        const QByteArray body = reply->readAll();
+        reply->deleteLater();
+        requestManager->deleteLater();
+
+        if (status >= 200 && status < 300) {
+            emit trashCollectionsLoaded(QString::fromUtf8(body), calendarHomeHref, generation);
+            return;
+        }
+        if (status > 0) {
+            emit trashCollectionsLoadFailed(tr("Trash bin request failed with HTTP %1.").arg(status), generation);
+            return;
+        }
+        emit trashCollectionsLoadFailed(tr("Trash bin request failed because the network request could not be completed."), generation);
+    });
+}
+
+void CalDavNetwork::loadTrashObjects(int generation,
+                                     const QString &serverUrl,
+                                     const QString &userName,
+                                     const QString &secret,
+                                     const QString &trashBinHref)
+{
+    if (normalizedServerUrl(serverUrl).isEmpty() || userName.isEmpty() || secret.isEmpty() || trashBinHref.trimmed().isEmpty()) {
+        emit trashObjectsLoadFailed(tr("Trash bin request is incomplete."), generation);
+        return;
+    }
+
+    QString objectsHref = trashBinHref.trimmed();
+    if (!objectsHref.endsWith(QLatin1Char('/'))) {
+        objectsHref.append(QLatin1Char('/'));
+    }
+    objectsHref.append(QStringLiteral("objects"));
+
+    QNetworkAccessManager *requestManager = isolatedManager();
+    QNetworkRequest request = authorizedRequest(serverUrl, userName, secret, objectsHref);
+    request.setRawHeader("Depth", "1");
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/xml; charset=utf-8"));
+
+    const QByteArray body = QByteArrayLiteral(
+        "<?xml version=\"1.0\"?>"
+        "<c:calendar-query xmlns:d=\"DAV:\" xmlns:c=\"urn:ietf:params:xml:ns:caldav\" xmlns:nc=\"http://nextcloud.com/ns\">"
+        "<d:prop><d:getcontenttype/><d:getetag/><d:resourcetype/><c:calendar-data/><nc:calendar-uri/><nc:source-calendar-uri/><nc:calendar-owner-principal-uri/><nc:deleted-at/><nc:delegator/></d:prop>"
+        "<c:filter><c:comp-filter name=\"VCALENDAR\"><c:comp-filter name=\"VEVENT\"/></c:comp-filter></c:filter>"
+        "</c:calendar-query>");
+    QNetworkReply *reply = requestManager->sendCustomRequest(request, QByteArrayLiteral("REPORT"), body);
+    connect(reply, &QNetworkReply::finished, this, [this, reply, requestManager, generation, trashBinHref]() {
+        const int status = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+        const QByteArray body = reply->readAll();
+        reply->deleteLater();
+        requestManager->deleteLater();
+
+        if (status >= 200 && status < 300) {
+            emit trashObjectsLoaded(QString::fromUtf8(body), trashBinHref, generation);
+            return;
+        }
+        if (status == 404) {
+            emit trashObjectsLoaded(QString(), trashBinHref, generation);
+            return;
+        }
+        if (status > 0) {
+            emit trashObjectsLoadFailed(tr("Trash bin request failed with HTTP %1.").arg(status), generation);
+            return;
+        }
+        emit trashObjectsLoadFailed(tr("Trash bin request failed because the network request could not be completed."), generation);
+    });
+}
+
+void CalDavNetwork::restoreTrashItem(int generation,
+                                     const QString &serverUrl,
+                                     const QString &userName,
+                                     const QString &secret,
+                                     const QString &trashItemHref,
+                                     const QString &trashBinHref)
+{
+    const QString itemHref = trashItemHref.trimmed();
+    QString restoreHref = trashBinHref.trimmed();
+    if (normalizedServerUrl(serverUrl).isEmpty() || userName.isEmpty() || secret.isEmpty() || itemHref.isEmpty() || restoreHref.isEmpty()) {
+        emit trashItemRestoreFailed(tr("Trash restore request is incomplete."), generation);
+        return;
+    }
+    if (!restoreHref.endsWith(QLatin1Char('/'))) {
+        restoreHref.append(QLatin1Char('/'));
+    }
+    restoreHref.append(QStringLiteral("restore/file"));
+
+    QNetworkAccessManager *requestManager = isolatedManager();
+    QNetworkRequest request = authorizedRequest(serverUrl, userName, secret, itemHref);
+    request.setRawHeader("Destination", absoluteCalendarUrl(serverUrl, restoreHref).toUtf8());
+    request.setRawHeader("Overwrite", "F");
+
+    QNetworkReply *reply = requestManager->sendCustomRequest(request, QByteArrayLiteral("MOVE"));
+    connect(reply, &QNetworkReply::finished, this, [this, reply, requestManager, generation, itemHref]() {
+        const int status = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+        reply->deleteLater();
+        requestManager->deleteLater();
+
+        if (status >= 200 && status < 300) {
+            emit trashItemRestored(itemHref, generation);
+            return;
+        }
+        if (status > 0) {
+            emit trashItemRestoreFailed(tr("Trash restore failed with HTTP %1.").arg(status), generation);
+            return;
+        }
+        emit trashItemRestoreFailed(tr("Trash restore failed because the network request could not be completed."), generation);
     });
 }
 

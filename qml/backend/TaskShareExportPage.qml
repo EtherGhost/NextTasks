@@ -5,6 +5,7 @@ import Lomiri.Content 1.3
 Page {
     id: page
     title: i18n.tr("Share")
+    function debugLog() {}
 
     property string shareTitle: ""
     property string shareText: ""
@@ -48,7 +49,7 @@ Page {
         item.text = shareText
         transfer.items = [ item ]
         transfer.state = ContentTransfer.Charged
-        console.log("NextTasks ContentHub share requested textLength=" + shareText.length)
+        debugLog("NextTasks ContentHub share requested textLength=" + shareText.length)
         page.shareFinished()
     }
 }

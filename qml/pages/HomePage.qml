@@ -4,11 +4,14 @@ import Lomiri.Components 1.3
 import Lomiri.Components.Popups 1.3
 import QtGraphicalEffects 1.0
 import Qt.labs.settings 1.0
+import UTControls 1.0
 import "../backend"
 import "../NextCommon" as NextCommon
 
 Page {
     id: page
+    function debugLog() {}
+
     property var appController
     property bool drawerOpen: false
     property string searchQuery: ""
@@ -41,6 +44,7 @@ Page {
     property int bulkDeleteNewCount: 0
     property string sortDialogCalendarHref: ""
     property string sortDialogCalendarTitle: ""
+    property bool clearingTreeSelection: false
     readonly property string actionBlue: "#2c7fb8"
     readonly property string deleteRed: "#c7162b"
     readonly property var listColorChoices: [
@@ -59,6 +63,49 @@ Page {
         property string displayName: ""
     }
 
+    Settings {
+        id: appSettings
+        category: "app"
+        property bool syncOnStartup: true
+        property bool multiSelectEnabled: true
+        property bool swipeActionsEnabled: true
+        property bool swipeActionsReversed: false
+        property bool pullToRefreshEnabled: true
+        property bool dragForMoveEnabled: true
+        property bool levelZeroDragDropEnabled: true
+        property bool childDragDropEnabled: true
+        property bool defaultExpanded: true
+        property bool treeLinesEnabled: true
+        property bool showReadOnlyLists: true
+    }
+
+    Component.onCompleted: {
+        if (appController) {
+            appController.syncWhileActive = true
+            appController.syncOnStartup = appSettings.syncOnStartup
+            appController.multiSelectEnabled = appSettings.multiSelectEnabled
+            appController.swipeActionsEnabled = appSettings.swipeActionsEnabled
+            appController.swipeActionsReversed = appSettings.swipeActionsReversed
+            appController.pullToRefreshEnabled = appSettings.pullToRefreshEnabled
+            appController.dragForMoveEnabled = appSettings.dragForMoveEnabled
+            appController.levelZeroDragDropEnabled = appSettings.levelZeroDragDropEnabled
+            appController.childDragDropEnabled = appSettings.childDragDropEnabled
+            appController.defaultExpanded = appSettings.defaultExpanded
+            appController.treeLinesEnabled = appSettings.treeLinesEnabled
+            appController.showReadOnlyLists = appSettings.showReadOnlyLists
+        }
+    }
+
+    Connections {
+        target: appController
+
+        onShowReadOnlyListsChanged: {
+            if (dataController) {
+                dataController.showReadOnlyLists = appController.showReadOnlyLists
+            }
+        }
+    }
+
     Loader {
         id: shareImportLoader
         active: !desktopLarge
@@ -71,7 +118,7 @@ Page {
 
         onStatusChanged: {
             if (status === Loader.Error && source.toString().indexOf("TaskShareImportHandler.qml") !== -1) {
-                console.log("NextTasks ContentHub Lomiri.Content handler unavailable; trying Ubuntu.Content fallback")
+                debugLog("NextTasks ContentHub Lomiri.Content handler unavailable; trying Ubuntu.Content fallback")
                 source = Qt.resolvedUrl("../backend/TaskShareImportHandlerUbuntu.qml")
             }
         }
@@ -105,31 +152,240 @@ Page {
         PopupUtils.open(sortDialog)
     }
 
-    function useReorderableTaskList() {
-        return dataController.viewMode === "calendarTasks"
-            && dataController.sortMode === "manual"
-            && page.searchQuery.length === 0
-            && page.completedTaskCount === 0
+    function multiSelectAllowed() {
+        return page.settingEnabled("multiSelectEnabled", true)
     }
 
-    function reorderTaskByVisibleIndexes(fromIndex, toIndex) {
-        if (fromIndex < 0 || fromIndex >= reorderableTaskEntries.length) {
+    function settingEnabled(name, fallbackValue) {
+        if (appController && appController[name] !== undefined) {
+            return appController[name] === true
+        }
+        if (appSettings[name] !== undefined) {
+            return appSettings[name] === true
+        }
+        return fallbackValue === true
+    }
+
+    function useReorderableTaskList() {
+        return dataController.viewMode === "calendarTasks"
+            || dataController.viewMode === "myTasks"
+    }
+
+    function reorderTaskByTreeRequest(fromSectionId, fromIndex, toSectionId, toIndex, item, fromParentId, toParentId) {
+        if (String(fromSectionId || "") !== String(toSectionId || "")) {
             return
         }
-        if (toIndex < 0 || toIndex >= reorderableTaskEntries.length || fromIndex === toIndex) {
+        if (!page.taskManualSortEnabled(item)) {
             return
         }
-        var nextEntries = reorderableTaskEntries.slice(0)
-        var task = nextEntries.splice(fromIndex, 1)[0]
-        nextEntries.splice(toIndex, 0, task)
-        reorderableTaskEntries = nextEntries
-        dataController.reorderManualTask(task, toIndex, false)
+        if (String(fromParentId || "") !== String(toParentId || "")) {
+            return
+        }
+        var target = toIndex
+        if (String(fromSectionId || "") === String(toSectionId || "") && fromIndex < toIndex) {
+            target = toIndex - 1
+        }
+        if (dataController.viewMode === "calendarTasks" && String(fromParentId || "").length === 0 && fromIndex >= 0 && fromIndex < reorderableTaskEntries.length) {
+            var nextEntries = reorderableTaskEntries.slice(0)
+            var moved = nextEntries.splice(fromIndex, 1)[0]
+            var boundedTarget = Math.max(0, Math.min(target, nextEntries.length))
+            nextEntries.splice(boundedTarget, 0, moved)
+            reorderableTaskEntries = nextEntries
+            target = boundedTarget
+            dataController.reorderManualTask(item, target, false)
+            return
+        }
+        dataController.reorderManualTask(item, target, true)
+    }
+
+    function makeSubTaskByTreeRequest(fromSectionId, fromIndex, parentSectionId, parentIndex, item, parentItem, fromParentId) {
+        if (String(fromSectionId || "") !== String(parentSectionId || "")) {
+            return
+        }
+        if (!item || !parentItem || item.type !== "task" || parentItem.type !== "task") {
+            return
+        }
+        dataController.updateTaskParent(item, parentItem.uid || parentItem.id || "")
+    }
+
+    function outdentTaskByTreeRequest(fromSectionId, fromIndex, toParentId, toIndex, item, fromParentId) {
+        if (!item || item.type !== "task") {
+            return
+        }
+        dataController.updateTaskParent(item, toParentId || "")
+    }
+
+    function reorderableTaskSectionsModel() {
+        if (!page.useReorderableTaskList() || reorderableTaskEntries.length === 0) {
+            return []
+        }
+        if (dataController.viewMode === "myTasks") {
+            return page.reorderableTaskSectionsForMyTasks(reorderableTaskEntries)
+        }
+        var items = page.reorderableTaskTreeItems(reorderableTaskEntries)
+        return [{
+            "id": dataController.selectedCalendarHref || "current",
+            "title": dataController.selectedCalendarTitle || dataController.titleText || i18n.tr("Tasks"),
+            "items": items
+        }]
+    }
+
+    function reorderableTaskItems(sourceEntries) {
+        var items = []
+        var entries = sourceEntries || []
+        for (var i = 0; i < entries.length; ++i) {
+            var source = entries[i]
+            if (!source || source.type !== "task") {
+                continue
+            }
+            source.id = page.taskKey(source)
+            if (String(source.id || "").length > 0) {
+                items.push(source)
+            }
+        }
+        return items
+    }
+
+    function cloneTaskForTree(source) {
+        var copy = {}
+        for (var key in source) {
+            if (key !== "children") {
+                copy[key] = source[key]
+            }
+        }
+        copy.id = String(copy.uid || page.taskKey(copy))
+        copy.children = []
+        return copy
+    }
+
+    function taskTreeUid(task) {
+        return String(task && task.uid ? task.uid : "")
+    }
+
+    function taskTreeDepthSafe(node, seen) {
+        if (!node || !node.children) {
+            return
+        }
+        var uid = page.taskTreeUid(node)
+        if (uid.length > 0) {
+            if (seen[uid] === true) {
+                node.children = []
+                return
+            }
+            seen[uid] = true
+        }
+        for (var i = 0; i < node.children.length; ++i) {
+            var childSeen = {}
+            for (var key in seen) {
+                childSeen[key] = seen[key]
+            }
+            page.taskTreeDepthSafe(node.children[i], childSeen)
+        }
+    }
+
+    function reorderableTaskTreeItems(sourceEntries) {
+        var entries = sourceEntries || []
+        var byUid = {}
+        var clones = []
+        for (var i = 0; i < entries.length; ++i) {
+            var source = entries[i]
+            if (!source || source.type !== "task") {
+                continue
+            }
+            var clone = page.cloneTaskForTree(source)
+            clones.push(clone)
+            var uid = page.taskTreeUid(clone)
+            if (uid.length > 0) {
+                byUid[uid] = clone
+            }
+        }
+
+        var roots = []
+        for (var j = 0; j < clones.length; ++j) {
+            var task = clones[j]
+            var parentUid = String(task.parentUid || "")
+            var parent = parentUid.length > 0 ? byUid[parentUid] : null
+            if (parent && parent !== task) {
+                parent.children.push(task)
+            } else {
+                roots.push(task)
+            }
+        }
+
+        for (var k = 0; k < roots.length; ++k) {
+            page.taskTreeDepthSafe(roots[k], {})
+        }
+        return roots
+    }
+
+    function reorderableTaskSectionsForMyTasks(sourceEntries) {
+        var seen = {}
+        var order = []
+        var entries = sourceEntries || []
+        for (var i = 0; i < entries.length; ++i) {
+            var source = entries[i]
+            if (!source || source.type !== "task") {
+                continue
+            }
+            var key = String(source.calendarHref || source.calendarTitle || i18n.tr("Tasks"))
+            if (!seen[key]) {
+                seen[key] = []
+                order.push(key)
+            }
+            seen[key].push(source)
+        }
+        var sections = []
+        var emitted = {}
+        function appendSection(sectionKey) {
+            if (emitted[sectionKey] === true || !seen[sectionKey]) {
+                return
+            }
+            emitted[sectionKey] = true
+            var group = seen[sectionKey]
+            var firstTask = group.length > 0 ? group[0] : null
+            var href = firstTask && firstTask.calendarHref ? firstTask.calendarHref : ""
+            group = dataController.sortedTasksForCalendar(group, href)
+            sections.push({
+                "id": href || sectionKey,
+                "title": firstTask && firstTask.calendarTitle ? firstTask.calendarTitle : i18n.tr("Tasks"),
+                "items": page.reorderableTaskTreeItems(group)
+            })
+        }
+        var calendars = dataController.calendars || []
+        for (var j = 0; j < calendars.length; ++j) {
+            var calendar = calendars[j]
+            var calendarKey = String(calendar && (calendar.href || calendar.title) ? (calendar.href || calendar.title) : "")
+            if (calendarKey.length > 0) {
+                appendSection(calendarKey)
+            }
+        }
+        for (var k = 0; k < order.length; ++k) {
+            appendSection(order[k])
+        }
+        return sections
+    }
+
+    function anyReorderableSectionUsesManualSort() {
+        if (dataController.viewMode === "calendarTasks") {
+            return dataController.sortMode === "manual"
+        }
+        var entries = reorderableTaskEntries || []
+        for (var i = 0; i < entries.length; ++i) {
+            var entry = entries[i]
+            if (entry && entry.type === "task" && dataController.sortModeForCalendar(entry.calendarHref || "") === "manual") {
+                return true
+            }
+        }
+        return false
     }
 
     function activeSortMode() {
         return sortDialogCalendarHref.length > 0
             ? dataController.sortModeForCalendar(sortDialogCalendarHref)
             : dataController.sortMode
+    }
+
+    function syncManualReorderSetting() {
     }
 
     function applySortMode(mode) {
@@ -148,6 +404,30 @@ Page {
             return dataController.sortModeForCalendar(task.calendarHref || "") === "manual"
         }
         return dataController.sortMode === "manual"
+    }
+
+    function swipeDeletes(offset) {
+        if (!page.settingEnabled("swipeActionsEnabled", true)) {
+            return false
+        }
+        var reversed = page.settingEnabled("swipeActionsReversed", false)
+        return reversed ? offset < 0 : offset > 0
+    }
+
+    function swipeCompletes(offset) {
+        return page.settingEnabled("swipeActionsEnabled", true) && offset !== 0 && !page.swipeDeletes(offset)
+    }
+
+    function positiveSwipeText(entry) {
+        return page.swipeDeletes(1) ? i18n.tr("Delete") : (entry.completed === true ? i18n.tr("Reopen") : i18n.tr("Complete"))
+    }
+
+    function negativeSwipeText(entry) {
+        return page.swipeDeletes(-1) ? i18n.tr("Delete") : (entry.completed === true ? i18n.tr("Reopen") : i18n.tr("Complete"))
+    }
+
+    function swipeActionColor(offset) {
+        return page.swipeDeletes(offset) ? page.deleteRed : "#5a8f3c"
     }
 
     function createTask() {
@@ -194,7 +474,7 @@ Page {
         }
         if (page.shareImportDialogOpen || page.pendingSharedContent.length > 0) {
             page.pendingSharedImportQueue.push({"title": title || "", "content": cleanContent})
-            console.log("NextTasks ContentHub queued shared import queueLength=" + page.pendingSharedImportQueue.length)
+            debugLog("NextTasks ContentHub queued shared import queueLength=" + page.pendingSharedImportQueue.length)
             return
         }
         page.pendingSharedTitle = title || ""
@@ -342,9 +622,36 @@ Page {
         return count
     }
 
+    function activeSelectedCount() {
+        if (page.useReorderableTaskList() && reorderableTasks) {
+            return reorderableTasks.selectedCount
+        }
+        return page.selectedTaskCount()
+    }
+
     function clearSelection() {
         selectionMode = false
         selectedTaskKeys = ({})
+        selectionRevision += 1
+        if (!clearingTreeSelection && reorderableTasks && reorderableTasks.clearSelection) {
+            clearingTreeSelection = true
+            reorderableTasks.clearSelection()
+            clearingTreeSelection = false
+        }
+    }
+
+    function setSelectionFromTasks(tasks) {
+        var updated = {}
+        var incoming = tasks || []
+        for (var i = 0; i < incoming.length; ++i) {
+            var task = incoming[i] && incoming[i].item ? incoming[i].item : incoming[i]
+            var key = taskKey(task)
+            if (key.length > 0) {
+                updated[key] = true
+            }
+        }
+        selectedTaskKeys = updated
+        selectionMode = selectedTaskCount() > 0
         selectionRevision += 1
     }
 
@@ -430,7 +737,11 @@ Page {
 
     function updateFilteredEntries() {
         var query = String(searchQuery || "").toLowerCase()
-        var source = dataController.entries || []
+        var source = dataController.viewMode === "trash"
+            ? dataController.trashItems || []
+            : dataController.viewMode === "calendarTasks" || dataController.viewMode === "myTasks"
+            ? dataController.visibleTasks(dataController.tasksForCurrentScope(), false)
+            : dataController.entries || []
         if (query.length === 0) {
             filteredEntries = source
             updateDisplayGroups(source)
@@ -476,7 +787,9 @@ Page {
         }
         displayEntries = sectionedEntries(openEntries)
         completedDisplayEntries = sectionedEntries(completedEntries)
-        reorderableTaskEntries = dataController.viewMode === "calendarTasks" ? openEntries : []
+        reorderableTaskEntries = page.useReorderableTaskList()
+            ? (dataController.showCompletedTasks ? openEntries.concat(completedEntries) : openEntries)
+            : []
     }
 
     function sectionedEntries(source) {
@@ -509,8 +822,8 @@ Page {
             var firstTask = group.length > 0 ? group[0] : null
             var title = firstTask && firstTask.calendarTitle ? firstTask.calendarTitle : i18n.tr("Tasks")
             var href = firstTask && firstTask.calendarHref ? firstTask.calendarHref : ""
-            result.push({"type": "section", "title": title, "calendarHref": href})
             group = dataController.viewMode === "myTasks" ? dataController.sortedTasksForCalendar(group, href) : group
+            result.push({"type": "section", "title": title, "calendarHref": href})
             for (var k = 0; k < group.length; ++k) {
                 result.push(group[k])
             }
@@ -606,6 +919,7 @@ Page {
 
     function taskStatusBadgeText(entry) {
         if (!entry || entry.type !== "task") return ""
+        if (dataController.taskReadOnly(entry)) return i18n.tr("Read-only")
         if (entry.conflict === true) return i18n.tr("Conflict")
         if (entry.deleted === true) return i18n.tr("Delete pending")
         if (entry.isNew === true) return i18n.tr("New")
@@ -615,6 +929,7 @@ Page {
 
     function taskStatusBadgeColor(entry) {
         if (!entry || entry.type !== "task") return "#7a7a7a"
+        if (dataController.taskReadOnly(entry)) return "#7a7a7a"
         if (entry.conflict === true) return "#c7162b"
         if (entry.isNew === true) return "#237b4b"
         if (entry.dirty === true || entry.deleted === true) return "#c65d00"
@@ -686,7 +1001,7 @@ Page {
 
                 Label {
                     Layout.fillWidth: true
-                    text: i18n.tr("%1 selected").arg(page.selectedTaskCount())
+                    text: i18n.tr("%1 selected").arg(page.activeSelectedCount())
                     font.bold: true
                     elide: Text.ElideRight
                 }
@@ -694,7 +1009,7 @@ Page {
                 NextCommon.AppButton {
                     Layout.preferredWidth: units.gu(9.5)
                     Layout.preferredHeight: units.gu(5)
-                    enabled: page.selectedTaskCount() > 0
+                    enabled: page.activeSelectedCount() > 0
                     text: i18n.tr("Move")
                     onClicked: page.requestBulkMove()
                 }
@@ -702,7 +1017,7 @@ Page {
                 NextCommon.AppButton {
                     Layout.preferredWidth: units.gu(9.5)
                     Layout.preferredHeight: units.gu(5)
-                    enabled: page.selectedTaskCount() > 0
+                    enabled: page.activeSelectedCount() > 0
                     text: i18n.tr("Delete")
                     variant: "destructive"
                     destructiveColor: page.deleteRed
@@ -1288,21 +1603,64 @@ Page {
 
         Rectangle {
             property var itemData: ({})
+            property var rowData: ({})
             property int itemIndex: -1
+            property string sectionId: ""
+            property string parentId: ""
+            property int depth: 0
+            property bool expanded: false
+            property bool hasChildren: false
             property bool placeholder: false
             property bool dragging: false
+            property bool parentTarget: false
+            property bool selected: false
+            property bool selectionMode: false
+            signal toggleExpanded()
 
             implicitHeight: units.gu(8.8)
             radius: units.gu(0.6)
-            color: placeholder ? "transparent" : page.taskCardColor(itemData)
-            border.width: placeholder ? 2 : page.taskFrameWidth(itemData)
-            border.color: placeholder ? page.actionBlue : page.taskFrameColor(itemData)
+            color: placeholder ? "transparent" : (selected ? Qt.rgba(0.17, 0.50, 0.72, 0.18) : page.taskCardColor(itemData))
+            border.width: placeholder || selected ? 2 : page.taskFrameWidth(itemData)
+            border.color: placeholder || selected ? page.actionBlue : page.taskFrameColor(itemData)
             opacity: placeholder ? 0.55 : (itemData.completed ? 0.56 : 1.0)
+
+            Rectangle {
+                id: expandButton
+                anchors {
+                    left: parent.left
+                    verticalCenter: parent.verticalCenter
+                    leftMargin: units.gu(0.2)
+                }
+                width: units.gu(3.2)
+                height: units.gu(3.2)
+                radius: width / 2
+                z: 5
+                color: expandMouse.pressed ? Qt.rgba(0.17, 0.5, 0.72, 0.18) : "transparent"
+                border.width: hasChildren ? 1 : 0
+                border.color: Qt.rgba(0.17, 0.5, 0.72, 0.35)
+                opacity: hasChildren ? 1 : (depth > 0 ? 0.2 : 0)
+
+                Label {
+                    anchors.centerIn: parent
+                    text: hasChildren ? (expanded ? "-" : "+") : ""
+                    color: theme.palette.normal.backgroundText
+                    font.bold: true
+                }
+
+                MouseArea {
+                    id: expandMouse
+                    anchors.fill: parent
+                    enabled: hasChildren
+                    preventStealing: true
+                    onClicked: toggleExpanded()
+                }
+            }
 
             RowLayout {
                 anchors {
                     fill: parent
                     margins: units.gu(1)
+                    leftMargin: units.gu(4.8)
                 }
                 spacing: units.gu(1)
 
@@ -1311,14 +1669,14 @@ Page {
                     Layout.preferredHeight: units.gu(2.8)
                     Layout.alignment: Qt.AlignVCenter
                     radius: units.gu(0.35)
-                    color: itemData.completed ? "#5a8f3c" : "transparent"
+                    color: selected ? page.actionBlue : (itemData.completed ? "#5a8f3c" : "transparent")
                     border.width: 2
-                    border.color: itemData.completed ? "#5a8f3c" : theme.palette.normal.backgroundText
+                    border.color: selected ? page.actionBlue : (itemData.completed ? "#5a8f3c" : theme.palette.normal.backgroundText)
 
                     Label {
                         anchors.centerIn: parent
                         text: "\u2713"
-                        visible: itemData.completed === true
+                        visible: itemData.completed === true || selected
                         color: "white"
                         font.bold: true
                     }
@@ -1391,9 +1749,44 @@ Page {
         }
     }
 
+    Component {
+        id: emptyReorderSectionDelegate
+
+        RowLayout {
+            property var sectionData: ({})
+            property var sectionId: ""
+            property int sectionIndex: -1
+            width: parent ? parent.width : page.width
+            height: dataController.viewMode === "myTasks" ? units.gu(4) : 0
+            spacing: units.gu(0.8)
+            visible: height > 0
+
+            Rectangle {
+                Layout.preferredWidth: units.gu(1.2)
+                Layout.preferredHeight: units.gu(1.2)
+                Layout.alignment: Qt.AlignVCenter
+                radius: width / 2
+                color: "#d85a7f"
+            }
+
+            Label {
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignVCenter
+                text: sectionData && sectionData.title ? sectionData.title : i18n.tr("Tasks")
+                font.bold: true
+                opacity: 0.78
+                elide: Text.ElideRight
+            }
+        }
+    }
+
     TasksController {
         id: dataController
+        syncWhileActive: true
+        syncOnStartup: appController ? appController.syncOnStartup : true
+        showReadOnlyLists: appController ? appController.showReadOnlyLists : true
         onEntriesChanged: page.updateFilteredEntries()
+        onTrashItemsChanged: page.updateFilteredEntries()
         onAccountDataRevisionChanged: {
             page.filteredEntries = []
             page.displayEntries = []
@@ -1427,17 +1820,17 @@ Page {
         contentHeight: contentColumn.height + units.gu(3)
         clip: true
         interactive: page.manualDragTaskKey.length === 0 && !page.manualDragPointerCaptured
-        boundsBehavior: Flickable.DragOverBounds
+        boundsBehavior: page.settingEnabled("pullToRefreshEnabled", true) ? Flickable.DragOverBounds : Flickable.StopAtBounds
         property bool pullRefreshArmed: false
 
         onContentYChanged: {
-            if (contentY < -page.pullRefreshThreshold && !dataController.loading) {
+            if (page.settingEnabled("pullToRefreshEnabled", true) && contentY < -page.pullRefreshThreshold && !dataController.loading) {
                 pullRefreshArmed = true
             }
         }
 
         onMovementEnded: {
-            if (pullRefreshArmed && !dataController.loading) {
+            if (page.settingEnabled("pullToRefreshEnabled", true) && pullRefreshArmed && !dataController.loading) {
                 dataController.refresh()
             }
             pullRefreshArmed = false
@@ -1453,7 +1846,7 @@ Page {
             height: units.gu(3.2)
             radius: units.gu(1.6)
             color: "#2c7fb8"
-            opacity: taskFlickable.contentY < -units.gu(2) || dataController.loading ? 0.92 : 0
+            opacity: page.settingEnabled("pullToRefreshEnabled", true) && (taskFlickable.contentY < -units.gu(2) || dataController.loading) ? 0.92 : 0
             visible: opacity > 0
             z: 4
 
@@ -1482,7 +1875,7 @@ Page {
                 Item {
                     Layout.preferredWidth: units.gu(5)
                     Layout.preferredHeight: units.gu(4)
-                    visible: dataController.viewMode === "calendarTasks" || dataController.viewMode === "calendarList"
+                    visible: dataController.viewMode === "calendarTasks" || dataController.viewMode === "calendarList" || dataController.viewMode === "trash"
 
                     Label {
                         anchors.centerIn: parent
@@ -1506,8 +1899,128 @@ Page {
                 }
             }
 
+            ColumnLayout {
+                Layout.fillWidth: true
+                visible: dataController.viewMode === "trash"
+                spacing: units.gu(1)
+
+                Repeater {
+                    model: dataController.trashItems
+
+                    delegate: Rectangle {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: units.gu(9.6)
+                        radius: units.gu(0.6)
+                        color: theme.palette.normal.base
+                        border.width: 1
+                        border.color: Qt.rgba(theme.palette.normal.backgroundText.r,
+                                              theme.palette.normal.backgroundText.g,
+                                              theme.palette.normal.backgroundText.b,
+                                              0.18)
+
+                        RowLayout {
+                            anchors {
+                                fill: parent
+                                margins: units.gu(1.2)
+                            }
+                            spacing: units.gu(1)
+
+                            Rectangle {
+                                Layout.preferredWidth: units.gu(4.4)
+                                Layout.preferredHeight: units.gu(4.4)
+                                Layout.alignment: Qt.AlignVCenter
+                                radius: width / 2
+                                color: modelData.type === "trashCalendar"
+                                    ? (modelData.color || "#2f80ed")
+                                    : Qt.rgba(theme.palette.normal.backgroundText.r,
+                                              theme.palette.normal.backgroundText.g,
+                                              theme.palette.normal.backgroundText.b,
+                                              0.12)
+
+                                Label {
+                                    anchors.centerIn: parent
+                                    text: modelData.type === "trashCalendar" ? "\u2630" : "\u2713"
+                                    color: modelData.type === "trashCalendar"
+                                        ? "white"
+                                        : theme.palette.normal.backgroundText
+                                    font.bold: true
+                                    font.pixelSize: units.gu(2.1)
+                                }
+                            }
+
+                            ColumnLayout {
+                                Layout.fillWidth: true
+                                Layout.alignment: Qt.AlignVCenter
+                                spacing: units.gu(0.45)
+
+                                Label {
+                                    Layout.fillWidth: true
+                                    text: modelData.title || i18n.tr("Untitled")
+                                    font.bold: true
+                                    elide: Text.ElideRight
+                                    maximumLineCount: 1
+                                }
+
+                                RowLayout {
+                                    Layout.fillWidth: true
+                                    spacing: units.gu(0.6)
+
+                                    Rectangle {
+                                        Layout.preferredHeight: units.gu(2.4)
+                                        Layout.preferredWidth: typeLabel.implicitWidth + units.gu(1.4)
+                                        radius: units.gu(1.2)
+                                        color: Qt.rgba(theme.palette.normal.backgroundText.r,
+                                                       theme.palette.normal.backgroundText.g,
+                                                       theme.palette.normal.backgroundText.b,
+                                                       0.10)
+
+                                        Label {
+                                            id: typeLabel
+                                            anchors.centerIn: parent
+                                            text: modelData.type === "trashCalendar" ? i18n.tr("List") : i18n.tr("Task")
+                                            textSize: Label.Small
+                                            font.bold: true
+                                            opacity: 0.78
+                                        }
+                                    }
+
+                                    Label {
+                                        Layout.fillWidth: true
+                                        text: String(modelData.deletedAtText || "").length > 0
+                                            ? i18n.tr("Deleted %1").arg(modelData.deletedAtText)
+                                            : (modelData.subtitle || "")
+                                        textSize: Label.Small
+                                        opacity: 0.68
+                                        elide: Text.ElideRight
+                                        maximumLineCount: 1
+                                    }
+                                }
+                            }
+
+                            NextCommon.AppButton {
+                                Layout.preferredWidth: units.gu(9.2)
+                                Layout.preferredHeight: units.gu(4.4)
+                                text: i18n.tr("Restore")
+                                variant: "neutral"
+                                enabled: !dataController.loading
+                                onClicked: dataController.restoreTrashItem(modelData)
+                            }
+                        }
+                    }
+                }
+
+                NextCommon.EmptyState {
+                    Layout.fillWidth: true
+                    visible: dataController.trashItems.length === 0 && !dataController.loading
+                    title: i18n.tr("Trash bin is empty.")
+                    message: dataController.trashRetentionSeconds > 0
+                        ? i18n.tr("Deleted items are kept for a limited time by the server.")
+                        : ""
+                }
+            }
+
             Repeater {
-                model: page.displayEntries
+                model: dataController.viewMode !== "trash" ? page.displayEntries : []
                 delegate: Item {
                     id: taskRow
                     Layout.fillWidth: true
@@ -1533,9 +2046,9 @@ Page {
 
                     function triggerSwipeAction(offset) {
                         if (modelData.type !== "task") return
-                        if (offset > 0) {
+                        if (page.swipeDeletes(offset)) {
                             page.requestDeleteTask(modelData)
-                        } else if (offset < 0) {
+                        } else if (page.swipeCompletes(offset)) {
                             dataController.toggleTaskCompleted(modelData)
                         }
                     }
@@ -1636,7 +2149,7 @@ Page {
                             rightMargin: units.gu(0.45)
                         }
                         radius: units.gu(0.6)
-                        color: swipeContent.x > 0 ? "#c7162b" : "#5a8f3c"
+                        color: page.swipeActionColor(swipeContent.x)
                         opacity: modelData.type === "task" ? Math.min(1, Math.abs(swipeContent.x) / taskRow.actionThreshold) : 0
                         visible: modelData.type === "task" && opacity > 0
 
@@ -1647,7 +2160,7 @@ Page {
                                 leftMargin: units.gu(2)
                             }
                             visible: swipeContent.x > units.gu(1)
-                            text: i18n.tr("Delete")
+                            text: page.positiveSwipeText(modelData)
                             color: "white"
                             font.bold: true
                         }
@@ -1659,7 +2172,7 @@ Page {
                                 rightMargin: units.gu(2)
                             }
                             visible: swipeContent.x < -units.gu(1)
-                            text: modelData.completed === true ? i18n.tr("Reopen") : i18n.tr("Complete")
+                            text: page.negativeSwipeText(modelData)
                             color: "white"
                             font.bold: true
                         }
@@ -1888,7 +2401,7 @@ Page {
                             taskRow.manualDragOffsetY = 0
                         }
                         onPressAndHold: {
-                            if (modelData.type === "task" && !dataController.loading && page.manualDragTaskKey.length === 0) {
+                            if (page.multiSelectAllowed() && modelData.type === "task" && !dataController.loading && page.manualDragTaskKey.length === 0) {
                                 page.toggleTaskSelection(modelData)
                             }
                         }
@@ -1993,9 +2506,9 @@ Page {
 
                         function triggerSwipeAction(offset) {
                             if (modelData.type !== "task") return
-                            if (offset > 0) {
+                            if (page.swipeDeletes(offset)) {
                                 page.requestDeleteTask(modelData)
-                            } else if (offset < 0) {
+                            } else if (page.swipeCompletes(offset)) {
                                 dataController.toggleTaskCompleted(modelData)
                             }
                         }
@@ -2028,7 +2541,7 @@ Page {
                         Rectangle {
                             anchors { fill: parent; margins: units.gu(0.45) }
                             radius: units.gu(0.6)
-                            color: completedSwipeContent.x > 0 ? "#c7162b" : "#5a8f3c"
+                            color: page.swipeActionColor(completedSwipeContent.x)
                             opacity: modelData.type === "task" ? Math.min(1, Math.abs(completedSwipeContent.x) / completedTaskRow.actionThreshold) : 0
                             visible: modelData.type === "task" && opacity > 0
 
@@ -2039,7 +2552,7 @@ Page {
                                     leftMargin: units.gu(2)
                                 }
                                 visible: completedSwipeContent.x > units.gu(1)
-                                text: i18n.tr("Delete")
+                                text: page.positiveSwipeText(modelData)
                                 color: "white"
                                 font.bold: true
                             }
@@ -2051,7 +2564,7 @@ Page {
                                     rightMargin: units.gu(2)
                                 }
                                 visible: completedSwipeContent.x < -units.gu(1)
-                                text: i18n.tr("Reopen")
+                                text: page.negativeSwipeText(modelData)
                                 color: "white"
                                 font.bold: true
                             }
@@ -2211,7 +2724,7 @@ Page {
                                 }
                             }
                             onPressAndHold: {
-                                if (modelData.type === "task" && !dataController.loading) {
+                                if (page.multiSelectAllowed() && modelData.type === "task" && !dataController.loading) {
                                     page.toggleTaskSelection(modelData)
                                 }
                             }
@@ -2251,7 +2764,7 @@ Page {
 
             NextCommon.EmptyState {
                 Layout.fillWidth: true
-                visible: page.filteredEntries.length === 0 && !dataController.loading && (page.searchQuery.length > 0 || dataController.viewMode === "calendarList")
+                visible: page.filteredEntries.length === 0 && !dataController.loading && dataController.viewMode !== "trash" && (page.searchQuery.length > 0 || dataController.viewMode === "calendarList")
                 title: page.searchQuery.length > 0 ? i18n.tr("No matching items") : ""
                 message: page.searchQuery.length > 0 ? "" : appController.apiNote
             }
@@ -2303,45 +2816,44 @@ Page {
             }
         }
 
-        RowLayout {
-            Layout.fillWidth: true
-            Layout.preferredHeight: units.gu(4)
-            spacing: units.gu(0.8)
-
-            Rectangle {
-                Layout.preferredWidth: units.gu(1.2)
-                Layout.preferredHeight: units.gu(1.2)
-                radius: width / 2
-                color: "#d85a7f"
-            }
-
-            Label {
-                Layout.fillWidth: true
-                text: dataController.titleText || i18n.tr("Tasks")
-                font.bold: true
-                opacity: 0.78
-                elide: Text.ElideRight
-            }
-        }
-
-        NextCommon.ReorderableListView {
+        TreeReorderableListView {
             id: reorderableTasks
             Layout.fillWidth: true
-            Layout.preferredHeight: Math.max(units.gu(28), page.height - page.header.height - units.gu(16.6))
+            Layout.fillHeight: true
             visible: page.reorderableTaskEntries.length > 0
-            model: page.reorderableTaskEntries
+            model: page.reorderableTaskSectionsModel()
             delegate: reorderTaskDelegate
-            reorderEnabled: !dataController.loading && !page.selectionMode
+            sectionDelegate: emptyReorderSectionDelegate
+            reorderEnabled: page.anyReorderableSectionUsesManualSort() && page.searchQuery.length === 0 && page.settingEnabled("dragForMoveEnabled", true) && !dataController.loading && !page.selectionMode
             refreshing: dataController.loading
-            dragAreaRightMargin: units.gu(5)
+            levelZeroDragDropEnabled: page.settingEnabled("levelZeroDragDropEnabled", true)
+            childDragDropEnabled: page.settingEnabled("levelZeroDragDropEnabled", true) && page.settingEnabled("childDragDropEnabled", true)
+            subItemDropEnabled: page.settingEnabled("levelZeroDragDropEnabled", true) && page.settingEnabled("childDragDropEnabled", true)
+            crossListDragEnabled: false
+            defaultExpanded: page.settingEnabled("defaultExpanded", true)
+            treeLinesEnabled: page.settingEnabled("treeLinesEnabled", true)
+            swipeActionsEnabled: page.settingEnabled("swipeActionsEnabled", true)
+            swipeRightEnabled: page.settingEnabled("swipeActionsEnabled", true)
+            swipeLeftEnabled: page.settingEnabled("swipeActionsEnabled", true)
+            swipeActionsReversed: page.settingEnabled("swipeActionsReversed", false)
+            swipeRightText: i18n.tr("Delete")
+            swipeLeftText: i18n.tr("Toggle complete")
+            swipeRightColor: page.deleteRed
+            swipeLeftColor: "#5a8f3c"
+            selectionEnabled: page.multiSelectAllowed()
+            sectionHeight: dataController.viewMode === "myTasks" ? units.gu(4) : 0
+            cardHeight: units.gu(8.8)
+            taskSpacing: units.gu(1.2)
+            dropPreviewHeight: units.gu(8.8)
+            dragAreaLeftMargin: units.gu(4.6)
             pullRefreshThreshold: page.pullRefreshThreshold
-            pullToRefreshEnabled: false
+            pullToRefreshEnabled: page.settingEnabled("pullToRefreshEnabled", true)
             refreshIndicatorColor: page.actionBlue
             pullToRefreshText: i18n.tr("Pull to refresh")
             releaseToRefreshText: i18n.tr("Release to refresh")
             refreshingText: i18n.tr("Refreshing...")
 
-            onItemClicked: function(index, item) {
+            onItemClicked: function(sectionId, index, item, parentId) {
                 if (!item || item.type !== "task") {
                     return
                 }
@@ -2352,17 +2864,86 @@ Page {
                 }
             }
 
-            onMoveRequested: function(fromIndex, toIndex) {
-                page.reorderTaskByVisibleIndexes(fromIndex, toIndex)
+            onMoveRequested: function(fromSectionId, fromIndex, toSectionId, toIndex, item, fromParentId, toParentId) {
+                page.reorderTaskByTreeRequest(fromSectionId, fromIndex, toSectionId, toIndex, item, fromParentId, toParentId)
             }
 
-            onDragStarted: {
+            onSubItemRequested: function(fromSectionId, fromIndex, parentSectionId, parentIndex, item, parentItem, fromParentId) {
+                page.makeSubTaskByTreeRequest(fromSectionId, fromIndex, parentSectionId, parentIndex, item, parentItem, fromParentId)
+            }
+
+            onOutdentRequested: function(fromSectionId, fromIndex, toParentId, toIndex, item, fromParentId) {
+                page.outdentTaskByTreeRequest(fromSectionId, fromIndex, toParentId, toIndex, item, fromParentId)
+            }
+
+            onDragStarted: function(sectionId, index, item, parentId) {
                 dataController.pauseUserSync()
             }
-            onDragEnded: {
+            onDragEnded: function(sectionId, fromIndex, toSectionId, toIndex, item, fromParentId, toParentId) {
                 dataController.resumeUserSync()
             }
+            onSwipeRightRequested: function(sectionId, index, item, parentId) {
+                if (!item || item.type !== "task") {
+                    return
+                }
+                page.requestDeleteTask(item)
+            }
+            onSwipeLeftRequested: function(sectionId, index, item, parentId) {
+                if (!item || item.type !== "task") {
+                    return
+                }
+                dataController.toggleTaskCompleted(item)
+            }
+            onSelectionChanged: function(selectedItems) {
+                if (!page.clearingTreeSelection) {
+                    page.setSelectionFromTasks(selectedItems)
+                }
+            }
+            onSelectionCleared: {
+                if (!page.clearingTreeSelection) {
+                    page.clearSelection()
+                }
+            }
             onRefreshRequested: dataController.refresh()
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+            Layout.preferredHeight: units.gu(4.8)
+            visible: page.completedTaskCount > 0
+            spacing: units.gu(1)
+
+            Label {
+                Layout.fillWidth: true
+                text: dataController.showCompletedTasks
+                    ? i18n.tr("Hide completed tasks (%1)").arg(page.completedTaskCount)
+                    : i18n.tr("Show completed tasks (%1)").arg(page.completedTaskCount)
+                opacity: 0.72
+                horizontalAlignment: Text.AlignHCenter
+                font.bold: true
+
+                MouseArea {
+                    anchors.fill: parent
+                    enabled: !dataController.loading
+                    onClicked: dataController.toggleShowCompletedTasks()
+                }
+            }
+
+            NextCommon.AppButton {
+                Layout.preferredWidth: units.gu(10)
+                Layout.preferredHeight: units.gu(4.6)
+                visible: dataController.viewMode === "calendarTasks" && dataController.showCompletedTasks
+                text: i18n.tr("Reopen all")
+                enabled: !dataController.loading
+                onClicked: PopupUtils.open(reopenCompletedDialog)
+            }
+        }
+
+        NextCommon.EmptyState {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            visible: page.reorderableTaskEntries.length === 0 && !dataController.loading
+            title: page.searchQuery.length > 0 ? i18n.tr("No matching items") : i18n.tr("No tasks found.")
         }
     }
 

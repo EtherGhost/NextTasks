@@ -7,6 +7,7 @@
 #include <QHash>
 #include <QQuickView>
 #include <QQmlContext>
+#include <QQmlEngine>
 #include <QSettings>
 #include <QSize>
 #include <QString>
@@ -156,6 +157,7 @@ int main(int argc, char *argv[])
     QQuickView view;
     CalDavNetwork calDavNetwork;
     ContentHubBridge contentHubBridge;
+    view.engine()->addImportPath(QStringLiteral("qrc:/qml"));
     view.rootContext()->setContextProperty(QStringLiteral("nexttasksAppVersion"), QStringLiteral(NEXTTASKS_VERSION));
     view.rootContext()->setContextProperty(QStringLiteral("calDavNetwork"), &calDavNetwork);
     view.rootContext()->setContextProperty(QStringLiteral("contentHubBridge"), &contentHubBridge);

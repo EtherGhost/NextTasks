@@ -4,6 +4,7 @@ import Ubuntu.Content 1.3
 Item {
     id: handler
     visible: false
+    function debugLog() {}
 
     signal sharedTextReceived(string title, string content)
     signal importFailed(string message)
@@ -13,7 +14,7 @@ Item {
     property var processedContentKeys: ({})
 
     Component.onCompleted: {
-        console.log("NextTasks ContentHub import handler ready hasPending=" + ContentHub.hasPending
+        debugLog("NextTasks ContentHub import handler ready hasPending=" + ContentHub.hasPending
                     + " finishedImports=" + finishedImportCount())
         Qt.callLater(restorePendingImports)
     }
@@ -24,7 +25,7 @@ Item {
         onImportRequested: handler.handleImportRequested(transfer)
 
         onFinishedImportsChanged: {
-            console.log("NextTasks ContentHub finishedImports changed count=" + handler.finishedImportCount())
+            debugLog("NextTasks ContentHub finishedImports changed count=" + handler.finishedImportCount())
             handler.processFinishedImports()
         }
     }
@@ -37,7 +38,7 @@ Item {
     }
 
     function restorePendingImports() {
-        console.log("NextTasks ContentHub restore pending hasPending=" + ContentHub.hasPending
+        debugLog("NextTasks ContentHub restore pending hasPending=" + ContentHub.hasPending
                     + " finishedImports=" + finishedImportCount())
         if (ContentHub.hasPending) {
             ContentHub.restoreImports()
@@ -52,10 +53,10 @@ Item {
     function processFinishedImports() {
         var count = finishedImportCount()
         if (count <= 0) {
-            console.log("NextTasks ContentHub no finished imports to process")
+            debugLog("NextTasks ContentHub no finished imports to process")
             return
         }
-        console.log("NextTasks ContentHub processing finished imports count=" + count)
+        debugLog("NextTasks ContentHub processing finished imports count=" + count)
         for (var i = 0; i < count; ++i) {
             handleImportRequested(ContentHub.finishedImports[i])
         }
@@ -63,9 +64,9 @@ Item {
 
     function handleImportRequested(transfer) {
         var count = transfer && transfer.items ? transfer.items.length : 0
-        console.log("NextTasks ContentHub import requested itemCount=" + count)
+        debugLog("NextTasks ContentHub import requested itemCount=" + count)
         if (wasTransferProcessed(transfer)) {
-            console.log("NextTasks ContentHub import skipped already processed transfer")
+            debugLog("NextTasks ContentHub import skipped already processed transfer")
             return
         }
         if (!transfer || !transfer.items || transfer.items.length === 0) {
@@ -96,11 +97,11 @@ Item {
         }
         if (content.length > maxImportedCharacters) {
             content = content.slice(0, maxImportedCharacters)
-            console.log("NextTasks ContentHub import truncated length=" + content.length)
+            debugLog("NextTasks ContentHub import truncated length=" + content.length)
         }
 
         if (wasContentProcessed(content)) {
-            console.log("NextTasks ContentHub import skipped duplicate content textLength=" + content.length)
+            debugLog("NextTasks ContentHub import skipped duplicate content textLength=" + content.length)
             markTransferProcessed(transfer, content)
             markTransferCollected(transfer)
             return
@@ -108,7 +109,7 @@ Item {
 
         markTransferProcessed(transfer, content)
         markTransferCollected(transfer)
-        console.log("NextTasks ContentHub import received textLength=" + content.length)
+        debugLog("NextTasks ContentHub import received textLength=" + content.length)
         sharedTextReceived(title, content)
     }
 
@@ -118,7 +119,7 @@ Item {
         }
 
         if (item.text && String(item.text).length > 0) {
-            console.log("NextTasks ContentHub import read item text length=" + String(item.text).length)
+            debugLog("NextTasks ContentHub import read item text length=" + String(item.text).length)
             return String(item.text)
         }
 
@@ -126,14 +127,14 @@ Item {
         if (url && String(url).length > 0 && contentHubBridge) {
             var fileText = contentHubBridge.readTextFile(url)
             if (fileText && fileText.length > 0) {
-                console.log("NextTasks ContentHub import read local file length=" + fileText.length)
+                debugLog("NextTasks ContentHub import read local file length=" + fileText.length)
                 return fileText
             }
-            console.log("NextTasks ContentHub import local file was empty or unreadable")
+            debugLog("NextTasks ContentHub import local file was empty or unreadable")
         }
 
         if (item.name && String(item.name).length > 0) {
-            console.log("NextTasks ContentHub import using item name length=" + String(item.name).length)
+            debugLog("NextTasks ContentHub import using item name length=" + String(item.name).length)
             return String(item.name)
         }
 
@@ -150,7 +151,7 @@ Item {
                 transfer.finalize()
             }
         } catch (error) {
-            console.log("NextTasks ContentHub import finalize failed: " + error)
+            debugLog("NextTasks ContentHub import finalize failed: " + error)
         }
     }
 

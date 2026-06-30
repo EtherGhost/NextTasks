@@ -50,6 +50,22 @@ public:
                                const QString &secret,
                                const QString &calendarHref,
                                const QString &calendarTitle);
+    Q_INVOKABLE void loadTrashCollections(int generation,
+                                          const QString &serverUrl,
+                                          const QString &userName,
+                                          const QString &secret,
+                                          const QString &calendarHomeHref);
+    Q_INVOKABLE void loadTrashObjects(int generation,
+                                      const QString &serverUrl,
+                                      const QString &userName,
+                                      const QString &secret,
+                                      const QString &trashBinHref);
+    Q_INVOKABLE void restoreTrashItem(int generation,
+                                      const QString &serverUrl,
+                                      const QString &userName,
+                                      const QString &secret,
+                                      const QString &trashItemHref,
+                                      const QString &trashBinHref);
     Q_INVOKABLE void putTask(int generation,
                              const QString &serverUrl,
                              const QString &userName,
@@ -87,6 +103,12 @@ signals:
     void calendarsLoadFailed(const QString &message, int generation);
     void tasksLoaded(const QString &calendarTitle, const QString &calendarHref, const QString &responseText, int generation);
     void tasksLoadFailed(const QString &message, int generation);
+    void trashCollectionsLoaded(const QString &responseText, const QString &calendarHomeHref, int generation);
+    void trashCollectionsLoadFailed(const QString &message, int generation);
+    void trashObjectsLoaded(const QString &responseText, const QString &trashBinHref, int generation);
+    void trashObjectsLoadFailed(const QString &message, int generation);
+    void trashItemRestored(const QString &trashItemHref, int generation);
+    void trashItemRestoreFailed(const QString &message, int generation);
     void taskPutFinished(const QString &kind, const QString &href, const QString &etag, int status, int generation);
     void taskPutFailed(const QString &kind, const QString &message, int generation);
     void taskDeleteFinished(int status, int generation);

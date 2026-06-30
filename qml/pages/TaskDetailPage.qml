@@ -6,6 +6,8 @@ import "../NextCommon" as NextCommon
 
 Page {
     id: page
+    function debugLog() {}
+
     property var appController
     property var tasksController
     property var task: ({})
@@ -42,6 +44,10 @@ Page {
         || urlText !== String(task.url || "")
         || tagsText !== String(task.tags || "")
         || notesText !== String(task.description || "")
+
+    function taskReadOnly() {
+        return task && task.readOnly === true
+    }
 
     Component.onCompleted: resetFields()
     onTaskChanged: resetFields()
@@ -648,6 +654,7 @@ Page {
                 id: titleField
                 Layout.fillWidth: true
                 text: page.titleText
+                readOnly: page.taskReadOnly()
                 font.pixelSize: units.gu(2.8)
                 font.bold: true
                 placeholderText: i18n.tr("Task title")
@@ -1043,6 +1050,7 @@ Page {
                         TextField {
                             Layout.fillWidth: true
                             text: page.locationText
+                            readOnly: page.taskReadOnly()
                             placeholderText: i18n.tr("Set location")
                             inputMethodHints: Qt.ImhNoPredictiveText
                             onTextChanged: {
@@ -1068,6 +1076,7 @@ Page {
                         TextField {
                             Layout.fillWidth: true
                             text: page.urlText
+                            readOnly: page.taskReadOnly()
                             placeholderText: i18n.tr("Set a URL")
                             inputMethodHints: Qt.ImhUrlCharactersOnly
                             onTextChanged: {
@@ -1168,7 +1177,7 @@ Page {
                         text: i18n.tr("Delete task")
                         variant: "destructive"
                         destructiveColor: page.deleteRed
-                        enabled: tasksController && !tasksController.loading
+                        enabled: tasksController && !tasksController.loading && !page.taskReadOnly()
                         onClicked: PopupUtils.open(deleteTaskDialog)
                     }
                 }
@@ -1202,7 +1211,7 @@ Page {
                         Layout.fillWidth: true
                         Layout.fillHeight: true
                         text: page.notesText
-                        readOnly: false
+                        readOnly: page.taskReadOnly()
                         wrapMode: TextEdit.WordWrap
                         placeholderText: i18n.tr("No notes.")
                         onTextChanged: {
@@ -1269,7 +1278,7 @@ Page {
     }
 
     function scheduleAutoSave() {
-        if (initializingFields || !tasksController || !dirty) {
+        if (initializingFields || !tasksController || !dirty || page.taskReadOnly()) {
             return
         }
         tasksController.updateTaskLocalDraft(task, currentChanges())
@@ -1286,7 +1295,7 @@ Page {
 
     function performAutoSave() {
         autoSaveTimer.stop()
-        if (!tasksController || !dirty) {
+        if (!tasksController || !dirty || page.taskReadOnly()) {
             return
         }
         var changes = currentChanges()
@@ -1378,7 +1387,7 @@ Page {
             "shareText": text
         })
         if (!sharePage) {
-            console.log("NextTasks ContentHub Lomiri.Content share page unavailable; trying Ubuntu.Content fallback")
+            debugLog("NextTasks ContentHub Lomiri.Content share page unavailable; trying Ubuntu.Content fallback")
             sharePage = pageStack.push(Qt.resolvedUrl("../backend/TaskShareExportPageUbuntu.qml"), {
                 "shareTitle": page.taskShareTitle(),
                 "shareText": text

@@ -3,12 +3,16 @@ import "AuthCore.js" as AuthCore
 
 Item {
     id: api
+    function debugLog() {}
+
     property int requestGeneration: 0
     property var pendingNativeCalendarLoads: ({})
     property var pendingNativeCompletion: ({})
     property var pendingNativeWrite: ({})
     property var pendingNativeDeleteTask: ({})
     property var pendingNativeFetches: ({})
+    property var pendingNativeTrashLoads: ({})
+    property var pendingNativeTrashRestores: ({})
 
     signal calendarsLoaded(var entries, int generation)
     signal tasksLoaded(string calendarTitle, string calendarHref, var entries, int generation)
@@ -29,6 +33,10 @@ Item {
     signal calendarUpdateFailed(string message, int generation)
     signal calendarDeleted(int generation)
     signal calendarDeleteFailed(string message, int generation)
+    signal trashLoaded(var items, string trashBinHref, int retentionSeconds, int generation)
+    signal trashLoadFailed(string message, int generation)
+    signal trashItemRestored(var item, int generation)
+    signal trashItemRestoreFailed(string message, int generation)
     signal failed(string message, int generation)
 
     Connections {
@@ -53,6 +61,12 @@ Item {
         onTaskDeleteFailed: api.taskDeleteFailed(message, generation)
         onTaskFetched: api.handleNativeTaskFetched(kind, responseText, status, generation)
         onTaskFetchFailed: api.handleNativeTaskFetchFailed(kind, message, generation)
+        onTrashCollectionsLoaded: api.handleNativeTrashCollectionsLoaded(responseText, calendarHomeHref, generation)
+        onTrashCollectionsLoadFailed: api.handleNativeTrashLoadFailed(message, generation)
+        onTrashObjectsLoaded: api.handleNativeTrashObjectsLoaded(responseText, trashBinHref, generation)
+        onTrashObjectsLoadFailed: api.handleNativeTrashLoadFailed(message, generation)
+        onTrashItemRestored: api.handleNativeTrashItemRestored(trashItemHref, generation)
+        onTrashItemRestoreFailed: api.handleNativeTrashItemRestoreFailed(message, generation)
     }
 
     function loadCalendars(serverUrl, userName, secret) {
@@ -68,7 +82,7 @@ Item {
                 "userName": userName,
                 "secret": secret
             }
-            console.log("NextTasks TasksApi native user lookup generation=" + generation)
+            debugLog("NextTasks TasksApi native user lookup generation=" + generation)
             calDavNetwork.lookupUser(generation, base, userName, secret)
             return
         }
@@ -92,7 +106,7 @@ Item {
         xhr.onreadystatechange = function() {
             if (xhr.readyState !== XMLHttpRequest.DONE) return
             if (xhr.status < 200 || xhr.status >= 300) {
-                console.log("NextTasks TasksApi user lookup failed httpStatus=" + xhr.status)
+                debugLog("NextTasks TasksApi user lookup failed httpStatus=" + xhr.status)
                 callback("")
                 return
             }
@@ -101,9 +115,9 @@ Item {
                 var parsed = JSON.parse(xhr.responseText || "{}")
                 userId = String(parsed && parsed.ocs && parsed.ocs.data && parsed.ocs.data.id ? parsed.ocs.data.id : "")
             } catch (e) {
-                console.log("NextTasks TasksApi user lookup JSON parse failed")
+                debugLog("NextTasks TasksApi user lookup JSON parse failed")
             }
-            console.log(
+            debugLog(
                 "NextTasks TasksApi user lookup result"
                 + " generation=" + generation
                 + " userIdHash=" + AuthCore.stableHash(userId)
@@ -112,11 +126,11 @@ Item {
             callback(userId)
         }
         xhr.onerror = function() {
-            console.log("NextTasks TasksApi user lookup network error")
+            debugLog("NextTasks TasksApi user lookup network error")
             callback("")
         }
         xhr.ontimeout = function() {
-            console.log("NextTasks TasksApi user lookup timeout")
+            debugLog("NextTasks TasksApi user lookup timeout")
             callback("")
         }
         xhr.send()
@@ -131,7 +145,7 @@ Item {
             home = "/" + home
         }
         var url = authenticatedUrl(home.indexOf("http") === 0 ? home : base + home, userName)
-        console.log(
+        debugLog(
             "NextTasks TasksApi PROPFIND calendars"
             + " generation=" + generation
             + " serverUrlConfigured=" + AuthCore.hasValue(base)
@@ -147,12 +161,12 @@ Item {
         xhr.onreadystatechange = function() {
             if (xhr.readyState !== XMLHttpRequest.DONE) return
             if (xhr.status < 200 || xhr.status >= 300) {
-                console.log("NextTasks TasksApi PROPFIND calendars failed httpStatus=" + xhr.status)
+                debugLog("NextTasks TasksApi PROPFIND calendars failed httpStatus=" + xhr.status)
                 failed(i18n.tr("Tasks calendar request failed with HTTP %1.").arg(xhr.status), generation)
                 return
             }
             var entries = parseCalendars(xhr.responseText, userName, home)
-            console.log(
+            debugLog(
                 "NextTasks TasksApi PROPFIND calendars success"
                 + " generation=" + generation
                 + " entries=" + entries.length
@@ -161,14 +175,14 @@ Item {
             calendarsLoaded(entries, generation)
         }
         xhr.onerror = function() {
-            console.log("NextTasks TasksApi PROPFIND calendars network error")
+            debugLog("NextTasks TasksApi PROPFIND calendars network error")
             failed(i18n.tr("Tasks calendar request failed because the network request could not be completed."), generation)
         }
         xhr.ontimeout = function() {
-            console.log("NextTasks TasksApi PROPFIND calendars timeout")
+            debugLog("NextTasks TasksApi PROPFIND calendars timeout")
             failed(i18n.tr("Tasks calendar request timed out."), generation)
         }
-        xhr.send("<?xml version=\"1.0\"?><d:propfind xmlns:d=\"DAV:\" xmlns:cs=\"http://calendarserver.org/ns/\" xmlns:c=\"urn:ietf:params:xml:ns:caldav\" xmlns:x1=\"http://apple.com/ns/ical/\"><d:prop><d:displayname/><cs:getctag/><c:supported-calendar-component-set/><x1:calendar-color/></d:prop></d:propfind>")
+        xhr.send("<?xml version=\"1.0\"?><d:propfind xmlns:d=\"DAV:\" xmlns:cs=\"http://calendarserver.org/ns/\" xmlns:c=\"urn:ietf:params:xml:ns:caldav\" xmlns:x1=\"http://apple.com/ns/ical/\"><d:prop><d:displayname/><cs:getctag/><c:supported-calendar-component-set/><x1:calendar-color/><d:current-user-privilege-set/></d:prop></d:propfind>")
     }
 
     function discoverCalendarHome(base, userName, secret, generation, callback) {
@@ -184,13 +198,13 @@ Item {
         xhr.onreadystatechange = function() {
             if (xhr.readyState !== XMLHttpRequest.DONE) return
             if (xhr.status < 200 || xhr.status >= 300) {
-                console.log("NextTasks TasksApi principal discovery failed httpStatus=" + xhr.status)
+                debugLog("NextTasks TasksApi principal discovery failed httpStatus=" + xhr.status)
                 fallback()
                 return
             }
             var principalHref = nestedHref(xhr.responseText, "current-user-principal")
             if (principalHref.length === 0) {
-                console.log("NextTasks TasksApi principal discovery returned no principal")
+                debugLog("NextTasks TasksApi principal discovery returned no principal")
                 fallback()
                 return
             }
@@ -213,12 +227,12 @@ Item {
         xhr.onreadystatechange = function() {
             if (xhr.readyState !== XMLHttpRequest.DONE) return
             if (xhr.status < 200 || xhr.status >= 300) {
-                console.log("NextTasks TasksApi calendar-home discovery failed httpStatus=" + xhr.status)
+                debugLog("NextTasks TasksApi calendar-home discovery failed httpStatus=" + xhr.status)
                 callback("")
                 return
             }
             var calendarHomeHref = nestedHref(xhr.responseText, "calendar-home-set")
-            console.log(
+            debugLog(
                 "NextTasks TasksApi calendar-home discovery result"
                 + " generation=" + generation
                 + " homeAvailable=" + AuthCore.hasValue(calendarHomeHref)
@@ -240,12 +254,12 @@ Item {
             return
         }
         if (typeof calDavNetwork !== "undefined") {
-            console.log("NextTasks TasksApi native PROPFIND tasks serverUrlConfigured=" + AuthCore.hasValue(base))
+            debugLog("NextTasks TasksApi native PROPFIND tasks serverUrlConfigured=" + AuthCore.hasValue(base))
             calDavNetwork.loadTasks(generation, base, userName, secret, calendarHref, calendarTitle || i18n.tr("Tasks"))
             return
         }
         var url = authenticatedUrl(calendarHref.indexOf("http") === 0 ? calendarHref : base + calendarHref, userName)
-        console.log("NextTasks TasksApi PROPFIND tasks serverUrlConfigured=" + AuthCore.hasValue(base))
+        debugLog("NextTasks TasksApi PROPFIND tasks serverUrlConfigured=" + AuthCore.hasValue(base))
         var xhr = new XMLHttpRequest()
         xhr.open("PROPFIND", url)
         xhr.timeout = 15000
@@ -255,20 +269,20 @@ Item {
         xhr.onreadystatechange = function() {
             if (xhr.readyState !== XMLHttpRequest.DONE) return
             if (xhr.status < 200 || xhr.status >= 300) {
-                console.log("NextTasks TasksApi PROPFIND tasks failed httpStatus=" + xhr.status)
+                debugLog("NextTasks TasksApi PROPFIND tasks failed httpStatus=" + xhr.status)
                 failed(i18n.tr("Tasks request failed with HTTP %1.").arg(xhr.status), generation)
                 return
             }
             var entries = parseTasks(xhr.responseText)
-            console.log("NextTasks TasksApi PROPFIND tasks success entries=" + entries.length)
+            debugLog("NextTasks TasksApi PROPFIND tasks success entries=" + entries.length)
             tasksLoaded(calendarTitle || i18n.tr("Tasks"), calendarHref || "", entries, generation)
         }
         xhr.onerror = function() {
-            console.log("NextTasks TasksApi PROPFIND tasks network error")
+            debugLog("NextTasks TasksApi PROPFIND tasks network error")
             failed(i18n.tr("Tasks request failed because the network request could not be completed."), generation)
         }
         xhr.ontimeout = function() {
-            console.log("NextTasks TasksApi PROPFIND tasks timeout")
+            debugLog("NextTasks TasksApi PROPFIND tasks timeout")
             failed(i18n.tr("Tasks request timed out."), generation)
         }
         xhr.send("<?xml version=\"1.0\"?><d:propfind xmlns:d=\"DAV:\" xmlns:c=\"urn:ietf:params:xml:ns:caldav\"><d:prop><d:getetag/><c:calendar-data/></d:prop></d:propfind>")
@@ -276,8 +290,13 @@ Item {
 
     function handleNativeUserLookupLoaded(responseText, generation) {
         var pending = pendingNativeCalendarLoads[String(generation)]
+        var pendingTrash = pendingNativeTrashLoads[String(generation)]
         if (!pending) {
-            console.log("NextTasks TasksApi ignored native user lookup for stale generation=" + generation)
+            if (pendingTrash) {
+                handleNativeTrashUserLookupLoaded(responseText, generation)
+                return
+            }
+            debugLog("NextTasks TasksApi ignored native user lookup for stale generation=" + generation)
             return
         }
         var userId = ""
@@ -285,19 +304,19 @@ Item {
             var parsed = JSON.parse(responseText || "{}")
             userId = String(parsed && parsed.ocs && parsed.ocs.data && parsed.ocs.data.id ? parsed.ocs.data.id : "")
         } catch (e) {
-            console.log("NextTasks TasksApi native user lookup JSON parse failed")
+            debugLog("NextTasks TasksApi native user lookup JSON parse failed")
         }
         if (userId.length === 0) {
             userId = String(pending.userName || "")
         }
         var home = "/remote.php/dav/calendars/" + encodeURIComponent(userId) + "/"
-        console.log(
+        debugLog(
             "NextTasks TasksApi native user lookup result"
             + " generation=" + generation
             + " userIdHash=" + AuthCore.stableHash(userId)
             + " accountUserHash=" + AuthCore.stableHash(pending.userName)
         )
-        console.log(
+        debugLog(
             "NextTasks TasksApi native PROPFIND calendars"
             + " generation=" + generation
             + " serverUrlConfigured=" + AuthCore.hasValue(pending.base)
@@ -308,19 +327,26 @@ Item {
 
     function handleNativeUserLookupFailed(message, generation) {
         var pending = pendingNativeCalendarLoads[String(generation)]
+        var pendingTrash = pendingNativeTrashLoads[String(generation)]
         if (!pending) {
+            if (pendingTrash) {
+                var trashHome = "/remote.php/dav/calendars/" + encodeURIComponent(pendingTrash.userName) + "/"
+                debugLog("NextTasks TasksApi native trash user lookup failed; falling back to account username")
+                calDavNetwork.loadTrashCollections(generation, pendingTrash.base, pendingTrash.userName, pendingTrash.secret, trashHome)
+                return
+            }
             failed(message, generation)
             return
         }
         var home = "/remote.php/dav/calendars/" + encodeURIComponent(pending.userName) + "/"
-        console.log("NextTasks TasksApi native user lookup failed; falling back to account username")
+        debugLog("NextTasks TasksApi native user lookup failed; falling back to account username")
         calDavNetwork.loadCalendars(generation, pending.base, pending.userName, pending.secret, home)
     }
 
     function handleNativeCalendarsLoaded(responseText, calendarHomeHref, generation) {
         delete pendingNativeCalendarLoads[String(generation)]
         var entries = parseCalendars(responseText, "", calendarHomeHref)
-        console.log(
+        debugLog(
             "NextTasks TasksApi native PROPFIND calendars success"
             + " generation=" + generation
             + " entries=" + entries.length
@@ -331,8 +357,150 @@ Item {
 
     function handleNativeTasksLoaded(calendarTitle, calendarHref, responseText, generation) {
         var entries = parseTasks(responseText)
-        console.log("NextTasks TasksApi native PROPFIND tasks success entries=" + entries.length)
+        debugLog("NextTasks TasksApi native PROPFIND tasks success entries=" + entries.length)
         tasksLoaded(calendarTitle || i18n.tr("Tasks"), calendarHref || "", entries, generation)
+    }
+
+    function loadTrash(serverUrl, userName, secret, calendarHomeHref) {
+        var generation = requestGeneration
+        var base = AuthCore.normalizeServerUrl(serverUrl)
+        var home = String(calendarHomeHref || "")
+        if (typeof calDavNetwork === "undefined") {
+            trashLoadFailed(i18n.tr("Trash bin is not available."), generation)
+            return
+        }
+        if (base.length === 0 || userName.length === 0 || secret.length === 0) {
+            trashLoadFailed(i18n.tr("Trash bin request is incomplete."), generation)
+            return
+        }
+        pendingNativeTrashLoads[String(generation)] = {
+            "base": base,
+            "userName": userName,
+            "secret": secret,
+            "collections": [],
+            "trashBinHref": "",
+            "retentionSeconds": 0
+        }
+        if (home.length === 0) {
+            debugLog("NextTasks TasksApi native trash user lookup generation=" + generation)
+            calDavNetwork.lookupUser(generation, base, userName, secret)
+            return
+        }
+        debugLog("NextTasks TasksApi PROPFIND trash collections")
+        calDavNetwork.loadTrashCollections(generation, base, userName, secret, home)
+    }
+
+    function handleNativeTrashUserLookupLoaded(responseText, generation) {
+        var pending = pendingNativeTrashLoads[String(generation)]
+        if (!pending) {
+            return
+        }
+        var userId = ""
+        try {
+            var parsed = JSON.parse(responseText || "{}")
+            userId = String(parsed && parsed.ocs && parsed.ocs.data && parsed.ocs.data.id ? parsed.ocs.data.id : "")
+        } catch (e) {
+            debugLog("NextTasks TasksApi native trash user lookup JSON parse failed")
+        }
+        if (userId.length === 0) {
+            userId = String(pending.userName || "")
+        }
+        var home = "/remote.php/dav/calendars/" + encodeURIComponent(userId) + "/"
+        debugLog(
+            "NextTasks TasksApi native trash user lookup result"
+            + " generation=" + generation
+            + " userIdHash=" + AuthCore.stableHash(userId)
+            + " accountUserHash=" + AuthCore.stableHash(pending.userName)
+            + " homeOwner=" + hrefOwnerFingerprint(home)
+        )
+        calDavNetwork.loadTrashCollections(generation, pending.base, pending.userName, pending.secret, home)
+    }
+
+    function restoreTrashItem(serverUrl, userName, secret, item, trashBinHref) {
+        var generation = requestGeneration
+        var base = AuthCore.normalizeServerUrl(serverUrl)
+        var href = String(item && item.href ? item.href : "")
+        var bin = String(trashBinHref || "")
+        if (typeof calDavNetwork === "undefined") {
+            trashItemRestoreFailed(i18n.tr("Trash restore is not available."), generation)
+            return
+        }
+        if (base.length === 0 || userName.length === 0 || secret.length === 0 || href.length === 0 || bin.length === 0) {
+            trashItemRestoreFailed(i18n.tr("Trash restore request is incomplete."), generation)
+            return
+        }
+        pendingNativeTrashRestores[String(generation)] = item || ({})
+        debugLog("NextTasks TasksApi MOVE restore trash item type=" + String(item && item.type ? item.type : ""))
+        calDavNetwork.restoreTrashItem(generation, base, userName, secret, href, bin)
+    }
+
+    function handleNativeTrashCollectionsLoaded(responseText, calendarHomeHref, generation) {
+        var pending = pendingNativeTrashLoads[String(generation)]
+        if (!pending) {
+            return
+        }
+        var parsed = parseTrashCollections(responseText, calendarHomeHref)
+        pending.collections = parsed.items
+        pending.trashBinHref = parsed.trashBinHref.length > 0 ? parsed.trashBinHref : calendarHomeHref
+        pending.retentionSeconds = parsed.retentionSeconds
+        debugLog(
+            "NextTasks TasksApi trash collections parsed"
+            + " generation=" + generation
+            + " deletedCalendars=" + pending.collections.length
+            + " trashBinAvailable=" + AuthCore.hasValue(pending.trashBinHref)
+            + " homeOwner=" + hrefOwnerFingerprint(calendarHomeHref)
+        )
+        if (pending.trashBinHref.length === 0) {
+            delete pendingNativeTrashLoads[String(generation)]
+            trashLoaded(pending.collections, "", pending.retentionSeconds, generation)
+            return
+        }
+        debugLog("NextTasks TasksApi REPORT trash objects")
+        calDavNetwork.loadTrashObjects(generation, pending.base, pending.userName, pending.secret, pending.trashBinHref)
+    }
+
+    function trashBinHrefForCalendarHome(calendarHomeHref) {
+        var home = String(calendarHomeHref || "")
+        if (home.length === 0) {
+            return ""
+        }
+        if (!/\/trashbin\/?$/i.test(home)) {
+            if (!home.endsWith("/")) {
+                home += "/"
+            }
+            home += "trashbin/"
+        }
+        return home
+    }
+
+    function handleNativeTrashObjectsLoaded(responseText, trashBinHref, generation) {
+        var pending = pendingNativeTrashLoads[String(generation)]
+        if (!pending) {
+            return
+        }
+        delete pendingNativeTrashLoads[String(generation)]
+        var objects = parseTrashObjects(responseText)
+        var combined = pending.collections.concat(objects)
+        debugLog("NextTasks TasksApi trash loaded items=" + combined.length
+                    + " deletedCalendars=" + pending.collections.length
+                    + " deletedTasks=" + objects.length)
+        trashLoaded(combined, trashBinHref || pending.trashBinHref, pending.retentionSeconds, generation)
+    }
+
+    function handleNativeTrashLoadFailed(message, generation) {
+        delete pendingNativeTrashLoads[String(generation)]
+        trashLoadFailed(message, generation)
+    }
+
+    function handleNativeTrashItemRestored(trashItemHref, generation) {
+        var item = pendingNativeTrashRestores[String(generation)] || ({})
+        delete pendingNativeTrashRestores[String(generation)]
+        trashItemRestored(item, generation)
+    }
+
+    function handleNativeTrashItemRestoreFailed(message, generation) {
+        delete pendingNativeTrashRestores[String(generation)]
+        trashItemRestoreFailed(message, generation)
     }
 
     function createCalendar(serverUrl, userName, secret, title) {
@@ -346,7 +514,7 @@ Item {
             calendarCreateFailed(i18n.tr("Task list name is required."), generation)
             return
         }
-        console.log("NextTasks TasksApi MKCOL calendar via native helper")
+        debugLog("NextTasks TasksApi MKCOL calendar via native helper")
         calDavNetwork.createCalendar(generation, serverUrl, userName, secret, displayName)
     }
 
@@ -360,7 +528,7 @@ Item {
             calendarUpdateFailed(i18n.tr("Task list name is required."), generation)
             return
         }
-        console.log("NextTasks TasksApi PROPPATCH calendar via native helper")
+        debugLog("NextTasks TasksApi PROPPATCH calendar via native helper")
         calDavNetwork.updateCalendar(generation, serverUrl, userName, secret, calendarHref, String(title || "").trim(), String(color || ""))
     }
 
@@ -374,7 +542,7 @@ Item {
             calendarDeleteFailed(i18n.tr("Task list delete request is incomplete."), generation)
             return
         }
-        console.log("NextTasks TasksApi DELETE calendar via native helper")
+        debugLog("NextTasks TasksApi DELETE calendar via native helper")
         calDavNetwork.deleteCalendar(generation, serverUrl, userName, secret, calendarHref)
     }
 
@@ -393,12 +561,12 @@ Item {
             pendingNativeCompletion = {
                 "completed": completed
             }
-            console.log("NextTasks TasksApi native PUT task completion serverUrlConfigured=" + AuthCore.hasValue(base) + " completed=" + completed)
+            debugLog("NextTasks TasksApi native PUT task completion serverUrlConfigured=" + AuthCore.hasValue(base) + " completed=" + completed)
             calDavNetwork.putTask(generation, serverUrl, userName, secret, href, body, String(task.etag || ""), false, "completion")
             return
         }
         var url = authenticatedUrl(href.indexOf("http") === 0 ? href : base + href, userName)
-        console.log("NextTasks TasksApi PUT task completion serverUrlConfigured=" + AuthCore.hasValue(base) + " completed=" + completed)
+        debugLog("NextTasks TasksApi PUT task completion serverUrlConfigured=" + AuthCore.hasValue(base) + " completed=" + completed)
         var xhr = new XMLHttpRequest()
         xhr.open("PUT", url)
         xhr.timeout = 15000
@@ -410,24 +578,24 @@ Item {
         xhr.onreadystatechange = function() {
             if (xhr.readyState !== XMLHttpRequest.DONE) return
             if (xhr.status === 412) {
-                console.log("NextTasks TasksApi PUT task completion conflict")
+                debugLog("NextTasks TasksApi PUT task completion conflict")
                 taskCompletionFailed(i18n.tr("Server version changed. Refresh tasks and try again."), generation)
                 return
             }
             if (xhr.status < 200 || xhr.status >= 300) {
-                console.log("NextTasks TasksApi PUT task completion failed httpStatus=" + xhr.status)
+                debugLog("NextTasks TasksApi PUT task completion failed httpStatus=" + xhr.status)
                 taskCompletionFailed(i18n.tr("Task update failed with HTTP %1.").arg(xhr.status), generation)
                 return
             }
-            console.log("NextTasks TasksApi PUT task completion success")
+            debugLog("NextTasks TasksApi PUT task completion success")
             taskCompletionUpdated(completed, generation)
         }
         xhr.onerror = function() {
-            console.log("NextTasks TasksApi PUT task completion network error")
+            debugLog("NextTasks TasksApi PUT task completion network error")
             taskCompletionFailed(i18n.tr("Task update failed because the network request could not be completed."), generation)
         }
         xhr.ontimeout = function() {
-            console.log("NextTasks TasksApi PUT task completion timeout")
+            debugLog("NextTasks TasksApi PUT task completion timeout")
             taskCompletionFailed(i18n.tr("Task update timed out."), generation)
         }
         xhr.send(body)
@@ -456,12 +624,12 @@ Item {
                 "fallbackEtag": task.etag || "",
                 "kind": "update"
             }
-            console.log("NextTasks TasksApi native PUT task fields serverUrlConfigured=" + AuthCore.hasValue(base))
+            debugLog("NextTasks TasksApi native PUT task fields serverUrlConfigured=" + AuthCore.hasValue(base))
             calDavNetwork.putTask(generation, serverUrl, userName, secret, href, body, String(task.etag || ""), false, "update")
             return
         }
         var url = authenticatedUrl(href.indexOf("http") === 0 ? href : base + href, userName)
-        console.log("NextTasks TasksApi PUT task fields serverUrlConfigured=" + AuthCore.hasValue(base))
+        debugLog("NextTasks TasksApi PUT task fields serverUrlConfigured=" + AuthCore.hasValue(base))
         var xhr = new XMLHttpRequest()
         xhr.open("PUT", url)
         xhr.timeout = 15000
@@ -473,25 +641,25 @@ Item {
         xhr.onreadystatechange = function() {
             if (xhr.readyState !== XMLHttpRequest.DONE) return
             if (xhr.status === 412) {
-                console.log("NextTasks TasksApi PUT task fields conflict")
+                debugLog("NextTasks TasksApi PUT task fields conflict")
                 fetchConflictTask(serverUrl, userName, secret, task, i18n.tr("Server version changed. Local task was not uploaded."), generation)
                 return
             }
             if (xhr.status < 200 || xhr.status >= 300) {
-                console.log("NextTasks TasksApi PUT task fields failed httpStatus=" + xhr.status)
+                debugLog("NextTasks TasksApi PUT task fields failed httpStatus=" + xhr.status)
                 taskUpdateFailed(i18n.tr("Task update failed with HTTP %1.").arg(xhr.status), generation)
                 return
             }
-            console.log("NextTasks TasksApi PUT task fields success")
+            debugLog("NextTasks TasksApi PUT task fields success")
             var responseEtag = decodeName(xhr.getResponseHeader("ETag") || xhr.getResponseHeader("Etag") || "")
             fetchWrittenTask(serverUrl, userName, secret, href, task, updatedTodo, responseEtag.length > 0 ? responseEtag : (task.etag || ""), "update", generation)
         }
         xhr.onerror = function() {
-            console.log("NextTasks TasksApi PUT task fields network error")
+            debugLog("NextTasks TasksApi PUT task fields network error")
             taskUpdateFailed(i18n.tr("Task update failed because the network request could not be completed."), generation)
         }
         xhr.ontimeout = function() {
-            console.log("NextTasks TasksApi PUT task fields timeout")
+            debugLog("NextTasks TasksApi PUT task fields timeout")
             taskUpdateFailed(i18n.tr("Task update timed out."), generation)
         }
         xhr.send(body)
@@ -520,12 +688,12 @@ Item {
                 "fallbackEtag": "",
                 "kind": "create"
             }
-            console.log("NextTasks TasksApi native PUT new task serverUrlConfigured=" + AuthCore.hasValue(base))
+            debugLog("NextTasks TasksApi native PUT new task serverUrlConfigured=" + AuthCore.hasValue(base))
             calDavNetwork.putTask(generation, serverUrl, userName, secret, href, body, "", true, "create")
             return
         }
         var url = authenticatedUrl(href.indexOf("http") === 0 ? href : base + href, userName)
-        console.log("NextTasks TasksApi PUT new task serverUrlConfigured=" + AuthCore.hasValue(base))
+        debugLog("NextTasks TasksApi PUT new task serverUrlConfigured=" + AuthCore.hasValue(base))
         var xhr = new XMLHttpRequest()
         xhr.open("PUT", url)
         xhr.timeout = 15000
@@ -535,25 +703,25 @@ Item {
         xhr.onreadystatechange = function() {
             if (xhr.readyState !== XMLHttpRequest.DONE) return
             if (xhr.status === 409 || xhr.status === 412) {
-                console.log("NextTasks TasksApi PUT new task conflict httpStatus=" + xhr.status)
+                debugLog("NextTasks TasksApi PUT new task conflict httpStatus=" + xhr.status)
                 taskCreateFailed(i18n.tr("Server rejected the new task because that resource already exists."), generation)
                 return
             }
             if (xhr.status < 200 || xhr.status >= 300) {
-                console.log("NextTasks TasksApi PUT new task failed httpStatus=" + xhr.status)
+                debugLog("NextTasks TasksApi PUT new task failed httpStatus=" + xhr.status)
                 taskCreateFailed(i18n.tr("Task create failed with HTTP %1.").arg(xhr.status), generation)
                 return
             }
-            console.log("NextTasks TasksApi PUT new task success")
+            debugLog("NextTasks TasksApi PUT new task success")
             var responseEtag = decodeName(xhr.getResponseHeader("ETag") || xhr.getResponseHeader("Etag") || "")
             fetchWrittenTask(serverUrl, userName, secret, href, task, updatedTodo, responseEtag, "create", generation)
         }
         xhr.onerror = function() {
-            console.log("NextTasks TasksApi PUT new task network error")
+            debugLog("NextTasks TasksApi PUT new task network error")
             taskCreateFailed(i18n.tr("Task create failed because the network request could not be completed."), generation)
         }
         xhr.ontimeout = function() {
-            console.log("NextTasks TasksApi PUT new task timeout")
+            debugLog("NextTasks TasksApi PUT new task timeout")
             taskCreateFailed(i18n.tr("Task create timed out."), generation)
         }
         xhr.send(body)
@@ -575,12 +743,12 @@ Item {
                 "userName": userName,
                 "secret": secret
             }
-            console.log("NextTasks TasksApi native DELETE task serverUrlConfigured=" + AuthCore.hasValue(base))
+            debugLog("NextTasks TasksApi native DELETE task serverUrlConfigured=" + AuthCore.hasValue(base))
             calDavNetwork.deleteTaskObject(generation, serverUrl, userName, secret, href, String(task.etag || ""))
             return
         }
         var url = authenticatedUrl(href.indexOf("http") === 0 ? href : base + href, userName)
-        console.log("NextTasks TasksApi DELETE task serverUrlConfigured=" + AuthCore.hasValue(base))
+        debugLog("NextTasks TasksApi DELETE task serverUrlConfigured=" + AuthCore.hasValue(base))
         var xhr = new XMLHttpRequest()
         xhr.open("DELETE", url)
         xhr.timeout = 15000
@@ -591,29 +759,29 @@ Item {
         xhr.onreadystatechange = function() {
             if (xhr.readyState !== XMLHttpRequest.DONE) return
             if (xhr.status === 404 || xhr.status === 410) {
-                console.log("NextTasks TasksApi DELETE task already gone")
+                debugLog("NextTasks TasksApi DELETE task already gone")
                 taskDeleted(task, generation)
                 return
             }
             if (xhr.status === 412) {
-                console.log("NextTasks TasksApi DELETE task conflict")
+                debugLog("NextTasks TasksApi DELETE task conflict")
                 fetchConflictTask(serverUrl, userName, secret, task, i18n.tr("Server version changed. Local delete was not uploaded."), generation)
                 return
             }
             if (xhr.status < 200 || xhr.status >= 300) {
-                console.log("NextTasks TasksApi DELETE task failed httpStatus=" + xhr.status)
+                debugLog("NextTasks TasksApi DELETE task failed httpStatus=" + xhr.status)
                 taskDeleteFailed(i18n.tr("Task delete failed with HTTP %1.").arg(xhr.status), generation)
                 return
             }
-            console.log("NextTasks TasksApi DELETE task success")
+            debugLog("NextTasks TasksApi DELETE task success")
             taskDeleted(task, generation)
         }
         xhr.onerror = function() {
-            console.log("NextTasks TasksApi DELETE task network error")
+            debugLog("NextTasks TasksApi DELETE task network error")
             taskDeleteFailed(i18n.tr("Task delete failed because the network request could not be completed."), generation)
         }
         xhr.ontimeout = function() {
-            console.log("NextTasks TasksApi DELETE task timeout")
+            debugLog("NextTasks TasksApi DELETE task timeout")
             taskDeleteFailed(i18n.tr("Task delete timed out."), generation)
         }
         xhr.send()
@@ -640,7 +808,7 @@ Item {
         pendingNativeMoveSourceTask = task
         pendingNativeMoveTargetCalendar = targetCalendar
         pendingNativeMoveDestinationHref = destinationHref
-        console.log("NextTasks TasksApi MOVE task via native helper")
+        debugLog("NextTasks TasksApi MOVE task via native helper")
         calDavNetwork.moveTask(generation, serverUrl, userName, secret, sourceHref, destinationHref)
     }
 
@@ -697,16 +865,16 @@ Item {
             var completed = pendingNativeCompletion.completed === true
             pendingNativeCompletion = ({})
             if (code === 412) {
-                console.log("NextTasks TasksApi native PUT task completion conflict")
+                debugLog("NextTasks TasksApi native PUT task completion conflict")
                 taskCompletionFailed(i18n.tr("Server version changed. Refresh tasks and try again."), generation)
                 return
             }
             if (code < 200 || code >= 300) {
-                console.log("NextTasks TasksApi native PUT task completion failed httpStatus=" + code)
+                debugLog("NextTasks TasksApi native PUT task completion failed httpStatus=" + code)
                 taskCompletionFailed(i18n.tr("Task update failed with HTTP %1.").arg(code), generation)
                 return
             }
-            console.log("NextTasks TasksApi native PUT task completion success")
+            debugLog("NextTasks TasksApi native PUT task completion success")
             taskCompletionUpdated(completed, generation)
             return
         }
@@ -714,17 +882,17 @@ Item {
         var pending = pendingNativeWrite || ({})
         pendingNativeWrite = ({})
         if (kind === "update" && code === 412) {
-            console.log("NextTasks TasksApi native PUT task fields conflict")
+            debugLog("NextTasks TasksApi native PUT task fields conflict")
             fetchConflictTask(pending.serverUrl || "", pending.userName || "", pending.secret || "", pending.sourceTask || null, i18n.tr("Server version changed. Local task was not uploaded."), generation)
             return
         }
         if (kind === "create" && (code === 409 || code === 412)) {
-            console.log("NextTasks TasksApi native PUT new task conflict httpStatus=" + code)
+            debugLog("NextTasks TasksApi native PUT new task conflict httpStatus=" + code)
             taskCreateFailed(i18n.tr("Server rejected the new task because that resource already exists."), generation)
             return
         }
         if (code < 200 || code >= 300) {
-            console.log("NextTasks TasksApi native PUT task failed httpStatus=" + code + " kind=" + kind)
+            debugLog("NextTasks TasksApi native PUT task failed httpStatus=" + code + " kind=" + kind)
             if (kind === "create") {
                 taskCreateFailed(i18n.tr("Task create failed with HTTP %1.").arg(code), generation)
             } else {
@@ -732,7 +900,7 @@ Item {
             }
             return
         }
-        console.log("NextTasks TasksApi native PUT task success kind=" + kind)
+        debugLog("NextTasks TasksApi native PUT task success kind=" + kind)
         fetchWrittenTask(
             pending.serverUrl || "",
             pending.userName || "",
@@ -767,21 +935,21 @@ Item {
         pendingNativeDeleteTask = ({})
         var task = pending.task || ({})
         if (code === 404 || code === 410) {
-            console.log("NextTasks TasksApi native DELETE task already gone")
+            debugLog("NextTasks TasksApi native DELETE task already gone")
             taskDeleted(task, generation)
             return
         }
         if (code === 412) {
-            console.log("NextTasks TasksApi native DELETE task conflict")
+            debugLog("NextTasks TasksApi native DELETE task conflict")
             fetchConflictTask(pending.serverUrl || "", pending.userName || "", pending.secret || "", task, i18n.tr("Server version changed. Local delete was not uploaded."), generation)
             return
         }
         if (code < 200 || code >= 300) {
-            console.log("NextTasks TasksApi native DELETE task failed httpStatus=" + code)
+            debugLog("NextTasks TasksApi native DELETE task failed httpStatus=" + code)
             taskDeleteFailed(i18n.tr("Task delete failed with HTTP %1.").arg(code), generation)
             return
         }
-        console.log("NextTasks TasksApi native DELETE task success")
+        debugLog("NextTasks TasksApi native DELETE task success")
         taskDeleted(task, generation)
     }
 
@@ -797,12 +965,12 @@ Item {
                 "localTask": localTask,
                 "message": message
             }
-            console.log("NextTasks TasksApi native PROPFIND conflict task serverUrlConfigured=" + AuthCore.hasValue(base))
+            debugLog("NextTasks TasksApi native PROPFIND conflict task serverUrlConfigured=" + AuthCore.hasValue(base))
             calDavNetwork.fetchTaskObject(generation, serverUrl, userName, secret, href, "conflict")
             return
         }
         var url = authenticatedUrl(href.indexOf("http") === 0 ? href : base + href, userName)
-        console.log("NextTasks TasksApi PROPFIND conflict task serverUrlConfigured=" + AuthCore.hasValue(base))
+        debugLog("NextTasks TasksApi PROPFIND conflict task serverUrlConfigured=" + AuthCore.hasValue(base))
         var xhr = new XMLHttpRequest()
         xhr.open("PROPFIND", url)
         xhr.timeout = 15000
@@ -812,7 +980,7 @@ Item {
         xhr.onreadystatechange = function() {
             if (xhr.readyState !== XMLHttpRequest.DONE) return
             if (xhr.status < 200 || xhr.status >= 300) {
-                console.log("NextTasks TasksApi PROPFIND conflict task failed httpStatus=" + xhr.status)
+                debugLog("NextTasks TasksApi PROPFIND conflict task failed httpStatus=" + xhr.status)
                 taskConflict(localTask, null, message, generation)
                 return
             }
@@ -825,11 +993,11 @@ Item {
             taskConflict(localTask, serverTask, message, generation)
         }
         xhr.onerror = function() {
-            console.log("NextTasks TasksApi PROPFIND conflict task network error")
+            debugLog("NextTasks TasksApi PROPFIND conflict task network error")
             taskConflict(localTask, null, message, generation)
         }
         xhr.ontimeout = function() {
-            console.log("NextTasks TasksApi PROPFIND conflict task timeout")
+            debugLog("NextTasks TasksApi PROPFIND conflict task timeout")
             taskConflict(localTask, null, message, generation)
         }
         xhr.send("<?xml version=\"1.0\"?><d:propfind xmlns:d=\"DAV:\" xmlns:c=\"urn:ietf:params:xml:ns:caldav\"><d:prop><d:getetag/><c:calendar-data/></d:prop></d:propfind>")
@@ -850,13 +1018,13 @@ Item {
                 "fallbackEtag": fallbackEtag,
                 "kind": kind
             }
-            console.log("NextTasks TasksApi native PROPFIND written task kind=" + kind + " serverUrlConfigured=" + AuthCore.hasValue(base))
+            debugLog("NextTasks TasksApi native PROPFIND written task kind=" + kind + " serverUrlConfigured=" + AuthCore.hasValue(base))
             calDavNetwork.fetchTaskObject(generation, serverUrl, userName, secret, taskHref, String(kind || "update"))
             return
         }
 
         var url = authenticatedUrl(taskHref.indexOf("http") === 0 ? taskHref : base + taskHref, userName)
-        console.log("NextTasks TasksApi PROPFIND written task kind=" + kind + " serverUrlConfigured=" + AuthCore.hasValue(base))
+        debugLog("NextTasks TasksApi PROPFIND written task kind=" + kind + " serverUrlConfigured=" + AuthCore.hasValue(base))
         var xhr = new XMLHttpRequest()
         xhr.open("PROPFIND", url)
         xhr.timeout = 15000
@@ -866,7 +1034,7 @@ Item {
         xhr.onreadystatechange = function() {
             if (xhr.readyState !== XMLHttpRequest.DONE) return
             if (xhr.status < 200 || xhr.status >= 300) {
-                console.log("NextTasks TasksApi PROPFIND written task failed httpStatus=" + xhr.status + " kind=" + kind)
+                debugLog("NextTasks TasksApi PROPFIND written task failed httpStatus=" + xhr.status + " kind=" + kind)
                 emitWrittenTaskFallback(sourceTask, taskHref, fallbackTodo, fallbackEtag, kind, generation)
                 return
             }
@@ -879,7 +1047,7 @@ Item {
             parsed.calendarTitle = sourceTask.calendarTitle || ""
             parsed.calendarHref = sourceTask.calendarHref || ""
             parsed.localModified = Number(sourceTask.localModified || 0)
-            console.log("NextTasks TasksApi PROPFIND written task success kind=" + kind + " etagAvailable=" + AuthCore.hasValue(parsed.etag))
+            debugLog("NextTasks TasksApi PROPFIND written task success kind=" + kind + " etagAvailable=" + AuthCore.hasValue(parsed.etag))
             if (kind === "create") {
                 taskCreated(parsed, generation)
             } else {
@@ -887,11 +1055,11 @@ Item {
             }
         }
         xhr.onerror = function() {
-            console.log("NextTasks TasksApi PROPFIND written task network error kind=" + kind)
+            debugLog("NextTasks TasksApi PROPFIND written task network error kind=" + kind)
             emitWrittenTaskFallback(sourceTask, taskHref, fallbackTodo, fallbackEtag, kind, generation)
         }
         xhr.ontimeout = function() {
-            console.log("NextTasks TasksApi PROPFIND written task timeout kind=" + kind)
+            debugLog("NextTasks TasksApi PROPFIND written task timeout kind=" + kind)
             emitWrittenTaskFallback(sourceTask, taskHref, fallbackTodo, fallbackEtag, kind, generation)
         }
         xhr.send("<?xml version=\"1.0\"?><d:propfind xmlns:d=\"DAV:\" xmlns:c=\"urn:ietf:params:xml:ns:caldav\"><d:prop><d:getetag/><c:calendar-data/></d:prop></d:propfind>")
@@ -907,7 +1075,7 @@ Item {
             var localTask = pending.localTask || null
             var message = pending.message || i18n.tr("Server version changed. Local task was not uploaded.")
             if (code < 200 || code >= 300) {
-                console.log("NextTasks TasksApi native PROPFIND conflict task failed httpStatus=" + code)
+                debugLog("NextTasks TasksApi native PROPFIND conflict task failed httpStatus=" + code)
                 taskConflict(localTask, null, message, generation)
                 return
             }
@@ -922,7 +1090,7 @@ Item {
         }
 
         if (code < 200 || code >= 300) {
-            console.log("NextTasks TasksApi native PROPFIND written task failed httpStatus=" + code + " kind=" + key)
+            debugLog("NextTasks TasksApi native PROPFIND written task failed httpStatus=" + code + " kind=" + key)
             emitWrittenTaskFallback(pending.sourceTask || ({}), pending.href || "", pending.fallbackTodo || "", pending.fallbackEtag || "", pending.kind || key, generation)
             return
         }
@@ -936,7 +1104,7 @@ Item {
         parsed.calendarTitle = sourceTask.calendarTitle || ""
         parsed.calendarHref = sourceTask.calendarHref || ""
         parsed.localModified = Number(sourceTask.localModified || 0)
-        console.log("NextTasks TasksApi native PROPFIND written task success kind=" + key + " etagAvailable=" + AuthCore.hasValue(parsed.etag))
+        debugLog("NextTasks TasksApi native PROPFIND written task success kind=" + key + " etagAvailable=" + AuthCore.hasValue(parsed.etag))
         if ((pending.kind || key) === "create") {
             taskCreated(parsed, generation)
         } else {
@@ -965,7 +1133,7 @@ Item {
         fallback.calendarTitle = sourceTask.calendarTitle || ""
         fallback.calendarHref = sourceTask.calendarHref || ""
         fallback.localModified = Number(sourceTask.localModified || 0)
-        console.log("NextTasks TasksApi using written task fallback kind=" + kind + " etagAvailable=" + AuthCore.hasValue(fallback.etag))
+        debugLog("NextTasks TasksApi using written task fallback kind=" + kind + " etagAvailable=" + AuthCore.hasValue(fallback.etag))
         if (kind === "create") {
             taskCreated(fallback, generation)
         } else {
@@ -987,7 +1155,7 @@ Item {
                 continue
             }
             if (home.length > 0 && normalizedHref.indexOf(home + "/") !== 0) {
-                console.log(
+                debugLog(
                     "NextTasks TasksApi skipped calendar outside discovered home"
                     + " homeOwner=" + hrefOwnerFingerprint(home)
                     + " hrefOwner=" + hrefOwnerFingerprint(href)
@@ -997,9 +1165,21 @@ Item {
             if (!name || href.replace(/\/+$/, "").match(new RegExp("/calendars/" + escapeRegExp(userName) + "$"))) {
                 continue
             }
-            entries.push({"title": name, "subtitle": i18n.tr("Task calendar"), "detail": textOf(block, "getctag"), "href": href, "type": "calendar", "color": normalizeCalendarColor(textOf(block, "calendar-color"))})
+            var readOnly = calendarReadOnly(block)
+            entries.push({"title": name, "subtitle": readOnly ? i18n.tr("Read-only task calendar") : i18n.tr("Task calendar"), "detail": textOf(block, "getctag"), "href": href, "type": "calendar", "color": normalizeCalendarColor(textOf(block, "calendar-color")), "readOnly": readOnly})
         }
         return entries
+    }
+
+    function calendarReadOnly(block) {
+        var text = String(block || "")
+        var hasRead = /<[^:>]*:?read\s*\/?>/i.test(text)
+        var hasWrite = /<[^:>]*:?write\s*\/?>/i.test(text)
+            || /<[^:>]*:?write-content\s*\/?>/i.test(text)
+            || /<[^:>]*:?write-properties\s*\/?>/i.test(text)
+            || /<[^:>]*:?bind\s*\/?>/i.test(text)
+            || /<[^:>]*:?unbind\s*\/?>/i.test(text)
+        return hasRead && !hasWrite
     }
 
     function normalizeCalendarColor(value) {
@@ -1035,6 +1215,75 @@ Item {
             if (a.completed !== b.completed) return a.completed ? 1 : -1
             return String(a.due || "").localeCompare(String(b.due || ""))
         })
+        return entries
+    }
+
+    function parseTrashCollections(xml, calendarHomeHref) {
+        var result = {
+            "items": [],
+            "trashBinHref": "",
+            "retentionSeconds": 0
+        }
+        var home = normalizedDavHref(calendarHomeHref)
+        var responseRe = /<[^:>]*:?response[\s\S]*?<\/[^:>]*:?response>/g
+        var matches = String(xml || "").match(responseRe) || []
+        for (var i = 0; i < matches.length; ++i) {
+            var block = matches[i]
+            var href = textOf(block, "href")
+            var normalizedHref = normalizedDavHref(href)
+            if (home.length > 0 && normalizedHref.indexOf(home + "/") !== 0 && normalizedHref !== home) {
+                continue
+            }
+            if (/<[^:>]*:?trash-bin(?:\s|>|\/)/i.test(block)) {
+                result.trashBinHref = href
+                result.retentionSeconds = parseInt(textOf(block, "trash-bin-retention-duration"), 10) || 0
+                continue
+            }
+            if (!/<[^:>]*:?deleted-calendar(?:\s|>|\/)/i.test(block)) {
+                continue
+            }
+            var title = decodeName(textOf(block, "displayname")) || i18n.tr("Untitled list")
+            result.items.push({
+                "type": "trashCalendar",
+                "title": title,
+                "subtitle": i18n.tr("Deleted task list"),
+                "href": href,
+                "sourceCalendarUri": textOf(block, "source-calendar-uri") || textOf(block, "calendar-uri"),
+                "deletedAt": textOf(block, "deleted-at"),
+                "deletedAtText": formatDateValue(textOf(block, "deleted-at")),
+                "color": normalizeCalendarColor(textOf(block, "calendar-color"))
+            })
+        }
+        return result
+    }
+
+    function parseTrashObjects(xml) {
+        var entries = []
+        var responseRe = /<[^:>]*:?response[\s\S]*?<\/[^:>]*:?response>/g
+        var matches = String(xml || "").match(responseRe) || []
+        for (var i = 0; i < matches.length; ++i) {
+            var block = matches[i]
+            var href = textOf(block, "href")
+            var etag = decodeName(textOf(block, "getetag"))
+            var deletedAt = textOf(block, "deleted-at")
+            var calendarUri = textOf(block, "calendar-uri") || textOf(block, "source-calendar-uri")
+            var data = decodeName(textOf(block, "calendar-data"))
+            var todos = data.match(/BEGIN:VTODO[\s\S]*?END:VTODO/g) || []
+            for (var j = 0; j < todos.length; ++j) {
+                var todo = parseTodo(todos[j], href, etag)
+                entries.push({
+                    "type": "trashTask",
+                    "title": todo.title || i18n.tr("Untitled task"),
+                    "subtitle": i18n.tr("Deleted task"),
+                    "href": href,
+                    "uid": todo.uid || "",
+                    "calendarUri": calendarUri || "",
+                    "deletedAt": deletedAt,
+                    "deletedAtText": formatDateValue(deletedAt),
+                    "rawTodo": todo.rawTodo || ""
+                })
+            }
+        }
         return entries
     }
 
@@ -1135,6 +1384,7 @@ Item {
         lines = removeProperty(lines, "LOCATION")
         lines = removeProperty(lines, "URL")
         lines = removeProperty(lines, "CATEGORIES")
+        lines = removeProperty(lines, "RELATED-TO")
         lines = removeProperty(lines, "STATUS")
         lines = removeProperty(lines, "COMPLETED")
         lines = removeProperty(lines, "PERCENT-COMPLETE")
@@ -1168,6 +1418,9 @@ Item {
         }
         if (String(changes.tags || "").length > 0) {
             additions.push("CATEGORIES:" + escapeCategories(changes.tags))
+        }
+        if (String(changes.parentUid || "").length > 0) {
+            additions.push("RELATED-TO:" + escapeIcs(changes.parentUid))
         }
         var status = normalizeStatus(changes.status, completed)
         var percent = normalizePercent(changes.percentComplete)
@@ -1400,6 +1653,11 @@ Item {
         var re = new RegExp("<[^:>]*:?" + localName + "[^>]*>([\\s\\S]*?)<\\/[^:>]*:?" + localName + ">", "i")
         var m = re.exec(block)
         return m ? String(m[1]).replace(/<[^>]+>/g, "").trim() : ""
+    }
+    function propBlock(block, localName) {
+        var re = new RegExp("<[^:>]*:?" + localName + "[^>]*>([\\s\\S]*?)<\\/[^:>]*:?" + localName + ">", "i")
+        var m = re.exec(block)
+        return m ? String(m[1]) : ""
     }
     function nestedHref(block, localName) {
         var re = new RegExp("<[^:>]*:?" + localName + "[^>]*>([\\s\\S]*?)<\\/[^:>]*:?" + localName + ">", "i")
